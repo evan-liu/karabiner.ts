@@ -6,6 +6,7 @@ import {
   ifDeviceExists,
   ifVar,
   isConditionBuilder,
+  ifKeyboardType,
 } from './condition.ts'
 import { Condition } from '../karabiner/karabiner-config.ts'
 
@@ -70,6 +71,17 @@ test('ifDeviceExists()', () => {
   ).toEqual({
     type: 'device_exists_if',
     identifiers: [{ vendor_id: '1', product_id: '2' }, { location_id: '3' }],
+  })
+})
+
+test('ifKeyboardType()', () => {
+  expect(ifKeyboardType('iso').build()).toEqual({
+    type: 'keyboard_type_if',
+    keyboard_types: ['iso'],
+  })
+  expect(ifKeyboardType(['jis', 'ansi']).build()).toEqual({
+    type: 'keyboard_type_if',
+    keyboard_types: ['jis', 'ansi'],
   })
 })
 

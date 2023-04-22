@@ -123,6 +123,8 @@ export type DeviceIdentifier = {
   is_built_in_keyboard?: boolean
 }
 
+export type KeyboardType = 'ansi' | 'iso' | 'jis'
+
 export type Condition =
   | ({
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/frontmost-application/ */
@@ -142,7 +144,7 @@ export type Condition =
   | {
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/keyboard-type/ */
       type: 'keyboard_type_if' | 'keyboard_type_unless'
-      keyboard_types: Array<'ansi' | 'iso' | 'jis'>
+      keyboard_types: KeyboardType[]
       description?: string
     }
   | {

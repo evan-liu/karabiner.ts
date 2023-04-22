@@ -1,6 +1,7 @@
 import {
   Condition,
   DeviceIdentifier,
+  KeyboardType,
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
 
@@ -65,6 +66,17 @@ export function ifDeviceExists(
   return new ConditionBuilder({
     type: 'device_exists_if',
     identifiers: Array.isArray(identifier) ? identifier : [identifier],
+    description,
+  })
+}
+
+export function ifKeyboardType(
+  keyboardType: KeyboardType | KeyboardType[],
+  description?: string,
+) {
+  return new ConditionBuilder({
+    type: 'keyboard_type_if',
+    keyboard_types: Array.isArray(keyboardType) ? keyboardType : [keyboardType],
     description,
   })
 }
