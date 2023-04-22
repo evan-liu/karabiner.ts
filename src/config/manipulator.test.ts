@@ -4,6 +4,7 @@ import { isManipulatorBuilder, ManipulatorBuilder } from './manipulator.ts'
 
 describe('ManipulatorBuilder', () => {
   const from: FromEvent = { key_code: 'a' }
+  const toEvent: ToEvent = { key_code: 'b', modifiers: ['command'], lazy: true }
 
   test('type and from', () => {
     expect(new ManipulatorBuilder(from).build()).toEqual({
@@ -13,13 +14,12 @@ describe('ManipulatorBuilder', () => {
   })
 
   test('to()', () => {
-    const event: ToEvent = { key_code: 'b', modifiers: ['command'], lazy: true }
     expect(
       new ManipulatorBuilder(from)
-        .to(event)
+        .to(toEvent)
         .to('b', '⌘', { lazy: true })
         .build().to,
-    ).toEqual([event, event])
+    ).toEqual([toEvent, toEvent])
   })
 
   test('to$(), toApp(), toPaste()', () => {
@@ -56,6 +56,45 @@ describe('ManipulatorBuilder', () => {
         },
       },
     ])
+  })
+
+  test('toIfAlone()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .toIfAlone(toEvent)
+        .toIfAlone('b', '⌘', { lazy: true })
+        .build().to_if_alone,
+    ).toEqual([toEvent, toEvent])
+  })
+
+  test('toIfHeldDown()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .toIfHeldDown(toEvent)
+        .toIfHeldDown('b', '⌘', { lazy: true })
+        .build().to_if_held_down,
+    ).toEqual([toEvent, toEvent])
+  })
+
+  test('toAfterKeyUp()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .toAfterKeyUp(toEvent)
+        .toAfterKeyUp('b', '⌘', { lazy: true })
+        .build().to_after_key_up,
+    ).toEqual([toEvent, toEvent])
+  })
+
+  test('toDelayedAction()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .toDelayedAction([{ key_code: 'a' }], [{ key_code: 'b' }])
+        .toDelayedAction([{ key_code: 'c' }], [{ key_code: 'd' }])
+        .build().to_delayed_action,
+    ).toEqual({
+      to_if_invoked: [{ key_code: 'a' }, { key_code: 'c' }],
+      to_if_canceled: [{ key_code: 'b' }, { key_code: 'd' }],
+    })
   })
 })
 

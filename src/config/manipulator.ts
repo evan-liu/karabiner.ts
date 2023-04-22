@@ -67,6 +67,82 @@ set the clipboard to prev'`)
     return this
   }
 
+  toIfAlone(event: ToEvent): this
+  toIfAlone(
+    key: ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this
+  toIfAlone(
+    keyOrEvent: ToEvent | ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this {
+    this.pushOrCreateList(
+      this.manipulator,
+      'to_if_alone',
+      typeof keyOrEvent === 'string'
+        ? toKey(keyOrEvent, modifiers, options)
+        : keyOrEvent,
+    )
+    return this
+  }
+
+  toIfHeldDown(event: ToEvent): this
+  toIfHeldDown(
+    key: ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this
+  toIfHeldDown(
+    keyOrEvent: ToEvent | ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this {
+    this.pushOrCreateList(
+      this.manipulator,
+      'to_if_held_down',
+      typeof keyOrEvent === 'string'
+        ? toKey(keyOrEvent, modifiers, options)
+        : keyOrEvent,
+    )
+    return this
+  }
+
+  toAfterKeyUp(event: ToEvent): this
+  toAfterKeyUp(
+    key: ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this
+  toAfterKeyUp(
+    keyOrEvent: ToEvent | ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this {
+    this.pushOrCreateList(
+      this.manipulator,
+      'to_after_key_up',
+      typeof keyOrEvent === 'string'
+        ? toKey(keyOrEvent, modifiers, options)
+        : keyOrEvent,
+    )
+    return this
+  }
+
+  toDelayedAction(to_if_invoked: ToEvent[], to_if_canceled: ToEvent[]): this {
+    if (this.manipulator.to_delayed_action) {
+      this.manipulator.to_delayed_action.to_if_invoked.push(...to_if_invoked)
+      this.manipulator.to_delayed_action.to_if_canceled.push(...to_if_canceled)
+    } else {
+      this.manipulator.to_delayed_action = {
+        to_if_invoked,
+        to_if_canceled,
+      }
+    }
+    return this
+  }
+
   build(): BasicManipulator {
     return { ...this.manipulator }
   }
