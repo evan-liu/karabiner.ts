@@ -1,8 +1,27 @@
 {
-  "name": "karabiner.ts",
-  "version": "0.0.0",
+  "name": "karabiner.config.ts",
+  "version": "0.1.0",
+  "description": "Karabiner-Elements configuration in TypeScript",
+  "license": "MIT",
+  "author": "Evan Liu",
+  "homepage": "https://github.com/evan-liu/karabiner.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evan-liu/karabiner.ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/evan-liu/karabiner.ts/issues"
+  },
   "type": "module",
-  "scripts": {},
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/karabiner.cjs",
+  "module": "./dist/karabiner.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build"
+  },
   "devDependencies": {
     "@types/node": "^18.15.13",
     "prettier": "^2.8.7",
