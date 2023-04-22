@@ -1,5 +1,7 @@
 import {
   BasicManipulator,
+  BasicParameters,
+  Condition,
   FromEvent,
   Manipulator,
   ToEvent,
@@ -9,6 +11,7 @@ import {
 } from '../karabiner/karabiner-config'
 import { ModifierParam } from './modifier'
 import { toKey, ToKeyParam } from './to'
+import { ConditionBuilder, isConditionBuilder } from './condition.ts'
 
 export class ManipulatorBuilder {
   private readonly manipulator: BasicManipulator
@@ -140,6 +143,23 @@ set the clipboard to prev'`)
         to_if_canceled,
       }
     }
+    return this
+  }
+
+  description(v: string): this {
+    this.manipulator.description = v
+    return this
+  }
+
+  condition(...v: Array<Condition | ConditionBuilder>): this {
+    const { conditions = [] } = this.manipulator
+    v.forEach((c) => conditions.push(isConditionBuilder(c) ? c.build() : c))
+    this.manipulator.conditions = conditions
+    return this
+  }
+
+  parameters(v: BasicParameters): this {
+    this.manipulator.parameters = { ...this.manipulator.parameters, ...v }
     return this
   }
 

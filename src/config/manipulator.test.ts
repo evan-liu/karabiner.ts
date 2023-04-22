@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { FromEvent, ToEvent } from '../karabiner/karabiner-config.ts'
 import { isManipulatorBuilder, ManipulatorBuilder } from './manipulator.ts'
+import { ifEventChanged } from './condition.ts'
 
 describe('ManipulatorBuilder', () => {
   const from: FromEvent = { key_code: 'a' }
@@ -94,6 +95,45 @@ describe('ManipulatorBuilder', () => {
     ).toEqual({
       to_if_invoked: [{ key_code: 'a' }, { key_code: 'c' }],
       to_if_canceled: [{ key_code: 'b' }, { key_code: 'd' }],
+    })
+  })
+
+  test('description()', () => {
+    const manipulatorBuilder = new ManipulatorBuilder(from)
+    expect(manipulatorBuilder.build().description).toBeUndefined()
+    manipulatorBuilder.description('a')
+    expect(manipulatorBuilder.build().description).toBe('a')
+    manipulatorBuilder.description('b')
+    expect(manipulatorBuilder.build().description).toBe('b')
+  })
+
+  test('condition()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .condition(ifEventChanged())
+        .condition(ifEventChanged(false), ifEventChanged())
+        .build().conditions,
+    ).toEqual([
+      { type: 'event_changed_if', value: true },
+      { type: 'event_changed_if', value: false },
+      { type: 'event_changed_if', value: true },
+    ])
+  })
+
+  test('parameters()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .parameters({
+          'basic.simultaneous_threshold_milliseconds': 1,
+          'basic.to_if_alone_timeout_milliseconds': 2,
+        })
+        .parameters({
+          'basic.simultaneous_threshold_milliseconds': 3,
+        })
+        .build().parameters,
+    ).toEqual({
+      'basic.simultaneous_threshold_milliseconds': 3,
+      'basic.to_if_alone_timeout_milliseconds': 2,
     })
   })
 })
