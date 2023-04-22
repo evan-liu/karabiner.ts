@@ -2,8 +2,8 @@
   "name": "karabiner.ts",
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-  },
+  "scripts": {},
   "devDependencies": {
+    "typescript": "^5.0.4"
   }
 }
