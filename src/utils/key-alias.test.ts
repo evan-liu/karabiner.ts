@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { getKeyWithAlias } from './key-alias.ts'
+import { getKeyWithAlias } from './key-alias'
 
 test('getKeyWithAlias()', () => {
   // KeyCode

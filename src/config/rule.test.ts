@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
-import { BasicRuleBuilder, isRuleBuilder, rule } from './rule.ts'
-import { ifVar } from './condition.ts'
-import { map } from './from.ts'
+import { BasicRuleBuilder, isRuleBuilder, rule } from './rule'
+import { ifVar } from './condition'
+import { map } from './from'
 
 test('rule()', () => {
   const condition1 = ifVar('v1').build()

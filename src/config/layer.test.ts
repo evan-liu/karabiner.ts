@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest'
-import { layer, simlayer } from './layer.ts'
-import { map } from './from.ts'
-import { BasicManipulator } from '../karabiner/karabiner-config.ts'
-import { setVar, toKey } from './to.ts'
+import { layer, simlayer } from './layer'
+import { map } from './from'
+import { BasicManipulator } from '../karabiner/karabiner-config'
+import { setVar, toKey } from './to'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)

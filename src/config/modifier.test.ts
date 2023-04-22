@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { parseFromModifierParams, parseModifierParam } from './modifier.ts'
+import { parseFromModifierParams, parseModifierParam } from './modifier'
 
 test('parseModifierParam()', () => {
   expect(parseModifierParam()).toBeUndefined()

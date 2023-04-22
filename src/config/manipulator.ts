@@ -11,7 +11,7 @@ import {
 } from '../karabiner/karabiner-config'
 import { ModifierParam } from './modifier'
 import { toKey, ToKeyParam } from './to'
-import { ConditionBuilder, isConditionBuilder } from './condition.ts'
+import { ConditionBuilder, isConditionBuilder } from './condition'
 
 export class ManipulatorBuilder {
   private readonly manipulator: BasicManipulator

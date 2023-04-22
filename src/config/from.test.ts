@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { map } from './from.ts'
+import { map } from './from'
 
 test('map()', () => {
   expect(map('/', '⌘⌥', '⌃').build().from).toEqual({

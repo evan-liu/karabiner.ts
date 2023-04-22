@@ -9,8 +9,8 @@ import {
   ifKeyboardType,
   ifInputSource,
   ifEventChanged,
-} from './condition.ts'
-import { Condition } from '../karabiner/karabiner-config.ts'
+} from './condition'
+import { Condition } from '../karabiner/karabiner-config'
 
 test('ifVar()', () => {
   expect(ifVar('test-mode', 2).build()).toEqual({

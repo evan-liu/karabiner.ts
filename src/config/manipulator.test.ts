@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { FromEvent, ToEvent } from '../karabiner/karabiner-config.ts'
-import { isManipulatorBuilder, ManipulatorBuilder } from './manipulator.ts'
-import { ifEventChanged } from './condition.ts'
+import { FromEvent, ToEvent } from '../karabiner/karabiner-config'
+import { isManipulatorBuilder, ManipulatorBuilder } from './manipulator'
+import { ifEventChanged } from './condition'
 
 describe('ManipulatorBuilder', () => {
   const from: FromEvent = { key_code: 'a' }

@@ -7,12 +7,19 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'karabiner.ts',
-      fileName: 'karabiner',
+      name: 'karabiner-config.',
+      fileName: 'index',
     },
     rollupOptions: {
       external: ['node:os', 'node:path', 'node:fs/promises'],
+      output: {
+        globals: {
+          'node:os': 'os',
+          'node:path': 'path',
+          'node:fs/promises': 'fs',
+        },
+      },
     },
   },
-  plugins: [dts()],
+  plugins: [dts({ rollupTypes: true })],
 })
