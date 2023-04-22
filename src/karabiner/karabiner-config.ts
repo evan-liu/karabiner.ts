@@ -20,7 +20,7 @@ export type FromEvent = (
   | { any: 'key_code' | 'consumer_key_code' | 'pointing_button' }
   | {
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous/ */
-      simultaneous?: Array<{ key_code: string }>
+      simultaneous: Array<{ key_code: string }>
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous-options/ */
       simultaneous_options?: {
         detect_key_down_uninterruptedly?: boolean
