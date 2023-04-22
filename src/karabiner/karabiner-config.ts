@@ -125,6 +125,12 @@ export type DeviceIdentifier = {
 
 export type KeyboardType = 'ansi' | 'iso' | 'jis'
 
+export type InputSource = {
+  language?: string
+  input_source_id?: string
+  input_mode_id?: string
+}
+
 export type Condition =
   | ({
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/frontmost-application/ */
@@ -150,11 +156,7 @@ export type Condition =
   | {
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/input-source/ */
       type: 'input_source_if' | 'input_source_unless'
-      input_sources: Array<{
-        language?: string
-        input_source_id?: string
-        input_mode_id?: string
-      }>
+      input_sources: InputSource[]
       description?: string
     }
   | {

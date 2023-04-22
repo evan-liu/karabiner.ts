@@ -7,6 +7,7 @@ import {
   ifVar,
   isConditionBuilder,
   ifKeyboardType,
+  ifInputSource,
 } from './condition.ts'
 import { Condition } from '../karabiner/karabiner-config.ts'
 
@@ -82,6 +83,25 @@ test('ifKeyboardType()', () => {
   expect(ifKeyboardType(['jis', 'ansi']).build()).toEqual({
     type: 'keyboard_type_if',
     keyboard_types: ['jis', 'ansi'],
+  })
+})
+
+test('ifInputSource()', () => {
+  expect(ifInputSource({ language: 'en' }).build()).toEqual({
+    type: 'input_source_if',
+    input_sources: [{ language: 'en' }],
+  })
+  expect(
+    ifInputSource([
+      { language: 'en' },
+      { language: 'cn', input_mode_id: 'zh' },
+    ]).build(),
+  ).toEqual({
+    type: 'input_source_if',
+    input_sources: [
+      { language: 'en' },
+      { language: 'cn', input_mode_id: 'zh' },
+    ],
   })
 })
 

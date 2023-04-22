@@ -1,6 +1,7 @@
 import {
   Condition,
   DeviceIdentifier,
+  InputSource,
   KeyboardType,
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
@@ -77,6 +78,17 @@ export function ifKeyboardType(
   return new ConditionBuilder({
     type: 'keyboard_type_if',
     keyboard_types: Array.isArray(keyboardType) ? keyboardType : [keyboardType],
+    description,
+  })
+}
+
+export function ifInputSource(
+  inputSource: InputSource | InputSource[],
+  description?: string,
+) {
+  return new ConditionBuilder({
+    type: 'input_source_if',
+    input_sources: Array.isArray(inputSource) ? inputSource : [inputSource],
     description,
   })
 }
