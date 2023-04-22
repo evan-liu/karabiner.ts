@@ -1,4 +1,8 @@
-import { Condition, ToVariable } from '../karabiner/karabiner-config.ts'
+import {
+  Condition,
+  DeviceIdentifier,
+  ToVariable,
+} from '../karabiner/karabiner-config.ts'
 
 export function ifVar(
   name: string,
@@ -40,6 +44,28 @@ export function ifApp(
     type: 'frontmost_application_if',
     description,
     bundle_identifiers,
+  })
+}
+
+export function ifDevice(
+  identifier: DeviceIdentifier | DeviceIdentifier[],
+  description?: string,
+) {
+  return new ConditionBuilder({
+    type: 'device_if',
+    identifiers: Array.isArray(identifier) ? identifier : [identifier],
+    description,
+  })
+}
+
+export function ifDeviceExists(
+  identifier: DeviceIdentifier | DeviceIdentifier[],
+  description?: string,
+) {
+  return new ConditionBuilder({
+    type: 'device_exists_if',
+    identifiers: Array.isArray(identifier) ? identifier : [identifier],
+    description,
   })
 }
 

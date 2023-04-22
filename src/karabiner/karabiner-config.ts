@@ -113,6 +113,16 @@ export type ToEvent = (
 ) &
   ToEventOptions
 
+export type DeviceIdentifier = {
+  vendor_id?: string
+  product_id?: string
+  location_id?: string
+  is_keyboard?: boolean
+  is_pointing_device?: boolean
+  is_touch_bar?: boolean
+  is_built_in_keyboard?: boolean
+}
+
 export type Condition =
   | ({
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/frontmost-application/ */
@@ -126,15 +136,7 @@ export type Condition =
         | 'device_unless'
         | 'device_exists_if'
         | 'device_exists_unless'
-      identifiers: {
-        vendor_id?: string
-        product_id?: string
-        location_id?: string
-        is_keyboard?: boolean
-        is_pointing_device?: boolean
-        is_touch_bar?: boolean
-        is_built_in_keyboard?: boolean
-      }
+      identifiers: DeviceIdentifier[]
       description?: string
     }
   | {

@@ -2,6 +2,8 @@ import { expect, test } from 'vitest'
 import {
   ConditionBuilder,
   ifApp,
+  ifDevice,
+  ifDeviceExists,
   ifVar,
   isConditionBuilder,
 } from './condition.ts'
@@ -34,6 +36,40 @@ test('ifApp()', () => {
   expect(ifApp({ file_paths: ['a', /b/] }).build()).toEqual({
     type: 'frontmost_application_if',
     file_paths: ['a', 'b'],
+  })
+})
+
+test('ifDevice()', () => {
+  expect(ifDevice({ vendor_id: '1' }).build()).toEqual({
+    type: 'device_if',
+    identifiers: [{ vendor_id: '1' }],
+  })
+
+  expect(
+    ifDevice([
+      { vendor_id: '1', product_id: '2' },
+      { location_id: '3' },
+    ]).build(),
+  ).toEqual({
+    type: 'device_if',
+    identifiers: [{ vendor_id: '1', product_id: '2' }, { location_id: '3' }],
+  })
+})
+
+test('ifDeviceExists()', () => {
+  expect(ifDeviceExists({ vendor_id: '1' }).build()).toEqual({
+    type: 'device_exists_if',
+    identifiers: [{ vendor_id: '1' }],
+  })
+
+  expect(
+    ifDeviceExists([
+      { vendor_id: '1', product_id: '2' },
+      { location_id: '3' },
+    ]).build(),
+  ).toEqual({
+    type: 'device_exists_if',
+    identifiers: [{ vendor_id: '1', product_id: '2' }, { location_id: '3' }],
   })
 })
 
