@@ -93,6 +93,10 @@ export function ifInputSource(
   })
 }
 
+export function ifEventChanged(value = true, description?: string) {
+  return new ConditionBuilder({ type: 'event_changed_if', value, description })
+}
+
 export class ConditionBuilder {
   constructor(private readonly condition: Condition) {}
 

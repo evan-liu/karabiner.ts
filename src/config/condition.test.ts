@@ -8,6 +8,7 @@ import {
   isConditionBuilder,
   ifKeyboardType,
   ifInputSource,
+  ifEventChanged,
 } from './condition.ts'
 import { Condition } from '../karabiner/karabiner-config.ts'
 
@@ -102,6 +103,17 @@ test('ifInputSource()', () => {
       { language: 'en' },
       { language: 'cn', input_mode_id: 'zh' },
     ],
+  })
+})
+
+test('ifEventChanged()', () => {
+  expect(ifEventChanged(true).build()).toEqual({
+    type: 'event_changed_if',
+    value: true,
+  })
+  expect(ifEventChanged(false).build()).toEqual({
+    type: 'event_changed_if',
+    value: false,
   })
 })
 
