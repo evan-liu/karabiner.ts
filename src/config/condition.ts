@@ -97,8 +97,26 @@ export function ifEventChanged(value = true, description?: string) {
   return new ConditionBuilder({ type: 'event_changed_if', value, description })
 }
 
+const unlessTypes = flipUnlessTypes({
+  frontmost_application_if: 'frontmost_application_unless',
+  device_if: 'device_unless',
+  device_exists_if: 'device_exists_unless',
+  keyboard_type_if: 'keyboard_type_unless',
+  input_source_if: 'input_source_unless',
+  variable_if: 'variable_unless',
+  event_changed_if: 'event_changed_unless',
+})
+
 export class ConditionBuilder {
   constructor(private readonly condition: Condition) {}
+
+  /** Switch type {condition}_if to {condition}_unless, and vice versa */
+  unless(): ConditionBuilder {
+    return new ConditionBuilder({
+      ...this.condition,
+      type: unlessTypes[this.condition.type],
+    } as Condition)
+  }
 
   build(): Condition {
     return { ...this.condition }
@@ -113,4 +131,12 @@ export function isConditionBuilder(
 
 function formatRegExp(v: string | RegExp) {
   return typeof v === 'string' ? v : v.toString().slice(1, -1)
+}
+
+function flipUnlessTypes(
+  types: Partial<Record<Condition['type'], Condition['type']>>,
+): Record<Condition['type'], Condition['type']> {
+  return Object.keys(types).reduce((result, type) => {
+    return { ...result, [result[type as Condition['type']]]: type }
+  }, types as Record<Condition['type'], Condition['type']>)
 }
