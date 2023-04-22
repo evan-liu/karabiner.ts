@@ -4,6 +4,7 @@ import {
   Manipulator,
   ToEvent,
   ToEventOptions,
+  ToMouseCursorPosition,
   ToVariable,
 } from '../karabiner/karabiner-config'
 import { ModifierParam } from './modifier'
@@ -57,6 +58,12 @@ set the clipboard to prev'`)
   /** Map to setting a variable */
   toVar(name: string, value: ToVariable['value'] = 1): this {
     this.addToEvent({ set_variable: { name, value } })
+    return this
+  }
+
+  /** Set mouse cursor position */
+  toMouseCursorPosition(p: ToMouseCursorPosition): this {
+    this.addToEvent({ software_function: { set_mouse_cursor_position: p } })
     return this
   }
 

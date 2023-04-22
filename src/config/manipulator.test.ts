@@ -41,6 +41,22 @@ describe('ManipulatorBuilder', () => {
       { set_variable: { name: 'b', value: true } },
     ])
   })
+
+  test('toMouseCursorPosition()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .toMouseCursorPosition({ x: 0, y: 0 })
+        .toMouseCursorPosition({ x: '50%', y: '50%', screen: 1 })
+        .build().to,
+    ).toEqual([
+      { software_function: { set_mouse_cursor_position: { x: 0, y: 0 } } },
+      {
+        software_function: {
+          set_mouse_cursor_position: { x: '50%', y: '50%', screen: 1 },
+        },
+      },
+    ])
+  })
 })
 
 test('isManipulatorBuilder()', () => {
