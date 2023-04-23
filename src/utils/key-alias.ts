@@ -48,16 +48,11 @@ export type NumberKeyValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 export type ArrowKeyAlias = keyof typeof arrowKeyAliases
 export type ControlOrSymbolKeyAlias = keyof typeof controlOrSymbolKeyAliases
-export type ModifierKeyAlias = keyof typeof modifierKeyAliases
-export type KeyAlias =
-  | ArrowKeyAlias
-  | ControlOrSymbolKeyAlias
-  | ModifierKeyAlias
+export type KeyAlias = ArrowKeyAlias | ControlOrSymbolKeyAlias
 
 const keyAliases = {
   ...arrowKeyAliases,
   ...controlOrSymbolKeyAliases,
-  ...modifierKeyAliases,
 } as Record<string, string>
 
 export function getKeyWithAlias(
