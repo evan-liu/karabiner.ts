@@ -28,7 +28,11 @@ export function writeToProfile(
   const config = require(karabinerConfigFile) as KarabinerConfig
   const profile = config?.profiles.find((v) => v.name === name)
   if (!profile)
-    exitWithError(`Profile ${name} not found in ${karabinerConfigFile}.`)
+    exitWithError(`⚠️ Profile ${name} not found in ${karabinerConfigFile}.\n
+ℹ️ Please check the profile name in the Karabiner-Elements UI and 
+    - Update the profile name at writeToProfile()
+    - Create a new profile if needed
+ `)
 
   try {
     profile.complex_modifications.rules = rules.map((v) =>
