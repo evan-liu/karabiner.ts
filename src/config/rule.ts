@@ -35,6 +35,10 @@ export class BasicRuleBuilder implements RuleBuilder {
 
   build(): Rule {
     const rule = { ...this.rule }
+    if (rule.manipulators.length === 0) {
+      throw new Error(`"manipulators" is empty in "${rule.description}"`)
+    }
+
     if (this.conditions.length === 0) return rule
 
     const conditions = this.conditions.map((condition) =>

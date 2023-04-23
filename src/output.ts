@@ -30,9 +30,19 @@ export function writeToProfile(
   if (!profile)
     exitWithError(`Profile ${name} not found in ${karabinerConfigFile}.`)
 
-  profile.complex_modifications.rules = rules.map((v) =>
-    isRuleBuilder(v) ? v.build() : v,
-  )
+  try {
+    profile.complex_modifications.rules = rules.map((v) =>
+      isRuleBuilder(v) ? v.build() : v,
+    )
+  } catch (e) {
+    exitWithError(e)
+  }
+  for (const rule of profile.complex_modifications.rules) {
+    if (!rule.manipulators.length) {
+      exitWithError(`"manipulators" is empty in "${rule.description}"`)
+    }
+  }
+
   profile.complex_modifications.parameters = parameters
 
   const json = JSON.stringify(config, null, 2)
