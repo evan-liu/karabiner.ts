@@ -43,36 +43,33 @@ test('ifApp()', () => {
 })
 
 test('ifDevice()', () => {
-  expect(ifDevice({ vendor_id: '1' }).build()).toEqual({
+  expect(ifDevice({ vendor_id: 1 }).build()).toEqual({
     type: 'device_if',
-    identifiers: [{ vendor_id: '1' }],
+    identifiers: [{ vendor_id: 1 }],
   })
 
   expect(
-    ifDevice([
-      { vendor_id: '1', product_id: '2' },
-      { location_id: '3' },
-    ]).build(),
+    ifDevice([{ vendor_id: 1, product_id: 2 }, { location_id: 3 }]).build(),
   ).toEqual({
     type: 'device_if',
-    identifiers: [{ vendor_id: '1', product_id: '2' }, { location_id: '3' }],
+    identifiers: [{ vendor_id: 1, product_id: 2 }, { location_id: 3 }],
   })
 })
 
 test('ifDeviceExists()', () => {
-  expect(ifDeviceExists({ vendor_id: '1' }).build()).toEqual({
+  expect(ifDeviceExists({ vendor_id: 1 }).build()).toEqual({
     type: 'device_exists_if',
-    identifiers: [{ vendor_id: '1' }],
+    identifiers: [{ vendor_id: 1 }],
   })
 
   expect(
     ifDeviceExists([
-      { vendor_id: '1', product_id: '2' },
-      { location_id: '3' },
+      { vendor_id: 1, product_id: 2 },
+      { location_id: 3 },
     ]).build(),
   ).toEqual({
     type: 'device_exists_if',
-    identifiers: [{ vendor_id: '1', product_id: '2' }, { location_id: '3' }],
+    identifiers: [{ vendor_id: 1, product_id: 2 }, { location_id: 3 }],
   })
 })
 
@@ -122,11 +119,11 @@ test('unless()', () => {
   expect(appUnless.build().type).toBe('frontmost_application_unless')
   expect(appUnless.build()).toEqual(appUnless.unless().unless().build())
 
-  const deviceUnless = ifDevice({ vendor_id: 'a' }).unless()
+  const deviceUnless = ifDevice({ vendor_id: 1 }).unless()
   expect(deviceUnless.build().type).toBe('device_unless')
   expect(deviceUnless.build()).toEqual(deviceUnless.unless().unless().build())
 
-  const deviceExistsUnless = ifDeviceExists({ vendor_id: 'a' }).unless()
+  const deviceExistsUnless = ifDeviceExists({ vendor_id: 1 }).unless()
   expect(deviceExistsUnless.build().type).toBe('device_exists_unless')
   expect(deviceExistsUnless.build()).toEqual(
     deviceExistsUnless.unless().unless().build(),
