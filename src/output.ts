@@ -56,6 +56,12 @@ export function writeToProfile(
 }
 
 function exitWithError(err: any): never {
-  console.error(err)
+  if (err) {
+    if (typeof err === 'string') {
+      console.error(err)
+    } else {
+      console.error((err as Error).message || err)
+    }
+  }
   process.exit(1)
 }
