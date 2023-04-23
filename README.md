@@ -19,7 +19,7 @@ layer('.', 'dot-mode')
   ])
 ```
 
-See [more examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) and [my config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts).
+See [more examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) and [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts).
 
 ## Usage
 
