@@ -48,13 +48,14 @@ export type ModifierKeyAlias = keyof typeof modifierKeyAliases
 
 export type ArrowKeyAlias = keyof typeof arrowKeyAliases
 export type ControlOrSymbolKeyAlias = keyof typeof controlOrSymbolKeyAliases
-export type KeyAlias = ArrowKeyAlias | ControlOrSymbolKeyAlias
+export type KeyAlias = ArrowKeyAlias | ControlOrSymbolKeyAlias | '⇪'
 export type NumberKeyValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
-const keyAliases = {
+const keyAliases: Record<string, string> = {
   ...arrowKeyAliases,
   ...controlOrSymbolKeyAliases,
-} as Record<string, string>
+  '⇪': modifierKeyAliases['⇪'],
+} satisfies Record<KeyAlias, KeyCode>
 
 export function getKeyWithAlias(
   key: KeyCode | KeyAlias | NumberKeyValue,
