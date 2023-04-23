@@ -1,6 +1,6 @@
 # karabiner.ts
 
-Write Karabiner-Elements configuration in TypeScript.
+Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) configuration in TypeScript.
 
 ## Why karabiner.ts
 
