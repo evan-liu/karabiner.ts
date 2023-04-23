@@ -114,9 +114,9 @@ export type ToEvent = (
   ToEventOptions
 
 export type DeviceIdentifier = {
-  vendor_id?: string
-  product_id?: string
-  location_id?: string
+  vendor_id?: number
+  product_id?: number
+  location_id?: number
   is_keyboard?: boolean
   is_pointing_device?: boolean
   is_touch_bar?: boolean
