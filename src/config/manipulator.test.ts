@@ -23,6 +23,15 @@ describe('ManipulatorBuilder', () => {
     ).toEqual([toEvent, toEvent])
   })
 
+  test('toHyper(), toMeh()', () => {
+    expect(new ManipulatorBuilder(from).toHyper().build().to).toEqual([
+      { key_code: 'left_command', modifiers: ['option', 'control', 'shift'] },
+    ])
+    expect(new ManipulatorBuilder(from).toMeh().build().to).toEqual([
+      { key_code: 'left_option', modifiers: ['control', 'shift'] },
+    ])
+  })
+
   test('to$(), toApp(), toPaste()', () => {
     const to = new ManipulatorBuilder(from)
       .to$('cd')

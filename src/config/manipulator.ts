@@ -35,6 +35,18 @@ export class ManipulatorBuilder {
     return this
   }
 
+  /** To Hyper key ⌘⌥⌃⇧ */
+  toHyper(options?: ToEventOptions): this {
+    this.addToEvent(toKey('left_command', '⌥⌃⇧', options))
+    return this
+  }
+
+  /** To Meh key ⌥⌃⇧ */
+  toMeh(options?: ToEventOptions): this {
+    this.addToEvent(toKey('left_option', '⌃⇧', options))
+    return this
+  }
+
   /** Map to shell command */
   to$(shell_command: string): this {
     this.addToEvent({ shell_command })
