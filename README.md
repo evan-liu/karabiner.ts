@@ -12,7 +12,7 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 - Strong-typed abstractions and key aliases with IDE support
 - Structured config files instead of one big file
 
-<img src="https://user-images.githubusercontent.com/126383/233834365-17bb6acc-e0e4-462e-936a-d52be7b24435.png" width="640" alt="screenshot">
+<img src="https://user-images.githubusercontent.com/126383/234121807-243cf564-be26-41a6-a450-6de2ed3ae934.png" width="640" alt="screenshot">
 
 See [more examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) and [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts).
 
