@@ -12,6 +12,14 @@ export type Modifier =
   | 'option'
   | 'shift'
 
+export type SimultaneousOptions = {
+  detect_key_down_uninterruptedly?: boolean
+  key_down_order?: 'insensitive' | 'strict' | 'strict_inverse'
+  key_up_order?: 'insensitive' | 'strict' | 'strict_inverse'
+  key_up_when?: 'any' | 'all'
+  to_after_key_up?: ToEvent[]
+}
+
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/ */
 export type FromEvent = (
   | { key_code: FromKeyCode }
@@ -22,13 +30,7 @@ export type FromEvent = (
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous/ */
       simultaneous: Array<{ key_code: string }>
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous-options/ */
-      simultaneous_options?: {
-        detect_key_down_uninterruptedly?: boolean
-        key_down_order?: 'insensitive' | 'strict' | 'strict_inverse'
-        key_up_order?: 'insensitive' | 'strict' | 'strict_inverse'
-        key_up_when?: 'any' | 'all'
-        to_after_key_up?: ToEvent[]
-      }
+      simultaneous_options?: SimultaneousOptions
     }
 ) & {
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/ */
