@@ -19,5 +19,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run test:coverage
-      - uses:  davelosert/vitest-coverage-report-action@v1
+      - uses: coverallsapp/github-action@v2
         if: always()
