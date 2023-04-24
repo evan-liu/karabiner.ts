@@ -1,0 +1,27 @@
+name: 👷 Build and Publish
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+      - run: npm ci
+
+      - run: npm run build
+      - run: npm run test:coverage
+      - uses: coverallsapp/github-action@v2
+        if: always()
+
+      - uses: JS-DevTools/npm-publish@v2
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
