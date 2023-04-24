@@ -27,7 +27,7 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'c8',
-      reporter: ['text', 'json-summary', 'json'],
+      reporter: ['lcov'],
     },
   },
 })
