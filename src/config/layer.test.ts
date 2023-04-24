@@ -58,3 +58,12 @@ test('simlayer()', () => {
     { type: 'variable_if', name: 'b-mode', value: true },
   ])
 })
+
+test('Empty manipulators error', () => {
+  expect(() => layer('a', '').manipulators([]).build()).toThrow(
+    /manipulators.*empty/,
+  )
+  expect(() => simlayer('a', '').manipulators([]).build()).toThrow(
+    /manipulators.*empty/,
+  )
+})
