@@ -1,5 +1,7 @@
 # karabiner.ts
 
+[![Coverage Status](https://coveralls.io/repos/github/evan-liu/karabiner.ts/badge.svg?branch=try-coveralls)](https://coveralls.io/github/evan-liu/karabiner.ts?branch=try-coveralls)
+
 Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) configuration in TypeScript.
 
 ## Why karabiner.ts
