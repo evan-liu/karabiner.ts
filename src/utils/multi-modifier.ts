@@ -14,6 +14,6 @@ export const multiModifierAliases = {
   '⌘⌥⌃⇧': ['command', 'option', 'control', 'shift'],
   Meh: ['option', 'control', 'shift'],
   Hyper: ['command', 'option', 'control', 'shift'],
-} satisfies Record<string, Modifier[]>
+} /* c8 ignore next */ satisfies Record<string, Modifier[]>
 
 export type MultiModifierAlias = keyof typeof multiModifierAliases

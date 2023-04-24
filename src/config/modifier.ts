@@ -66,7 +66,7 @@ const sidedModifiers = new Set<string>([
   'option',
   'control',
   'shift',
-] satisfies Modifier[])
+] /* c8 ignore next */ satisfies Modifier[])
 
 function parseSideModifier(
   side: 'left' | 'right',

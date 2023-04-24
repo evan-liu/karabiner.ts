@@ -11,7 +11,7 @@ export const modifierKeyAliases = {
   '⌃': 'control',
   '⇧': 'shift',
   '⇪': 'caps_lock',
-} satisfies Record<string, Modifier>
+} /* c8 ignore next */ satisfies Record<string, Modifier>
 
 export const arrowKeyAliases = {
   '↑': 'up_arrow',
@@ -22,7 +22,7 @@ export const arrowKeyAliases = {
   '⇟': 'page_down',
   '↖︎': 'home',
   '↘︎': 'end',
-} satisfies Record<string, ArrowKeyCode>
+} /* c8 ignore next */ satisfies Record<string, ArrowKeyCode>
 
 export const controlOrSymbolKeyAliases = {
   '⏎': 'return_or_enter',
@@ -42,7 +42,7 @@ export const controlOrSymbolKeyAliases = {
   ',': 'comma',
   '.': 'period',
   '/': 'slash',
-} satisfies Record<string, ControlOrSymbolKeyCode>
+} /* c8 ignore next */ satisfies Record<string, ControlOrSymbolKeyCode>
 
 export type ModifierKeyAlias = keyof typeof modifierKeyAliases
 
@@ -55,7 +55,7 @@ const keyAliases: Record<string, string> = {
   ...arrowKeyAliases,
   ...controlOrSymbolKeyAliases,
   '⇪': modifierKeyAliases['⇪'],
-} satisfies Record<KeyAlias, KeyCode>
+} /* c8 ignore next */ satisfies Record<KeyAlias, KeyCode>
 
 export function getKeyWithAlias(
   key: KeyCode | KeyAlias | NumberKeyValue,

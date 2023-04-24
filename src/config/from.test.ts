@@ -25,4 +25,6 @@ test('mapSimultaneous()', () => {
   expect(parameters).toEqual({
     'basic.simultaneous_threshold_milliseconds': 123,
   })
+
+  expect(mapSimultaneous([1, 2]).build().parameters).toBeUndefined()
 })

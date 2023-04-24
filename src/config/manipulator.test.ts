@@ -36,11 +36,13 @@ describe('ManipulatorBuilder', () => {
     const to = new ManipulatorBuilder(from)
       .to$('cd')
       .toApp('Finder')
+      .toApp('Xcode.app')
       .toPaste('test')
       .build().to as Array<{ shell_command: string }>
     expect(to[0]).toEqual({ shell_command: 'cd' })
     expect(to[1]).toEqual({ shell_command: 'open -a Finder.app' })
-    expect(to[2].shell_command).toMatch('"test"')
+    expect(to[2]).toEqual({ shell_command: 'open -a Xcode.app' })
+    expect(to[3].shell_command).toMatch('"test"')
   })
 
   test('toVar()', () => {

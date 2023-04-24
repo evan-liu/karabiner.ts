@@ -23,6 +23,12 @@ test('rule()', () => {
   })
 })
 
+test('Empty manipulators error', () => {
+  expect(() => new BasicRuleBuilder('test').build()).toThrow(
+    /manipulators.*empty/,
+  )
+})
+
 test('isRuleBuilder()', () => {
   expect(isRuleBuilder({ description: 'a', manipulators: [] })).toBe(false)
   expect(isRuleBuilder(new BasicRuleBuilder('b'))).toBe(true)
