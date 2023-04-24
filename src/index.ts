@@ -3,6 +3,7 @@ export * from './karabiner/karabiner-config'
 
 export * from './utils/key-alias'
 export * from './utils/multi-modifier'
+export * from './utils/with-condition'
 
 export * from './config/condition'
 export * from './config/from'
