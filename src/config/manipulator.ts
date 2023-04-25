@@ -55,7 +55,8 @@ export class ManipulatorBuilder {
 
   /** Map to `$ open -a {app}.app` */
   toApp(app: string) {
-    return this.to$(`open -a ${app.endsWith('.app') ? app : `${app}.app`}`)
+    const matched = app.match(/^"?(.*?)(.app)?"?$/)
+    return this.to$(`open -a "${matched?.[1] || app}".app`)
   }
 
   /** Map to paste {text} via clipboard */
