@@ -127,6 +127,30 @@ export type KeypadKeyCode =
   | 'keypad_equal_sign'
   | 'keypad_comma'
 
+export type PcKeyboardKeyCode =
+  | 'print_screen'
+  | 'scroll_lock'
+  | 'pause'
+  | 'insert'
+  | 'application'
+  | 'help'
+  | 'power'
+
+export type InternationalKeyCode =
+  | 'international1'
+  | 'international3'
+  | 'lang1'
+  | 'lang2'
+
+export type JapaneseKeyCode = 'japanese_eisuu' | 'japanese_kana'
+
+export type OtherKeyCode =
+  | 'volume_down' // equal to `volume_decrement`
+  | 'volume_up' // equal to `volume_increment`
+  | 'mute'
+  | 'volume_decrement'
+  | 'volume_increment'
+
 export type FromOnlyKeyCode =
   // Function keys
   | 'f21'
@@ -218,6 +242,10 @@ export type FromAndToKeyCode =
   | NumberKeyCode
   | FunctionKeyCode
   | KeypadKeyCode
+  | PcKeyboardKeyCode
+  | InternationalKeyCode
+  | JapaneseKeyCode
+  | OtherKeyCode
 export type KeyCode = FromAndToKeyCode | FromOnlyKeyCode | ToOnlyKeyCode
 export type FromKeyCode = FromAndToKeyCode | FromOnlyKeyCode
 export type ToKeyCode = FromAndToKeyCode | ToOnlyKeyCode
