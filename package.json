@@ -1,5 +1,5 @@
 {
-  "name": "karabiner-config",
+  "name": "karabiner-dot-ts",
   "version": "0.4.1",
   "description": "Karabiner-Elements configuration in TypeScript",
   "license": "MIT",
