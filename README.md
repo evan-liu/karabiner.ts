@@ -24,4 +24,4 @@ See [more examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/
 4. Set the profile name. Create a new Karabiner-Elements profile if needed.
 5. Run `npm run build`.
 
-Alternatively, you can install the `karabiner-config` npm package (`karabiner-ts` is taken) and call `writeToProfile()` in a Node.js script in your preferred way.
+Alternatively, you can install the `karabiner-dot-ts` npm package (`karabiner.ts` is not available) and call `writeToProfile()` in a Node.js script in your preferred way.
