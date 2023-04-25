@@ -1,3 +1,5 @@
+// See https://github.com/pqrs-org/Karabiner-Elements/blob/main/src/apps/SettingsWindow/Resources/simple_modifications.json
+
 export type StickyModifierKeyCode =
   | 'left_control'
   | 'left_shift'
@@ -104,8 +106,6 @@ export type FunctionKeyCode =
   | 'f19'
   | 'f20'
 
-export type FromOnlyFunctionKeyCode = 'f21' | 'f22' | 'f23' | 'f24'
-
 export type KeypadKeyCode =
   | 'keypad_num_lock'
   | 'keypad_slash'
@@ -127,18 +127,97 @@ export type KeypadKeyCode =
   | 'keypad_equal_sign'
   | 'keypad_comma'
 
-export type ToDisableKeyCode = 'vk_none'
+export type FromOnlyKeyCode =
+  // Function keys
+  | 'f21'
+  | 'f22'
+  | 'f23'
+  | 'f24'
+  // Keys in pc keyboards
+  | 'execute'
+  | 'menu'
+  | 'select'
+  | 'stop'
+  | 'again'
+  | 'undo'
+  | 'cut'
+  | 'copy'
+  | 'paste'
+  | 'find'
+  // International keys
+  | 'international2'
+  | 'international4'
+  | 'international5'
+  | 'international6'
+  | 'international7'
+  | 'international8'
+  | 'international9'
+  | 'lang3'
+  | 'lang4'
+  | 'lang5'
+  | 'lang6'
+  | 'lang7'
+  | 'lang8'
+  | 'lang9'
+  // Japanese
+  | 'japanese_pc_nfer' // PCキーボードの無変換キー
+  | 'japanese_pc_xfer' // PCキーボードの変換キー
+  | 'japanese_pc_katakana' // PCキーボードのかなキー
+  // Others
+  | 'keypad_equal_sign_as400'
+  | 'locking_caps_lock'
+  | 'locking_num_lock'
+  | 'locking_scroll_lock'
+  | 'alternate_erase'
+  | 'sys_req_or_attention'
+  | 'cancel'
+  | 'clear'
+  | 'prior'
+  | 'return' // rarely used return (HID usage 0x9e)
+  | 'separator'
+  | 'out'
+  | 'oper'
+  | 'clear_or_again'
+  | 'cr_sel_or_props'
+  | 'ex_sel'
 
-export type KeyCode =
+export type ToOnlyKeyCode =
+  // Disable this key
+  | 'vk_none'
+  // Others
+  | 'vk_consumer_brightness_down' // equal to `display_brightness_decrement`
+  | 'vk_consumer_brightness_up' // equal to `display_brightness_increment`
+  | 'vk_mission_control' // equal to `mission_control`
+  | 'vk_launchpad' // equal to `launchpad`
+  | 'vk_dashboard' // equal to `dashboard`
+  | 'vk_consumer_illumination_down' // equal to `illumination_decrement`
+  | 'vk_consumer_illumination_up' // equal to `illumination_increment`
+  | 'vk_consumer_previous' // equal to `rewind`
+  | 'vk_consumer_play' // equal to `play`
+  | 'vk_consumer_next' // equal to `fast_forward`
+  | 'display_brightness_decrement'
+  | 'display_brightness_increment'
+  | 'rewind'
+  | 'play_or_pause'
+  | 'fastforward'
+  | 'apple_display_brightness_decrement'
+  | 'apple_display_brightness_increment'
+  | 'dashboard'
+  | 'launchpad'
+  | 'mission_control'
+  | 'apple_top_case_display_brightness_decrement'
+  | 'apple_top_case_display_brightness_increment'
+  | 'illumination_decrement'
+  | 'illumination_increment'
+
+export type FromAndToKeyCode =
   | ModifierKeyCode
   | ControlOrSymbolKeyCode
   | ArrowKeyCode
   | LetterKeyCode
   | NumberKeyCode
   | FunctionKeyCode
-  | FromOnlyFunctionKeyCode
   | KeypadKeyCode
-  | ToDisableKeyCode
-
-export type FromKeyCode = Exclude<KeyCode, ToDisableKeyCode>
-export type ToKeyCode = Exclude<KeyCode, FromOnlyFunctionKeyCode>
+export type KeyCode = FromAndToKeyCode | FromOnlyKeyCode | ToOnlyKeyCode
+export type FromKeyCode = FromAndToKeyCode | FromOnlyKeyCode
+export type ToKeyCode = FromAndToKeyCode | ToOnlyKeyCode
