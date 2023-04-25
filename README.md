@@ -19,7 +19,7 @@ See [more examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/
 
 ## Usage
 
-1. [Download](https://github.com/evan-liu/karabiner-config-examples/archive/refs/heads/main.zip) (or clone | [fork](https://github.com/evan-liu/karabiner-config-examples/fork)) the [examples/starter repo](https://github.com/evan-liu/karabiner-config-examples).
+1. [Download](https://github.com/evan-liu/karabiner.ts.examples/archive/refs/heads/main.zip) (or clone | [fork](https://github.com/evan-liu/karabiner.ts.examples/fork)) the [examples/starter repo](https://github.com/evan-liu/karabiner.ts.examples).
 2. Run `npm install`.
 3. Update to your own [configs](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts).
 4. Set the profile name. Create a new Karabiner-Elements profile if needed.
