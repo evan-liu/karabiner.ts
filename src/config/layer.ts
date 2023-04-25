@@ -1,8 +1,7 @@
 import {
   FromKeyCode,
-  FromOnlyFunctionKeyCode,
+  FromOnlyKeyCode,
   ModifierKeyCode,
-  ToDisableKeyCode,
 } from '../karabiner/key-code'
 import { Manipulator, Rule, ToVariable } from '../karabiner/karabiner-config'
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias'
@@ -11,9 +10,11 @@ import { setVar } from './to'
 import { ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
 
-type LayerExclude = FromOnlyFunctionKeyCode | ToDisableKeyCode | ModifierKeyCode
-type LayerKeyCode = Exclude<FromKeyCode, LayerExclude>
-type LayerKeyParam = Exclude<FromKeyParam, LayerExclude | ModifierKeyAlias>
+type LayerKeyCode = Exclude<FromKeyCode, FromOnlyKeyCode | ModifierKeyCode>
+type LayerKeyParam = Exclude<
+  FromKeyParam,
+  FromOnlyKeyCode | ModifierKeyCode | ModifierKeyAlias
+>
 
 /** @see https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md#advance3 */
 export function layer(
