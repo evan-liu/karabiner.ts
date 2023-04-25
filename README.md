@@ -1,7 +1,7 @@
 # karabiner.ts
 
 [![Coverage Status](https://coveralls.io/repos/github/evan-liu/karabiner.ts/badge.svg?branch=try-coveralls)](https://coveralls.io/github/evan-liu/karabiner.ts?branch=try-coveralls)
-[![npm](https://img.shields.io/npm/v/karabiner-dot-ts.svg)](https://www.npmjs.com/package/karabiner-dot-ts)
+[![npm](https://img.shields.io/npm/v/karabiner.ts.svg)](https://www.npmjs.com/package/karabiner.ts)
 
 Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) configuration in TypeScript.
 
@@ -25,4 +25,4 @@ See [more examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/
 4. Set the profile name. Create a new Karabiner-Elements profile if needed.
 5. Run `npm run build`.
 
-Alternatively, you can install the `karabiner-dot-ts` npm package (`karabiner.ts` is not available) and call `writeToProfile()` in a Node.js script in your preferred way.
+Alternatively, you can install the `karabiner.ts` npm package and call `writeToProfile()` in a Node.js script in your preferred way.
