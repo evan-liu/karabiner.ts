@@ -9,7 +9,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'karabiner-dot-ts.',
+      name: 'karabiner.ts',
       fileName: 'index',
     },
     rollupOptions: {
