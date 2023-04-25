@@ -1,6 +1,6 @@
 {
   "name": "karabiner.ts",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Karabiner-Elements configuration in TypeScript",
   "license": "MIT",
   "author": "Evan Liu",
