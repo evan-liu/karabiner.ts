@@ -207,17 +207,18 @@ export type MouseMotionToScrollParameters = {
   'mouse_motion_to_scroll.speed'?: number
 }
 
+export type MouseMotionToScrollOptions = {
+  momentum_scroll_enabled?: boolean
+  speed_multiplier?: number
+}
+
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/other-types/mouse-motion-to-scroll/ */
 export type MouseMotionToScrollManipulator = {
   type: 'mouse_motion_to_scroll'
-  options?: {
-    momentum_scroll_enabled: boolean
-    speed_multiplier: number
-  }
-} & (
-  | { from: Pick<BasicManipulator['from'], 'modifiers'> }
-  | { conditions: BasicManipulator['conditions'] }
-)
+  from?: { modifiers: BasicManipulator['from']['modifiers'] }
+  conditions?: BasicManipulator['conditions']
+  options?: MouseMotionToScrollOptions
+}
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/ */
 export type Manipulator = BasicManipulator | MouseMotionToScrollManipulator
