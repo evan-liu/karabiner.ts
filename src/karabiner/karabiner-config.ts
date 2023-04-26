@@ -55,11 +55,11 @@ export type ToVariable = {
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/mouse-key/ */
 export type ToMouseKey = {
-  x: number
-  y: number
-  vertical_wheel: number
-  horizontal_wheel: number
-  speed_multiplier: number
+  x?: number
+  y?: number
+  vertical_wheel?: number
+  horizontal_wheel?: number
+  speed_multiplier?: number
 }
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/sticky-modifier/ */

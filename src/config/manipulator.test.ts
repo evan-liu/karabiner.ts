@@ -56,6 +56,20 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toMouseKey()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .toMouseKey({ x: 100, y: -100 })
+        .toMouseKey({ horizontal_wheel: -100 })
+        .toMouseKey({ speed_multiplier: 2 })
+        .build().to,
+    ).toEqual([
+      { mouse_key: { x: 100, y: -100 } },
+      { mouse_key: { horizontal_wheel: -100 } },
+      { mouse_key: { speed_multiplier: 2 } },
+    ])
+  })
+
   test('to$(), toApp(), toPaste()', () => {
     const to = new ManipulatorBuilder(from)
       .to$('cd')
