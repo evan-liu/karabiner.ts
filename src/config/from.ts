@@ -3,6 +3,7 @@ import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
 import { FromModifierParam, parseFromModifierParams } from './modifier'
 import { ManipulatorBuilder } from './manipulator'
 import { SimultaneousOptions } from '../karabiner/karabiner-config'
+import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
 
 export type FromKeyParam = FromKeyCode | KeyAlias | NumberKeyValue
 
@@ -31,4 +32,15 @@ export function mapSimultaneous(
         'basic.simultaneous_threshold_milliseconds': threshold,
       })
     : manipulatorBuilder
+}
+
+export function mapConsumerKey(
+  code: FromConsumerKeyCode,
+  mandatoryModifiers?: FromModifierParam,
+  optionalModifiers?: FromModifierParam,
+) {
+  return new ManipulatorBuilder({
+    consumer_key_code: code,
+    modifiers: parseFromModifierParams(mandatoryModifiers, optionalModifiers),
+  })
 }

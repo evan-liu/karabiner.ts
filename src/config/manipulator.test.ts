@@ -32,6 +32,18 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toConsumerKey()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .toConsumerKey('rewind')
+        .toConsumerKey('mute', '⌘', { lazy: true })
+        .build().to,
+    ).toEqual([
+      { consumer_key_code: 'rewind' },
+      { consumer_key_code: 'mute', modifiers: ['command'], lazy: true },
+    ])
+  })
+
   test('to$(), toApp(), toPaste()', () => {
     const to = new ManipulatorBuilder(from)
       .to$('cd')
