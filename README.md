@@ -1,8 +1,8 @@
 # karabiner.ts
 
+[![License](https://img.shields.io/npm/l/karabiner.ts.svg)](LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/evan-liu/karabiner.ts/badge.svg)](https://coveralls.io/github/evan-liu/karabiner.ts)
 [![npm](https://img.shields.io/npm/v/karabiner.ts.svg)](https://www.npmjs.com/package/karabiner.ts)
-[![License](https://img.shields.io/npm/l/karabiner.ts.svg)](LICENSE)
 
 Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) configuration in TypeScript.
 
