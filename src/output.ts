@@ -26,7 +26,11 @@ export function writeToProfile(
   rules: Array<Rule | RuleBuilder>,
   parameters: ComplexModificationsParameters = {},
 ) {
-  const config = require(karabinerConfigFile) as KarabinerConfig
+  const config: KarabinerConfig =
+    name === '--dry-run'
+      ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
+      : require(karabinerConfigFile)
+
   const profile = config?.profiles.find((v) => v.name === name)
   if (!profile)
     exitWithError(`⚠️ Profile ${name} not found in ${karabinerConfigFile}.\n
