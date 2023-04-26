@@ -4,6 +4,7 @@ import { FromModifierParam, parseFromModifierParams } from './modifier'
 import { ManipulatorBuilder } from './manipulator'
 import { SimultaneousOptions } from '../karabiner/karabiner-config'
 import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
+import { PointingButton } from '../karabiner/pointing-button'
 
 export type FromKeyParam = FromKeyCode | KeyAlias | NumberKeyValue
 
@@ -41,6 +42,22 @@ export function mapConsumerKey(
 ) {
   return new ManipulatorBuilder({
     consumer_key_code: code,
+    modifiers: parseFromModifierParams(mandatoryModifiers, optionalModifiers),
+  })
+}
+
+/**
+ * **Caution**
+ * Be careful using "pointing_button": "button1" and "any": "pointing_button".
+ * You may lose the left click button and system will be unusable.
+ */
+export function mapPointingButton(
+  button: PointingButton,
+  mandatoryModifiers?: FromModifierParam,
+  optionalModifiers?: FromModifierParam,
+) {
+  return new ManipulatorBuilder({
+    pointing_button: button,
     modifiers: parseFromModifierParams(mandatoryModifiers, optionalModifiers),
   })
 }

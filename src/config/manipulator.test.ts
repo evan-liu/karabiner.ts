@@ -44,6 +44,18 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toPointingButton()', () => {
+    expect(
+      new ManipulatorBuilder(from)
+        .toPointingButton('button2')
+        .toPointingButton('button3', '⌘', { lazy: true })
+        .build().to,
+    ).toEqual([
+      { pointing_button: 'button2' },
+      { pointing_button: 'button3', modifiers: ['command'], lazy: true },
+    ])
+  })
+
   test('to$(), toApp(), toPaste()', () => {
     const to = new ManipulatorBuilder(from)
       .to$('cd')
