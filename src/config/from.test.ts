@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { map, mapSimultaneous } from './from'
+import { map, mapConsumerKey, mapSimultaneous } from './from'
 
 test('map()', () => {
   expect(map('/', '⌘⌥', '⌃').build().from).toEqual({
@@ -27,4 +27,11 @@ test('mapSimultaneous()', () => {
   })
 
   expect(mapSimultaneous([1, 2]).build().parameters).toBeUndefined()
+})
+
+test('mapConsumerKey()', () => {
+  expect(mapConsumerKey('menu', '⌘⌥', '⌃').build().from).toEqual({
+    consumer_key_code: 'menu',
+    modifiers: { mandatory: ['command', 'option'], optional: ['control'] },
+  })
 })
