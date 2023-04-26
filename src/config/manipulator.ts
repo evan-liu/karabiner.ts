@@ -7,6 +7,7 @@ import {
   ToEvent,
   ToEventOptions,
   ToMouseCursorPosition,
+  ToMouseKey,
   ToVariable,
 } from '../karabiner/karabiner-config'
 import { ModifierParam, parseModifierParam } from './modifier'
@@ -74,6 +75,12 @@ export class ManipulatorBuilder {
       pointing_button: button,
       modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
     })
+    return this
+  }
+
+  /** Move mouse cursor by delta */
+  toMouseKey(mouse_key: ToMouseKey): this {
+    this.addToEvent({ mouse_key })
     return this
   }
 
