@@ -1,7 +1,7 @@
 import { FromKeyCode } from '../karabiner/key-code'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
 import { FromModifierParam, parseFromModifierParams } from './modifier'
-import { ManipulatorBuilder } from './manipulator'
+import { BasicManipulatorBuilder } from './manipulator'
 import { SimultaneousOptions } from '../karabiner/karabiner-config'
 import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
@@ -13,7 +13,7 @@ export function map(
   mandatoryModifiers?: FromModifierParam,
   optionalModifiers?: FromModifierParam,
 ) {
-  return new ManipulatorBuilder({
+  return new BasicManipulatorBuilder({
     key_code: getKeyWithAlias(key) as FromKeyCode,
     modifiers: parseFromModifierParams(mandatoryModifiers, optionalModifiers),
   })
@@ -24,7 +24,7 @@ export function mapSimultaneous(
   options?: SimultaneousOptions,
   threshold?: number,
 ) {
-  const manipulatorBuilder = new ManipulatorBuilder({
+  const manipulatorBuilder = new BasicManipulatorBuilder({
     simultaneous: keys.map((v) => ({ key_code: getKeyWithAlias(v) })),
     simultaneous_options: options,
   })
@@ -40,7 +40,7 @@ export function mapConsumerKey(
   mandatoryModifiers?: FromModifierParam,
   optionalModifiers?: FromModifierParam,
 ) {
-  return new ManipulatorBuilder({
+  return new BasicManipulatorBuilder({
     consumer_key_code: code,
     modifiers: parseFromModifierParams(mandatoryModifiers, optionalModifiers),
   })
@@ -56,7 +56,7 @@ export function mapPointingButton(
   mandatoryModifiers?: FromModifierParam,
   optionalModifiers?: FromModifierParam,
 ) {
-  return new ManipulatorBuilder({
+  return new BasicManipulatorBuilder({
     pointing_button: button,
     modifiers: parseFromModifierParams(mandatoryModifiers, optionalModifiers),
   })

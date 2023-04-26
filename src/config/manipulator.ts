@@ -16,7 +16,11 @@ import { ConditionBuilder, isConditionBuilder } from './condition'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 
-export class ManipulatorBuilder {
+export interface ManipulatorBuilder {
+  build(): Manipulator
+}
+
+export class BasicManipulatorBuilder implements ManipulatorBuilder {
   private readonly manipulator: BasicManipulator
 
   constructor(from: FromEvent) {

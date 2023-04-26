@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { FromEvent, ToEvent } from '../karabiner/karabiner-config'
-import { isManipulatorBuilder, ManipulatorBuilder } from './manipulator'
+import { isManipulatorBuilder, BasicManipulatorBuilder } from './manipulator'
 import { ifEventChanged } from './condition'
 
 describe('ManipulatorBuilder', () => {
@@ -8,7 +8,7 @@ describe('ManipulatorBuilder', () => {
   const toEvent: ToEvent = { key_code: 'b', modifiers: ['command'], lazy: true }
 
   test('type and from', () => {
-    expect(new ManipulatorBuilder(from).build()).toEqual({
+    expect(new BasicManipulatorBuilder(from).build()).toEqual({
       type: 'basic',
       from,
     })
@@ -16,7 +16,7 @@ describe('ManipulatorBuilder', () => {
 
   test('to()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .to(toEvent)
         .to('b', '⌘', { lazy: true })
         .build().to,
@@ -24,17 +24,17 @@ describe('ManipulatorBuilder', () => {
   })
 
   test('toHyper(), toMeh()', () => {
-    expect(new ManipulatorBuilder(from).toHyper().build().to).toEqual([
+    expect(new BasicManipulatorBuilder(from).toHyper().build().to).toEqual([
       { key_code: 'left_command', modifiers: ['option', 'control', 'shift'] },
     ])
-    expect(new ManipulatorBuilder(from).toMeh().build().to).toEqual([
+    expect(new BasicManipulatorBuilder(from).toMeh().build().to).toEqual([
       { key_code: 'left_option', modifiers: ['control', 'shift'] },
     ])
   })
 
   test('toConsumerKey()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toConsumerKey('rewind')
         .toConsumerKey('mute', '⌘', { lazy: true })
         .build().to,
@@ -46,7 +46,7 @@ describe('ManipulatorBuilder', () => {
 
   test('toPointingButton()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toPointingButton('button2')
         .toPointingButton('button3', '⌘', { lazy: true })
         .build().to,
@@ -58,7 +58,7 @@ describe('ManipulatorBuilder', () => {
 
   test('toMouseKey()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toMouseKey({ x: 100, y: -100 })
         .toMouseKey({ horizontal_wheel: -100 })
         .toMouseKey({ speed_multiplier: 2 })
@@ -71,7 +71,7 @@ describe('ManipulatorBuilder', () => {
   })
 
   test('to$(), toApp(), toPaste()', () => {
-    const to = new ManipulatorBuilder(from)
+    const to = new BasicManipulatorBuilder(from)
       .to$('cd')
       .toApp('Finder')
       .toApp('Xcode.app')
@@ -85,7 +85,7 @@ describe('ManipulatorBuilder', () => {
 
   test('toApp() with space in name', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toApp('System Settings')
         .toApp('System Settings.app')
         .toApp('"System Settings"')
@@ -101,16 +101,16 @@ describe('ManipulatorBuilder', () => {
 
   test('toVar()', () => {
     expect(
-      new ManipulatorBuilder(from).toVar('a', 1).toVar('b', true).build().to,
+      new BasicManipulatorBuilder(from).toVar('a', 1).toVar('b', 2).build().to,
     ).toEqual([
       { set_variable: { name: 'a', value: 1 } },
-      { set_variable: { name: 'b', value: true } },
+      { set_variable: { name: 'b', value: 2 } },
     ])
   })
 
   test('toMouseCursorPosition()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toMouseCursorPosition({ x: 0, y: 0 })
         .toMouseCursorPosition({ x: '50%', y: '50%', screen: 1 })
         .build().to,
@@ -126,7 +126,7 @@ describe('ManipulatorBuilder', () => {
 
   test('toIfAlone()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toIfAlone(toEvent)
         .toIfAlone('b', '⌘', { lazy: true })
         .build().to_if_alone,
@@ -135,7 +135,7 @@ describe('ManipulatorBuilder', () => {
 
   test('toIfHeldDown()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toIfHeldDown(toEvent)
         .toIfHeldDown('b', '⌘', { lazy: true })
         .build().to_if_held_down,
@@ -144,7 +144,7 @@ describe('ManipulatorBuilder', () => {
 
   test('toAfterKeyUp()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toAfterKeyUp(toEvent)
         .toAfterKeyUp('b', '⌘', { lazy: true })
         .build().to_after_key_up,
@@ -153,7 +153,7 @@ describe('ManipulatorBuilder', () => {
 
   test('toDelayedAction()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .toDelayedAction([{ key_code: 'a' }], [{ key_code: 'b' }])
         .toDelayedAction([{ key_code: 'c' }], [{ key_code: 'd' }])
         .build().to_delayed_action,
@@ -164,7 +164,7 @@ describe('ManipulatorBuilder', () => {
   })
 
   test('description()', () => {
-    const manipulatorBuilder = new ManipulatorBuilder(from)
+    const manipulatorBuilder = new BasicManipulatorBuilder(from)
     expect(manipulatorBuilder.build().description).toBeUndefined()
     manipulatorBuilder.description('a')
     expect(manipulatorBuilder.build().description).toBe('a')
@@ -174,7 +174,7 @@ describe('ManipulatorBuilder', () => {
 
   test('condition()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .condition(ifEventChanged())
         .condition(ifEventChanged(false), ifEventChanged())
         .build().conditions,
@@ -187,7 +187,7 @@ describe('ManipulatorBuilder', () => {
 
   test('parameters()', () => {
     expect(
-      new ManipulatorBuilder(from)
+      new BasicManipulatorBuilder(from)
         .parameters({
           'basic.simultaneous_threshold_milliseconds': 1,
           'basic.to_if_alone_timeout_milliseconds': 2,
@@ -206,5 +206,5 @@ describe('ManipulatorBuilder', () => {
 test('isManipulatorBuilder()', () => {
   const from: FromEvent = { key_code: 'a' }
   expect(isManipulatorBuilder({ type: 'basic', from })).toBe(false)
-  expect(isManipulatorBuilder(new ManipulatorBuilder(from))).toBe(true)
+  expect(isManipulatorBuilder(new BasicManipulatorBuilder(from))).toBe(true)
 })
