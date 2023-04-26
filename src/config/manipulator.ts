@@ -9,9 +9,10 @@ import {
   ToMouseCursorPosition,
   ToVariable,
 } from '../karabiner/karabiner-config'
-import { ModifierParam } from './modifier'
+import { ModifierParam, parseModifierParam } from './modifier'
 import { toKey, ToKeyParam } from './to'
 import { ConditionBuilder, isConditionBuilder } from './condition'
+import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 
 export class ManipulatorBuilder {
   private readonly manipulator: BasicManipulator
@@ -44,6 +45,20 @@ export class ManipulatorBuilder {
   /** To Meh key ⌥⌃⇧ */
   toMeh(options?: ToEventOptions): this {
     this.addToEvent(toKey('left_option', '⌃⇧', options))
+    return this
+  }
+
+  /** To { consumer_key_code } */
+  toConsumerKey(
+    code: ToConsumerKeyCode,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this {
+    this.addToEvent({
+      ...options,
+      consumer_key_code: code,
+      modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
+    })
     return this
   }
 
