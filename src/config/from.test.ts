@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { map, mapConsumerKey, mapSimultaneous } from './from'
+import { map, mapConsumerKey, mapPointingButton, mapSimultaneous } from './from'
 
 test('map()', () => {
   expect(map('/', '⌘⌥', '⌃').build().from).toEqual({
@@ -32,6 +32,13 @@ test('mapSimultaneous()', () => {
 test('mapConsumerKey()', () => {
   expect(mapConsumerKey('menu', '⌘⌥', '⌃').build().from).toEqual({
     consumer_key_code: 'menu',
+    modifiers: { mandatory: ['command', 'option'], optional: ['control'] },
+  })
+})
+
+test('mapPointingButton()', () => {
+  expect(mapPointingButton('button2', '⌘⌥', '⌃').build().from).toEqual({
+    pointing_button: 'button2',
     modifiers: { mandatory: ['command', 'option'], optional: ['control'] },
   })
 })

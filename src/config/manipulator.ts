@@ -13,6 +13,7 @@ import { ModifierParam, parseModifierParam } from './modifier'
 import { toKey, ToKeyParam } from './to'
 import { ConditionBuilder, isConditionBuilder } from './condition'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
+import { PointingButton } from '../karabiner/pointing-button'
 
 export class ManipulatorBuilder {
   private readonly manipulator: BasicManipulator
@@ -57,6 +58,20 @@ export class ManipulatorBuilder {
     this.addToEvent({
       ...options,
       consumer_key_code: code,
+      modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
+    })
+    return this
+  }
+
+  /** Map to mouse button */
+  toPointingButton(
+    button: PointingButton,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this {
+    this.addToEvent({
+      ...options,
+      pointing_button: button,
       modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
     })
     return this
