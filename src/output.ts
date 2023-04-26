@@ -14,14 +14,15 @@ export const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json
  *
- * @param name        The profile name to write the complex_modifications to
+ * @param name        The profile name to write the complex_modifications to.
+ *                    Use '--dry-run' to print the config json into console.
  * @param rules       The complex_modifications rules
  * @param parameters  Extra complex_modifications parameters
  *
  * @see https://karabiner-elements.pqrs.org/docs/json/root-data-structure/
  */
 export function writeToProfile(
-  name: string,
+  name: '--dry-run' | string,
   rules: Array<Rule | RuleBuilder>,
   parameters: ComplexModificationsParameters = {},
 ) {
@@ -50,6 +51,12 @@ export function writeToProfile(
   profile.complex_modifications.parameters = parameters
 
   const json = JSON.stringify(config, null, 2)
+
+  if (name === '--dry-run') {
+    console.info(json)
+    return
+  }
+
   writeFile(karabinerConfigFile, json).catch(exitWithError)
 
   console.log(`✓ Profile ${name} updated.`)
