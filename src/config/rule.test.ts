@@ -7,8 +7,8 @@ test('rule()', () => {
   const condition1 = ifVar('v1').build()
   const condition2 = ifVar('v2').build()
   const condition3 = ifVar('v3').build()
-  const manipulator1 = map('a').to('b').build()
-  const manipulator2 = map('c').to('d').condition(condition3).build()
+  const manipulator1 = map('a').to('b').build()[0]
+  const manipulator2 = map('c').to('d').condition(condition3).build()[0]
   expect(
     rule('test', condition1)
       .condition(condition2)

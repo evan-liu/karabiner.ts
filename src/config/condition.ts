@@ -129,6 +129,10 @@ export function isConditionBuilder(
   return typeof (src as ConditionBuilder).build === 'function'
 }
 
+export function buildCondition(src: Condition | ConditionBuilder): Condition {
+  return isConditionBuilder(src) ? src.build() : src
+}
+
 function formatRegExp(v: string | RegExp) {
   return typeof v === 'string' ? v : v.toString().slice(1, -1)
 }

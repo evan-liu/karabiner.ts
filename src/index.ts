@@ -6,6 +6,7 @@ export * from './utils/multi-modifier'
 export * from './utils/with-condition'
 
 export * from './config/condition'
+export * from './config/double-tap'
 export * from './config/from'
 export * from './config/layer'
 export * from './config/manipulator'

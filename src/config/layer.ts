@@ -27,7 +27,7 @@ export function layer(
 }
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
-  protected readonly layerManipulator: Manipulator
+  protected readonly layerManipulators: Manipulator[]
 
   constructor(
     protected readonly key: LayerKeyParam,
@@ -38,7 +38,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     super(`Layer - ${varName}`, ifVar(varName, onValue))
 
     const key_code = getKeyWithAlias(key) as LayerKeyCode
-    this.layerManipulator = map(key_code)
+    this.layerManipulators = map(key_code)
       .toVar(varName, onValue)
       .toAfterKeyUp(setVar(varName, offValue))
       .toIfAlone({ key_code })
@@ -47,7 +47,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
 
   public build(): Rule {
     const rule = super.build()
-    rule.manipulators = [this.layerManipulator, ...rule.manipulators]
+    rule.manipulators = [...this.layerManipulators, ...rule.manipulators]
     return rule
   }
 }

@@ -12,16 +12,16 @@ import {
 } from '../karabiner/karabiner-config'
 import { ModifierParam, parseModifierParam } from './modifier'
 import { toKey, ToKeyParam } from './to'
-import { ConditionBuilder, isConditionBuilder } from './condition'
+import { buildCondition, ConditionBuilder } from './condition'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 
 export interface ManipulatorBuilder {
-  build(): Manipulator
+  build(): Manipulator[]
 }
 
 export class BasicManipulatorBuilder implements ManipulatorBuilder {
-  private readonly manipulator: BasicManipulator
+  protected readonly manipulator: BasicManipulator
 
   constructor(from: FromEvent) {
     this.manipulator = { type: 'basic', from }
@@ -207,8 +207,7 @@ set the clipboard to prev'`)
 
   condition(...v: Array<Condition | ConditionBuilder>): this {
     const { conditions = [] } = this.manipulator
-    v.forEach((c) => conditions.push(isConditionBuilder(c) ? c.build() : c))
-    this.manipulator.conditions = conditions
+    this.manipulator.conditions = [...conditions, ...v.map(buildCondition)]
     return this
   }
 
@@ -217,15 +216,15 @@ set the clipboard to prev'`)
     return this
   }
 
-  build(): BasicManipulator {
-    return { ...this.manipulator }
+  build(): BasicManipulator[] {
+    return [{ ...this.manipulator }]
   }
 
-  private addToEvent(event: ToEvent) {
+  protected addToEvent(event: ToEvent) {
     this.pushOrCreateList(this.manipulator, 'to', event)
   }
 
-  private pushOrCreateList<T extends {}>(obj: T, key: keyof T, item: any) {
+  protected pushOrCreateList<T extends {}>(obj: T, key: keyof T, item: any) {
     const list = (obj[key] || []) as any[]
     list.push(item)
     Object.assign(obj, { [key]: list })
@@ -236,4 +235,10 @@ export function isManipulatorBuilder(
   src: Manipulator | ManipulatorBuilder,
 ): src is ManipulatorBuilder {
   return typeof (src as ManipulatorBuilder).build === 'function'
+}
+
+export function buildManipulators(
+  src: Manipulator | ManipulatorBuilder,
+): Manipulator[] {
+  return isManipulatorBuilder(src) ? src.build() : [src]
 }

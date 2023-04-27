@@ -6,7 +6,7 @@ import {
   MouseMotionToScrollOptions,
 } from '../karabiner/karabiner-config'
 import { FromModifierParam, parseFromModifierParams } from './modifier'
-import { ConditionBuilder, isConditionBuilder } from './condition'
+import { buildCondition, ConditionBuilder } from './condition'
 
 export function mouseMotionToScroll() {
   return new MouseMotionToScrollManipulatorBuilder()
@@ -31,8 +31,7 @@ export class MouseMotionToScrollManipulatorBuilder
 
   condition(...v: Array<Condition | ConditionBuilder>): this {
     const { conditions = [] } = this.manipulator
-    v.forEach((c) => conditions.push(isConditionBuilder(c) ? c.build() : c))
-    this.manipulator.conditions = conditions
+    this.manipulator.conditions = [...conditions, ...v.map(buildCondition)]
     return this
   }
 
@@ -41,7 +40,7 @@ export class MouseMotionToScrollManipulatorBuilder
     return this
   }
 
-  public build(): Manipulator {
-    return { ...this.manipulator }
+  public build(): Manipulator[] {
+    return [{ ...this.manipulator }]
   }
 }
