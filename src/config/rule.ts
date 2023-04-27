@@ -1,5 +1,5 @@
 import { Condition, Manipulator, Rule } from '../karabiner/karabiner-config'
-import { isManipulatorBuilder, ManipulatorBuilder } from './manipulator'
+import { buildManipulators, ManipulatorBuilder } from './manipulator'
 import { ConditionBuilder, isConditionBuilder } from './condition'
 
 export function rule(
@@ -23,7 +23,7 @@ export class BasicRuleBuilder implements RuleBuilder {
 
   manipulators(src: Array<Manipulator | ManipulatorBuilder>): this {
     src.forEach((v) =>
-      this.rule.manipulators.push(isManipulatorBuilder(v) ? v.build() : v),
+      buildManipulators(v).forEach((m) => this.rule.manipulators.push(m)),
     )
     return this
   }

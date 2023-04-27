@@ -17,7 +17,7 @@ import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 
 export interface ManipulatorBuilder {
-  build(): Manipulator
+  build(): Manipulator | Manipulator[]
 }
 
 export class BasicManipulatorBuilder implements ManipulatorBuilder {
@@ -236,4 +236,12 @@ export function isManipulatorBuilder(
   src: Manipulator | ManipulatorBuilder,
 ): src is ManipulatorBuilder {
   return typeof (src as ManipulatorBuilder).build === 'function'
+}
+
+export function buildManipulators(
+  src: Manipulator | ManipulatorBuilder,
+): Manipulator[] {
+  if (!isManipulatorBuilder(src)) return [src]
+  const result = src.build()
+  return Array.isArray(result) ? result : [result]
 }
