@@ -1,6 +1,6 @@
 import { Condition, Manipulator, Rule } from '../karabiner/karabiner-config'
 import { buildManipulators, ManipulatorBuilder } from './manipulator'
-import { ConditionBuilder, isConditionBuilder } from './condition'
+import { buildCondition, ConditionBuilder } from './condition'
 
 export function rule(
   description: string,
@@ -41,9 +41,7 @@ export class BasicRuleBuilder implements RuleBuilder {
 
     if (this.conditions.length === 0) return rule
 
-    const conditions = this.conditions.map((condition) =>
-      isConditionBuilder(condition) ? condition.build() : condition,
-    )
+    const conditions = this.conditions.map(buildCondition)
     rule.manipulators = rule.manipulators.map((v) =>
       v.type === 'basic'
         ? { ...v, conditions: [...(v.conditions || []), ...conditions] }
@@ -59,4 +57,8 @@ export interface RuleBuilder {
 
 export function isRuleBuilder(src: Rule | RuleBuilder): src is RuleBuilder {
   return typeof (src as RuleBuilder).build === 'function'
+}
+
+export function buildRule(src: Rule | RuleBuilder): Rule {
+  return isRuleBuilder(src) ? src.build() : src
 }

@@ -6,7 +6,7 @@ import {
   KarabinerConfig,
   Rule,
 } from './karabiner/karabiner-config'
-import { isRuleBuilder, RuleBuilder } from './config/rule'
+import { buildRule, RuleBuilder } from './config/rule'
 
 export const karabinerConfigDir = join(homedir(), '.config/karabiner')
 export const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
@@ -40,9 +40,7 @@ export function writeToProfile(
  `)
 
   try {
-    profile.complex_modifications.rules = rules.map((v) =>
-      isRuleBuilder(v) ? v.build() : v,
-    )
+    profile.complex_modifications.rules = rules.map(buildRule)
   } catch (e) {
     exitWithError(e)
   }

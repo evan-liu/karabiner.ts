@@ -1,6 +1,6 @@
 import { Condition, Manipulator } from '../karabiner/karabiner-config'
 import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
-import { ConditionBuilder, isConditionBuilder } from '../config/condition'
+import { buildCondition, ConditionBuilder } from '../config/condition'
 
 /** A high-order function to add condition to a group of manipulators */
 export function withCondition(
@@ -9,10 +9,7 @@ export function withCondition(
   return (
     manipulators: Array<Manipulator | ManipulatorBuilder>,
   ): Manipulator[] => {
-    const sharedConditions = conditions.map((v) =>
-      isConditionBuilder(v) ? v.build() : v,
-    )
-
+    const sharedConditions = conditions.map(buildCondition)
     function addSharedConditions(manipulator: Manipulator) {
       if (manipulator.type !== 'basic') return manipulator
       return {

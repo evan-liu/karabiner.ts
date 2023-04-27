@@ -12,7 +12,7 @@ import {
 } from '../karabiner/karabiner-config'
 import { ModifierParam, parseModifierParam } from './modifier'
 import { toKey, ToKeyParam } from './to'
-import { ConditionBuilder, isConditionBuilder } from './condition'
+import { buildCondition, ConditionBuilder } from './condition'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 
@@ -207,8 +207,7 @@ set the clipboard to prev'`)
 
   condition(...v: Array<Condition | ConditionBuilder>): this {
     const { conditions = [] } = this.manipulator
-    v.forEach((c) => conditions.push(isConditionBuilder(c) ? c.build() : c))
-    this.manipulator.conditions = conditions
+    this.manipulator.conditions = [...conditions, ...v.map(buildCondition)]
     return this
   }
 
