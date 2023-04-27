@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import { map, mapConsumerKey, mapPointingButton, mapSimultaneous } from './from'
 
 test('map()', () => {
-  expect(map('/', '⌘⌥', '⌃').build().from).toEqual({
+  expect(map('/', '⌘⌥', '⌃').build()[0].from).toEqual({
     key_code: 'slash',
     modifiers: { mandatory: ['command', 'option'], optional: ['control'] },
   })
@@ -13,7 +13,7 @@ test('mapSimultaneous()', () => {
     ['a', '←', 2],
     { key_up_order: 'strict' },
     123,
-  ).build()
+  ).build()[0]
   expect(from).toEqual({
     simultaneous: [
       { key_code: 'a' },
@@ -26,18 +26,18 @@ test('mapSimultaneous()', () => {
     'basic.simultaneous_threshold_milliseconds': 123,
   })
 
-  expect(mapSimultaneous([1, 2]).build().parameters).toBeUndefined()
+  expect(mapSimultaneous([1, 2]).build()[0].parameters).toBeUndefined()
 })
 
 test('mapConsumerKey()', () => {
-  expect(mapConsumerKey('menu', '⌘⌥', '⌃').build().from).toEqual({
+  expect(mapConsumerKey('menu', '⌘⌥', '⌃').build()[0].from).toEqual({
     consumer_key_code: 'menu',
     modifiers: { mandatory: ['command', 'option'], optional: ['control'] },
   })
 })
 
 test('mapPointingButton()', () => {
-  expect(mapPointingButton('button2', '⌘⌥', '⌃').build().from).toEqual({
+  expect(mapPointingButton('button2', '⌘⌥', '⌃').build()[0].from).toEqual({
     pointing_button: 'button2',
     modifiers: { mandatory: ['command', 'option'], optional: ['control'] },
   })

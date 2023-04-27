@@ -8,7 +8,7 @@ test('mouseMotionToScroll()', () => {
       .modifiers('⌘⌥', '⌃')
       .condition(ifVar('a'))
       .options({ speed_multiplier: 2 })
-      .build(),
+      .build()[0],
   ).toEqual({
     type: 'mouse_motion_to_scroll',
     from: {

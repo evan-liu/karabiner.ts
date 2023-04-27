@@ -8,7 +8,7 @@ describe('ManipulatorBuilder', () => {
   const toEvent: ToEvent = { key_code: 'b', modifiers: ['command'], lazy: true }
 
   test('type and from', () => {
-    expect(new BasicManipulatorBuilder(from).build()).toEqual({
+    expect(new BasicManipulatorBuilder(from).build()[0]).toEqual({
       type: 'basic',
       from,
     })
@@ -19,15 +19,15 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .to(toEvent)
         .to('b', '⌘', { lazy: true })
-        .build().to,
+        .build()[0].to,
     ).toEqual([toEvent, toEvent])
   })
 
   test('toHyper(), toMeh()', () => {
-    expect(new BasicManipulatorBuilder(from).toHyper().build().to).toEqual([
+    expect(new BasicManipulatorBuilder(from).toHyper().build()[0].to).toEqual([
       { key_code: 'left_command', modifiers: ['option', 'control', 'shift'] },
     ])
-    expect(new BasicManipulatorBuilder(from).toMeh().build().to).toEqual([
+    expect(new BasicManipulatorBuilder(from).toMeh().build()[0].to).toEqual([
       { key_code: 'left_option', modifiers: ['control', 'shift'] },
     ])
   })
@@ -37,7 +37,7 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toConsumerKey('rewind')
         .toConsumerKey('mute', '⌘', { lazy: true })
-        .build().to,
+        .build()[0].to,
     ).toEqual([
       { consumer_key_code: 'rewind' },
       { consumer_key_code: 'mute', modifiers: ['command'], lazy: true },
@@ -49,7 +49,7 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toPointingButton('button2')
         .toPointingButton('button3', '⌘', { lazy: true })
-        .build().to,
+        .build()[0].to,
     ).toEqual([
       { pointing_button: 'button2' },
       { pointing_button: 'button3', modifiers: ['command'], lazy: true },
@@ -62,7 +62,7 @@ describe('ManipulatorBuilder', () => {
         .toMouseKey({ x: 100, y: -100 })
         .toMouseKey({ horizontal_wheel: -100 })
         .toMouseKey({ speed_multiplier: 2 })
-        .build().to,
+        .build()[0].to,
     ).toEqual([
       { mouse_key: { x: 100, y: -100 } },
       { mouse_key: { horizontal_wheel: -100 } },
@@ -76,7 +76,7 @@ describe('ManipulatorBuilder', () => {
       .toApp('Finder')
       .toApp('Xcode.app')
       .toPaste('test')
-      .build().to as Array<{ shell_command: string }>
+      .build()[0].to as Array<{ shell_command: string }>
     expect(to[0]).toEqual({ shell_command: 'cd' })
     expect(to[1]).toEqual({ shell_command: 'open -a "Finder".app' })
     expect(to[2]).toEqual({ shell_command: 'open -a "Xcode".app' })
@@ -90,7 +90,7 @@ describe('ManipulatorBuilder', () => {
         .toApp('System Settings.app')
         .toApp('"System Settings"')
         .toApp('"System Settings.app"')
-        .build().to as Array<{ shell_command: string }>,
+        .build()[0].to as Array<{ shell_command: string }>,
     ).toEqual([
       { shell_command: 'open -a "System Settings".app' },
       { shell_command: 'open -a "System Settings".app' },
@@ -101,7 +101,8 @@ describe('ManipulatorBuilder', () => {
 
   test('toVar()', () => {
     expect(
-      new BasicManipulatorBuilder(from).toVar('a', 1).toVar('b', 2).build().to,
+      new BasicManipulatorBuilder(from).toVar('a', 1).toVar('b', 2).build()[0]
+        .to,
     ).toEqual([
       { set_variable: { name: 'a', value: 1 } },
       { set_variable: { name: 'b', value: 2 } },
@@ -113,7 +114,7 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toMouseCursorPosition({ x: 0, y: 0 })
         .toMouseCursorPosition({ x: '50%', y: '50%', screen: 1 })
-        .build().to,
+        .build()[0].to,
     ).toEqual([
       { software_function: { set_mouse_cursor_position: { x: 0, y: 0 } } },
       {
@@ -129,7 +130,7 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toIfAlone(toEvent)
         .toIfAlone('b', '⌘', { lazy: true })
-        .build().to_if_alone,
+        .build()[0].to_if_alone,
     ).toEqual([toEvent, toEvent])
   })
 
@@ -138,7 +139,7 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toIfHeldDown(toEvent)
         .toIfHeldDown('b', '⌘', { lazy: true })
-        .build().to_if_held_down,
+        .build()[0].to_if_held_down,
     ).toEqual([toEvent, toEvent])
   })
 
@@ -147,7 +148,7 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toAfterKeyUp(toEvent)
         .toAfterKeyUp('b', '⌘', { lazy: true })
-        .build().to_after_key_up,
+        .build()[0].to_after_key_up,
     ).toEqual([toEvent, toEvent])
   })
 
@@ -156,7 +157,7 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toDelayedAction([{ key_code: 'a' }], [{ key_code: 'b' }])
         .toDelayedAction([{ key_code: 'c' }], [{ key_code: 'd' }])
-        .build().to_delayed_action,
+        .build()[0].to_delayed_action,
     ).toEqual({
       to_if_invoked: [{ key_code: 'a' }, { key_code: 'c' }],
       to_if_canceled: [{ key_code: 'b' }, { key_code: 'd' }],
@@ -165,11 +166,11 @@ describe('ManipulatorBuilder', () => {
 
   test('description()', () => {
     const manipulatorBuilder = new BasicManipulatorBuilder(from)
-    expect(manipulatorBuilder.build().description).toBeUndefined()
+    expect(manipulatorBuilder.build()[0].description).toBeUndefined()
     manipulatorBuilder.description('a')
-    expect(manipulatorBuilder.build().description).toBe('a')
+    expect(manipulatorBuilder.build()[0].description).toBe('a')
     manipulatorBuilder.description('b')
-    expect(manipulatorBuilder.build().description).toBe('b')
+    expect(manipulatorBuilder.build()[0].description).toBe('b')
   })
 
   test('condition()', () => {
@@ -177,7 +178,7 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .condition(ifEventChanged())
         .condition(ifEventChanged(false), ifEventChanged())
-        .build().conditions,
+        .build()[0].conditions,
     ).toEqual([
       { type: 'event_changed_if', value: true },
       { type: 'event_changed_if', value: false },
@@ -195,7 +196,7 @@ describe('ManipulatorBuilder', () => {
         .parameters({
           'basic.simultaneous_threshold_milliseconds': 3,
         })
-        .build().parameters,
+        .build()[0].parameters,
     ).toEqual({
       'basic.simultaneous_threshold_milliseconds': 3,
       'basic.to_if_alone_timeout_milliseconds': 2,

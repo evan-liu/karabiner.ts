@@ -40,7 +40,7 @@ export class MouseMotionToScrollManipulatorBuilder
     return this
   }
 
-  public build(): Manipulator {
-    return { ...this.manipulator }
+  public build(): Manipulator[] {
+    return [{ ...this.manipulator }]
   }
 }

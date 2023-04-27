@@ -17,7 +17,7 @@ import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 
 export interface ManipulatorBuilder {
-  build(): Manipulator | Manipulator[]
+  build(): Manipulator[]
 }
 
 export class BasicManipulatorBuilder implements ManipulatorBuilder {
@@ -216,8 +216,8 @@ set the clipboard to prev'`)
     return this
   }
 
-  build(): BasicManipulator {
-    return { ...this.manipulator }
+  build(): BasicManipulator[] {
+    return [{ ...this.manipulator }]
   }
 
   private addToEvent(event: ToEvent) {
@@ -240,7 +240,5 @@ export function isManipulatorBuilder(
 export function buildManipulators(
   src: Manipulator | ManipulatorBuilder,
 ): Manipulator[] {
-  if (!isManipulatorBuilder(src)) return [src]
-  const result = src.build()
-  return Array.isArray(result) ? result : [result]
+  return isManipulatorBuilder(src) ? src.build() : [src]
 }
