@@ -21,7 +21,7 @@ export interface ManipulatorBuilder {
 }
 
 export class BasicManipulatorBuilder implements ManipulatorBuilder {
-  private readonly manipulator: BasicManipulator
+  protected readonly manipulator: BasicManipulator
 
   constructor(from: FromEvent) {
     this.manipulator = { type: 'basic', from }
@@ -220,11 +220,11 @@ set the clipboard to prev'`)
     return [{ ...this.manipulator }]
   }
 
-  private addToEvent(event: ToEvent) {
+  protected addToEvent(event: ToEvent) {
     this.pushOrCreateList(this.manipulator, 'to', event)
   }
 
-  private pushOrCreateList<T extends {}>(obj: T, key: keyof T, item: any) {
+  protected pushOrCreateList<T extends {}>(obj: T, key: keyof T, item: any) {
     const list = (obj[key] || []) as any[]
     list.push(item)
     Object.assign(obj, { [key]: list })
