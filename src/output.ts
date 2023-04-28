@@ -7,9 +7,13 @@ import {
   Rule,
 } from './karabiner/karabiner-config'
 import { buildRule, RuleBuilder } from './config/rule'
+import { doubleTapParameters } from './config/double-tap'
 
 export const karabinerConfigDir = join(homedir(), '.config/karabiner')
 export const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
+
+type Parameters = ComplexModificationsParameters &
+  Partial<typeof doubleTapParameters>
 
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json
@@ -24,8 +28,22 @@ export const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
 export function writeToProfile(
   name: '--dry-run' | string,
   rules: Array<Rule | RuleBuilder>,
-  parameters: ComplexModificationsParameters = {},
+  parameters: Parameters = {},
 ) {
+  if (parameters['double_tap.delay_milliseconds']) {
+    doubleTapParameters['double_tap.delay_milliseconds'] =
+      parameters['double_tap.delay_milliseconds']
+    delete parameters['double_tap.delay_milliseconds']
+  }
+  const profileParameters: ComplexModificationsParameters = {
+    'basic.to_if_alone_timeout_milliseconds': 1000,
+    'basic.to_if_held_down_threshold_milliseconds': 500,
+    'basic.to_delayed_action_delay_milliseconds': 500,
+    'basic.simultaneous_threshold_milliseconds': 50,
+    'mouse_motion_to_scroll.speed': 100,
+    ...parameters,
+  }
+
   const config: KarabinerConfig =
     name === '--dry-run'
       ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
@@ -50,7 +68,7 @@ export function writeToProfile(
     }
   }
 
-  profile.complex_modifications.parameters = parameters
+  profile.complex_modifications.parameters = profileParameters
 
   const json = JSON.stringify(config, null, 2)
 
