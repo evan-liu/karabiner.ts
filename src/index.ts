@@ -4,6 +4,7 @@ export * from './karabiner/karabiner-config'
 export * from './utils/key-alias'
 export * from './utils/multi-modifier'
 export * from './utils/with-condition'
+export * from './utils/with-modifier'
 
 export * from './config/condition'
 export * from './config/double-tap'

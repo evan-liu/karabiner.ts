@@ -15,4 +15,5 @@ test('withCondition()', () => {
     [ifA],
     [ifB, ifA],
   ])
+  expect(manipulators.build().length).toBe(2)
 })
