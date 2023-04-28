@@ -27,6 +27,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "postbuild": "node scripts/fix-with-mapper-types.js",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
