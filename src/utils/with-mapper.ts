@@ -1,8 +1,6 @@
 import { FromKeyParam } from '../config/from'
 import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
 import { Manipulator } from '../karabiner/karabiner-config'
-import { FromKeyCode } from '../karabiner/key-code'
-import { getKeyWithAlias } from './key-alias'
 
 /**
  *  A high-order function to map an array of keys.
@@ -12,10 +10,10 @@ import { getKeyWithAlias } from './key-alias'
  *      (key) => map(key).to(key, '⌘⌥')
  *    )
  */
-export function withMapper(
-  src: FromKeyParam[],
+export function withMapper<const T>(
+  src: readonly T[],
 ): (
-  mapper: (key: FromKeyCode) => Manipulator | ManipulatorBuilder,
+  mapper: (key: T, index: number) => Manipulator | ManipulatorBuilder,
 ) => ManipulatorBuilder
 
 /**
@@ -26,27 +24,24 @@ export function withMapper(
  *      (k, v) => map(k).to(v)
  *    )
  */
-export function withMapper<T = string>(
-  src: Partial<Record<FromKeyParam, T>>,
+export function withMapper<const K extends string | number, const V>(
+  src: Partial<Record<K, V>>,
 ): (
-  mapper: (key: FromKeyCode, value: any) => Manipulator | ManipulatorBuilder,
+  mapper: (key: K, value: V) => Manipulator | ManipulatorBuilder,
 ) => ManipulatorBuilder
 
 export function withMapper(
-  src: FromKeyParam[] | Partial<Record<FromKeyParam, any>>,
+  src: any[] | Partial<Record<any, any>>,
 ): (
-  mapper: (key: FromKeyCode, value?: any) => Manipulator | ManipulatorBuilder,
+  mapper: (key: FromKeyParam, value?: any) => Manipulator | ManipulatorBuilder,
 ) => ManipulatorBuilder {
   return (mapper) => ({
     build: () => {
       const entries = (
-        Array.isArray(src) ? src.map((v) => [v]) : Object.entries(src)
+        Array.isArray(src) ? src.map((v, i) => [v, i]) : Object.entries(src)
       ) as Array<[FromKeyParam, any]>
       return entries.reduce(
-        (r, [k, v]) => [
-          ...r,
-          ...buildManipulators(mapper(getKeyWithAlias(k) as FromKeyCode, v)),
-        ],
+        (r, [k, v]) => [...r, ...buildManipulators(mapper(k, v))],
         [] as Manipulator[],
       )
     },
