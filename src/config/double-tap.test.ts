@@ -31,6 +31,7 @@ test('mapDoubleTap()', () => {
         ],
         to_if_canceled: [{ set_variable: { name: 'double-tap-1', value: 0 } }],
       },
+      parameters: { 'basic.to_delayed_action_delay_milliseconds': 200 },
     },
   ])
 

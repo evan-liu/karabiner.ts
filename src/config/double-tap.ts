@@ -6,9 +6,16 @@ import { FromAndToKeyCode } from '../karabiner/key-code'
 import { ifVar } from './condition'
 import { setVar } from './to'
 
+export const doubleTapParameters = {
+  'double_tap.delay_milliseconds': 200,
+}
+
 export type DoubleTapParam = FromAndToKeyCode | KeyAlias | NumberKeyValue
 
-export function mapDoubleTap(key: DoubleTapParam, delay?: number) {
+export function mapDoubleTap(
+  key: DoubleTapParam,
+  delay = doubleTapParameters['double_tap.delay_milliseconds'],
+) {
   return new DoubleTapManipulatorBuilder(key, delay)
 }
 
@@ -16,7 +23,7 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
   private readonly keyCode: FromAndToKeyCode
   private readonly varName: string
 
-  constructor(key: FromKeyParam, private readonly delay?: number) {
+  constructor(key: FromKeyParam, private readonly delay: number) {
     const keyCode = getKeyWithAlias(key) as FromAndToKeyCode
     super({ key_code: keyCode })
 
@@ -44,10 +51,8 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
         to_if_canceled: [setVar(this.varName, 0)],
       },
     }
-    if (this.delay && this.delay > 0) {
-      toggleManipulator.parameters = {
-        'basic.to_delayed_action_delay_milliseconds': this.delay,
-      }
+    toggleManipulator.parameters = {
+      'basic.to_delayed_action_delay_milliseconds': this.delay,
     }
 
     return [baseManipulator, toggleManipulator]
