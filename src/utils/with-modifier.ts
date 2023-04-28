@@ -1,10 +1,6 @@
-import { BasicManipulator } from '../karabiner/karabiner-config'
+import { Manipulator, Modifier } from '../karabiner/karabiner-config'
 import { FromModifierParam, parseFromModifierParams } from '../config/modifier'
-import {
-  BasicManipulatorBuilder,
-  buildManipulators,
-  ManipulatorBuilder,
-} from '../config/manipulator'
+import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
 
 /**
  * A high-order function to add modifiers to a group of manipulators
@@ -19,37 +15,37 @@ export function withModifier(
   mandatoryModifiers: FromModifierParam,
   optionalModifiers?: FromModifierParam,
 ): (
-  manipulators: Array<BasicManipulator | BasicManipulatorBuilder>,
+  manipulators: Array<Manipulator | ManipulatorBuilder>,
 ) => ManipulatorBuilder {
-  return (manipulators) => {
-    const sharedModifiers = parseFromModifierParams(
-      mandatoryModifiers,
-      optionalModifiers,
-    )!
-    function addSharedModifiers(src: BasicManipulator): BasicManipulator {
-      const modifiers = (
-        Object.keys(sharedModifiers) as Array<keyof typeof sharedModifiers>
-      ).reduce(
-        (r, key) => {
-          if (!sharedModifiers[key]?.length) return r
-          Object.assign(r, {
-            [key]: Array.from(
-              new Set([...(r[key] || []), ...sharedModifiers[key]!]),
-            ),
-          })
-          return r
-        },
-        { ...src.from.modifiers },
-      )
-      return { ...src, from: { ...src.from, modifiers } }
-    }
-
-    return {
-      build: () =>
-        manipulators
-          .map(buildManipulators)
-          .reduce((r, v) => r.concat(v), [])
-          .map((v) => addSharedModifiers(v as BasicManipulator)),
-    }
-  }
+  return (manipulators) => ({
+    build: () => {
+      const sharedModifiers = parseFromModifierParams(
+        mandatoryModifiers,
+        optionalModifiers,
+      )!
+      return manipulators
+        .map(buildManipulators)
+        .reduce((result, manipulator) => result.concat(manipulator), [])
+        .map((src) => {
+          const modifiers = (
+            Object.keys(sharedModifiers) as Array<keyof typeof sharedModifiers>
+          ).reduce(
+            (result, key) => {
+              if (!sharedModifiers[key]?.length) return result
+              const modifierSet = new Set([
+                ...(result[key] || []),
+                ...sharedModifiers[key]!,
+              ])
+              result[key] = modifierSet.has('any')
+                ? ['any']
+                : (Array.from(modifierSet) as Modifier[])
+              return result
+            },
+            { ...src.from?.modifiers },
+          )
+          src.from = { ...src.from, modifiers }
+          return src
+        })
+    },
+  })
 }

@@ -38,8 +38,13 @@ describe('withModifier()', () => {
 
   test('Remove duplicated modifier', () => {
     expect(
-      withModifier('⌘')([map(1, '⌘').to('a')]).build()[0].from?.modifiers
-        ?.mandatory,
-    ).toEqual(['command'])
+      withModifier('⌘')([map(1, '⌘').to('a')]).build()[0].from?.modifiers,
+    ).toEqual({ mandatory: ['command'] })
+  })
+
+  test('any modifier', () => {
+    expect(
+      withModifier('⌘')([map(1, 'any').to('a')]).build()[0].from?.modifiers,
+    ).toEqual({ mandatory: ['any'] })
   })
 })
