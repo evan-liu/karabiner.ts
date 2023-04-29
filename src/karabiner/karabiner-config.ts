@@ -22,9 +22,9 @@ export type SimultaneousOptions = {
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/ */
 export type FromEvent = (
-  | { key_code: FromKeyCode }
-  | { consumer_key_code: string }
-  | { pointing_button: string }
+  | { key_code: FromKeyCode | number }
+  | { consumer_key_code: string | number }
+  | { pointing_button: string | number }
   | { any: 'key_code' | 'consumer_key_code' | 'pointing_button' }
   | {
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous/ */

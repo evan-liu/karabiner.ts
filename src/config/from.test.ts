@@ -6,6 +6,7 @@ test('map()', () => {
     key_code: 'slash',
     modifiers: { mandatory: ['command', 'option'], optional: ['control'] },
   })
+  expect(map({ key_code: 33 }).build()[0].from).toEqual({ key_code: 33 })
 })
 
 test('mapSimultaneous()', () => {

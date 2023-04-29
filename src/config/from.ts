@@ -2,19 +2,28 @@ import { FromKeyCode } from '../karabiner/key-code'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
 import { FromModifierParam, parseFromModifierParams } from './modifier'
 import { BasicManipulatorBuilder } from './manipulator'
-import { SimultaneousOptions } from '../karabiner/karabiner-config'
+import { FromEvent, SimultaneousOptions } from '../karabiner/karabiner-config'
 import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 
 export type FromKeyParam = FromKeyCode | KeyAlias | NumberKeyValue
 
+export function map(from: FromEvent): BasicManipulatorBuilder
 export function map(
   key: FromKeyParam,
   mandatoryModifiers?: FromModifierParam,
   optionalModifiers?: FromModifierParam,
+): BasicManipulatorBuilder
+export function map(
+  keyOrEvent: FromKeyParam | FromEvent,
+  mandatoryModifiers?: FromModifierParam,
+  optionalModifiers?: FromModifierParam,
 ) {
+  if (typeof keyOrEvent === 'object')
+    return new BasicManipulatorBuilder(keyOrEvent)
+
   return new BasicManipulatorBuilder({
-    key_code: getKeyWithAlias(key) as FromKeyCode,
+    key_code: getKeyWithAlias(keyOrEvent) as FromKeyCode,
     modifiers: parseFromModifierParams(mandatoryModifiers, optionalModifiers),
   })
 }
