@@ -42,7 +42,7 @@ export type FromEvent = (
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/select-input-source/ */
 export type ToInputSource = {
-  language: string
+  language?: string
   input_source_id?: string
   input_mode_id?: string
 }

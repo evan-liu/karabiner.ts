@@ -6,6 +6,7 @@ import {
   Manipulator,
   ToEvent,
   ToEventOptions,
+  ToInputSource,
   ToMouseCursorPosition,
   ToMouseKey,
   ToVariable,
@@ -111,6 +112,12 @@ tell application "System Events"
   delay 0.1
 end tell
 set the clipboard to prev'`)
+  }
+
+  /** To change the current input source */
+  toInputSource(inputSource: ToInputSource): this {
+    this.addToEvent({ select_input_source: inputSource })
+    return this
   }
 
   /** Map to setting a variable */

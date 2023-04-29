@@ -99,6 +99,14 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toInputSource()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toInputSource({ language: 'en' })
+        .build()[0].to,
+    ).toEqual([{ select_input_source: { language: 'en' } }])
+  })
+
   test('toVar()', () => {
     expect(
       new BasicManipulatorBuilder(from).toVar('a', 1).toVar('b', 2).build()[0]
