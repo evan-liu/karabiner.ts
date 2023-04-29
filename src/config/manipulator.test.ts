@@ -23,6 +23,10 @@ describe('ManipulatorBuilder', () => {
     ).toEqual([toEvent, toEvent])
   })
 
+  test('to([])', () => {
+    expect(new BasicManipulatorBuilder(from).to([]).build()[0].to).toEqual([])
+  })
+
   test('toHyper(), toMeh()', () => {
     expect(new BasicManipulatorBuilder(from).toHyper().build()[0].to).toEqual([
       { key_code: 'left_command', modifiers: ['option', 'control', 'shift'] },

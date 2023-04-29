@@ -29,18 +29,22 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     this.manipulator = { type: 'basic', from }
   }
 
-  to(event: ToEvent): this
+  to(event: ToEvent | ToEvent[]): this
   to(key: ToKeyParam, modifiers?: ModifierParam, options?: ToEventOptions): this
   to(
-    keyOrEvent: ToEvent | ToKeyParam,
+    keyOrEvent: ToEvent | ToKeyParam | ToEvent[],
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this {
-    this.addToEvent(
-      typeof keyOrEvent === 'string' || typeof keyOrEvent === 'number'
-        ? toKey(keyOrEvent, modifiers, options)
-        : keyOrEvent,
-    )
+    if (Array.isArray(keyOrEvent)) {
+      this.manipulator.to = [...(this.manipulator.to || []), ...keyOrEvent]
+    } else {
+      this.addToEvent(
+        typeof keyOrEvent === 'string' || typeof keyOrEvent === 'number'
+          ? toKey(keyOrEvent, modifiers, options)
+          : keyOrEvent,
+      )
+    }
     return this
   }
 
