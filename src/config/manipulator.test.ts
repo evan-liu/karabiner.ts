@@ -109,6 +109,13 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toStickyModifier()', () => {
+    const manipulator = new BasicManipulatorBuilder(from)
+      .toStickyModifier('fn')
+      .build()[0]
+    expect(manipulator.to).toEqual([{ sticky_modifier: { fn: 'toggle' } }])
+  })
+
   test('toMouseCursorPosition()', () => {
     expect(
       new BasicManipulatorBuilder(from)

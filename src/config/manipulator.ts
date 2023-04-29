@@ -15,6 +15,7 @@ import { toKey, ToKeyParam } from './to'
 import { buildCondition, ConditionBuilder } from './condition'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
+import { StickyModifierKeyCode } from '../karabiner/key-code'
 
 export interface ManipulatorBuilder {
   build(): Manipulator[]
@@ -115,6 +116,15 @@ set the clipboard to prev'`)
   /** Map to setting a variable */
   toVar(name: string, value: ToVariable['value'] = 1): this {
     this.addToEvent({ set_variable: { name, value } })
+    return this
+  }
+
+  /** Changes to a sticky modifier key */
+  toStickyModifier(
+    key: StickyModifierKeyCode,
+    value: 'on' | 'off' | 'toggle' = 'toggle',
+  ): this {
+    this.addToEvent({ sticky_modifier: { [key]: value } })
     return this
   }
 
