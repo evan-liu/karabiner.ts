@@ -11,8 +11,27 @@ import {
   ToMouseKey,
   ToVariable,
 } from '../karabiner/karabiner-config'
-import { ModifierParam, parseModifierParam } from './modifier'
-import { toKey, ToKeyParam } from './to'
+import { ModifierParam } from './modifier'
+import {
+  to$,
+  toApp,
+  toCgEventDoubleClick,
+  toConsumerKey,
+  toHyper,
+  toInputSource,
+  toKey,
+  ToKeyParam,
+  toMeh,
+  toMouseCursorPosition,
+  toMouseKey,
+  toNotificationMessage,
+  toPaste,
+  toPointingButton,
+  toRemoveNotificationMessage,
+  toSetVar,
+  toSleepSystem,
+  toStickyModifier,
+} from './to'
 import { buildCondition, ConditionBuilder } from './condition'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
@@ -50,13 +69,13 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
 
   /** To Hyper key ⌘⌥⌃⇧ */
   toHyper(options?: ToEventOptions): this {
-    this.addToEvent(toKey('left_command', '⌥⌃⇧', options))
+    this.addToEvent(toHyper(options))
     return this
   }
 
   /** To Meh key ⌥⌃⇧ */
   toMeh(options?: ToEventOptions): this {
-    this.addToEvent(toKey('left_option', '⌃⇧', options))
+    this.addToEvent(toMeh(options))
     return this
   }
 
@@ -66,11 +85,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this {
-    this.addToEvent({
-      ...options,
-      consumer_key_code: code,
-      modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
-    })
+    this.addToEvent(toConsumerKey(code, modifiers, options))
     return this
   }
 
@@ -80,65 +95,55 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this {
-    this.addToEvent({
-      ...options,
-      pointing_button: button,
-      modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
-    })
+    this.addToEvent(toPointingButton(button, modifiers, options))
     return this
   }
 
   /** Map to shell command */
   to$(shell_command: string): this {
-    this.addToEvent({ shell_command })
+    this.addToEvent(to$(shell_command))
     return this
   }
 
   /** Map to `$ open -a {app}.app` */
-  toApp(app: string) {
-    const matched = app.match(/^"?(.*?)(.app)?"?$/)
-    return this.to$(`open -a "${matched?.[1] || app}".app`)
+  toApp(app: string): this {
+    this.addToEvent(toApp(app))
+    return this
   }
 
   /** Map to paste {text} via clipboard */
-  toPaste(text: string) {
-    return this.to$(`osascript -e '
-set prev to the clipboard
-set the clipboard to "${text}"
-tell application "System Events"
-  keystroke "v" using command down
-  delay 0.1
-end tell
-set the clipboard to prev'`)
+  toPaste(text: string): this {
+    this.addToEvent(toPaste(text))
+    return this
   }
 
   /** To change the current input source */
   toInputSource(inputSource: ToInputSource): this {
-    this.addToEvent({ select_input_source: inputSource })
+    this.addToEvent(toInputSource(inputSource))
     return this
   }
 
   /** Map to setting a variable */
   toVar(name: string, value: ToVariable['value'] = 1): this {
-    this.addToEvent({ set_variable: { name, value } })
+    this.addToEvent(toSetVar(name, value))
     return this
   }
 
   /** To set or remove (set text to '') the notification message */
   toNotificationMessage(id: string, text: string): this {
-    this.addToEvent({ set_notification_message: { id, text } })
+    this.addToEvent(toNotificationMessage(id, text))
     return this
   }
 
   /** To remove the notification message */
   toRemoveNotificationMessage(id: string): this {
-    this.addToEvent({ set_notification_message: { id, text: '' } })
+    this.addToEvent(toRemoveNotificationMessage(id))
     return this
   }
 
   /** Move mouse cursor by delta */
   toMouseKey(mouse_key: ToMouseKey): this {
-    this.addToEvent({ mouse_key })
+    this.addToEvent(toMouseKey(mouse_key))
     return this
   }
 
@@ -147,31 +152,25 @@ set the clipboard to prev'`)
     key: StickyModifierKeyCode,
     value: 'on' | 'off' | 'toggle' = 'toggle',
   ): this {
-    this.addToEvent({ sticky_modifier: { [key]: value } })
+    this.addToEvent(toStickyModifier(key, value))
     return this
   }
 
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/software_function/cg_event_double_click/ */
   toCgEventDoubleClick(button: number): this {
-    this.addToEvent({
-      software_function: { cg_event_double_click: { button } },
-    })
+    this.addToEvent(toCgEventDoubleClick(button))
     return this
   }
 
   /** Set mouse cursor position */
   toMouseCursorPosition(p: ToMouseCursorPosition): this {
-    this.addToEvent({ software_function: { set_mouse_cursor_position: p } })
+    this.addToEvent(toMouseCursorPosition(p))
     return this
   }
 
   /** To causes a system sleep */
   toSleepSystem(delay?: number): this {
-    this.addToEvent({
-      software_function: {
-        iokit_power_management_sleep_system: { delay_milliseconds: delay },
-      },
-    })
+    this.addToEvent(toSleepSystem(delay))
     return this
   }
 

@@ -80,12 +80,14 @@ describe('ManipulatorBuilder', () => {
         .toApp('System Settings.app')
         .toApp('"System Settings"')
         .toApp('"System Settings.app"')
+        .toApp('\n')
         .build()[0].to as Array<{ shell_command: string }>,
     ).toEqual([
       { shell_command: 'open -a "System Settings".app' },
       { shell_command: 'open -a "System Settings".app' },
       { shell_command: 'open -a "System Settings".app' },
       { shell_command: 'open -a "System Settings".app' },
+      { shell_command: 'open -a "\n".app' },
     ])
   })
 

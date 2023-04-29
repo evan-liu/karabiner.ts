@@ -6,7 +6,7 @@ import {
 import { Manipulator, Rule, ToVariable } from '../karabiner/karabiner-config'
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias'
 import { FromKeyParam, map } from './from'
-import { setVar } from './to'
+import { toSetVar } from './to'
 import { ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
 
@@ -44,7 +44,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     const key_code = getKeyWithAlias(key) as LayerKeyCode
     this.layerManipulators = map(key_code)
       .toVar(varName, onValue)
-      .toAfterKeyUp(setVar(varName, offValue))
+      .toAfterKeyUp(toSetVar(varName, offValue))
       .toIfAlone({ key_code })
       .build()
   }
@@ -81,8 +81,8 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
   public build(): Rule {
     const rule = super.build()
 
-    const setVarOn = setVar(this.varName, this.onValue)
-    const setVarOff = setVar(this.varName, this.offValue)
+    const setVarOn = toSetVar(this.varName, this.onValue)
+    const setVarOff = toSetVar(this.varName, this.offValue)
     const layerKey = getKeyWithAlias(this.key) as LayerKeyCode
     rule.manipulators.concat().forEach((v) => {
       if (v.type !== 'basic' || !v.to?.length) return // TODO Throw error

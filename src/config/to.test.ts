@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { setVar, toKey } from './to'
+import { toSetVar, toKey } from './to'
 
 test('toKey()', () => {
   // ToKeyCode
@@ -15,8 +15,8 @@ test('toKey()', () => {
 })
 
 test('setVar()', () => {
-  expect(setVar('test')).toEqual({ set_variable: { name: 'test', value: 1 } })
-  expect(setVar('test', true)).toEqual({
+  expect(toSetVar('test')).toEqual({ set_variable: { name: 'test', value: 1 } })
+  expect(toSetVar('test', true)).toEqual({
     set_variable: { name: 'test', value: true },
   })
 })

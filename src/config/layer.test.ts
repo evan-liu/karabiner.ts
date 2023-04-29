@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import { layer, simlayer } from './layer'
 import { map } from './from'
 import { BasicManipulator } from '../karabiner/karabiner-config'
-import { setVar, toKey } from './to'
+import { toSetVar, toKey } from './to'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)
@@ -40,7 +40,7 @@ test('simlayer()', () => {
     parameters: {
       'basic.simultaneous_threshold_milliseconds': 1,
     },
-    to: [setVar('b-mode', true), toKey('d')],
+    to: [toSetVar('b-mode', true), toKey('d')],
     from: {
       simultaneous: [{ key_code: 'a' }, { key_code: 'c' }],
       simultaneous_options: {
@@ -48,7 +48,7 @@ test('simlayer()', () => {
         key_down_order: 'strict',
         key_up_order: 'strict_inverse',
         key_up_when: 'any',
-        to_after_key_up: [setVar('b-mode', false)],
+        to_after_key_up: [toSetVar('b-mode', false)],
       },
     },
   })
