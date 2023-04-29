@@ -84,12 +84,6 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     return this
   }
 
-  /** Move mouse cursor by delta */
-  toMouseKey(mouse_key: ToMouseKey): this {
-    this.addToEvent({ mouse_key })
-    return this
-  }
-
   /** Map to shell command */
   to$(shell_command: string): this {
     this.addToEvent({ shell_command })
@@ -123,6 +117,24 @@ set the clipboard to prev'`)
   /** Map to setting a variable */
   toVar(name: string, value: ToVariable['value'] = 1): this {
     this.addToEvent({ set_variable: { name, value } })
+    return this
+  }
+
+  /** To set or remove (set text to '') the notification message */
+  toNotificationMessage(id: string, text: string): this {
+    this.addToEvent({ set_notification_message: { id, text } })
+    return this
+  }
+
+  /** To remove the notification message */
+  toRemoveNotificationMessage(id: string): this {
+    this.addToEvent({ set_notification_message: { id, text: '' } })
+    return this
+  }
+
+  /** Move mouse cursor by delta */
+  toMouseKey(mouse_key: ToMouseKey): this {
+    this.addToEvent({ mouse_key })
     return this
   }
 

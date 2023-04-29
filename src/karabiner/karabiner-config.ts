@@ -89,7 +89,6 @@ export type ToSoftwareFunction =
   | { iokit_power_management_sleep_system: ToSleepSystem }
 
 export type ToEventOptions = {
-  set_notification_message?: ToNotificationMessage
   modifiers?: Modifier[]
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/lazy/ */
   lazy?: boolean
@@ -109,6 +108,7 @@ export type ToEvent = (
   | { shell_command: string }
   | { select_input_source: ToInputSource }
   | { set_variable: ToVariable }
+  | { set_notification_message: ToNotificationMessage }
   | { mouse_key: ToMouseKey }
   | { sticky_modifier: ToStickyModifier }
   | { software_function: ToSoftwareFunction }

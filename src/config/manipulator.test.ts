@@ -56,20 +56,6 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
-  test('toMouseKey()', () => {
-    expect(
-      new BasicManipulatorBuilder(from)
-        .toMouseKey({ x: 100, y: -100 })
-        .toMouseKey({ horizontal_wheel: -100 })
-        .toMouseKey({ speed_multiplier: 2 })
-        .build()[0].to,
-    ).toEqual([
-      { mouse_key: { x: 100, y: -100 } },
-      { mouse_key: { horizontal_wheel: -100 } },
-      { mouse_key: { speed_multiplier: 2 } },
-    ])
-  })
-
   test('to$(), toApp(), toPaste()', () => {
     const to = new BasicManipulatorBuilder(from)
       .to$('cd')
@@ -114,6 +100,36 @@ describe('ManipulatorBuilder', () => {
     ).toEqual([
       { set_variable: { name: 'a', value: 1 } },
       { set_variable: { name: 'b', value: 2 } },
+    ])
+  })
+
+  test('toNotificationMessage()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toNotificationMessage('a', 'b')
+        .build()[0].to,
+    ).toEqual([{ set_notification_message: { id: 'a', text: 'b' } }])
+  })
+
+  test('toRemoveNotificationMessage()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toRemoveNotificationMessage('a')
+        .build()[0].to,
+    ).toEqual([{ set_notification_message: { id: 'a', text: '' } }])
+  })
+
+  test('toMouseKey()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toMouseKey({ x: 100, y: -100 })
+        .toMouseKey({ horizontal_wheel: -100 })
+        .toMouseKey({ speed_multiplier: 2 })
+        .build()[0].to,
+    ).toEqual([
+      { mouse_key: { x: 100, y: -100 } },
+      { mouse_key: { horizontal_wheel: -100 } },
+      { mouse_key: { speed_multiplier: 2 } },
     ])
   })
 
