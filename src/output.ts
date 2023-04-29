@@ -8,12 +8,14 @@ import {
 } from './karabiner/karabiner-config'
 import { buildRule, RuleBuilder } from './config/rule'
 import { doubleTapParameters } from './config/double-tap'
+import { simlayerParameters } from './config/layer'
 
 export const karabinerConfigDir = join(homedir(), '.config/karabiner')
 export const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
 
 type Parameters = ComplexModificationsParameters &
-  Partial<typeof doubleTapParameters>
+  Partial<typeof doubleTapParameters> &
+  Partial<typeof simlayerParameters>
 
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json
@@ -35,6 +37,13 @@ export function writeToProfile(
       parameters['double_tap.delay_milliseconds']
     delete parameters['double_tap.delay_milliseconds']
   }
+
+  if (parameters['simlayer.threshold_milliseconds']) {
+    simlayerParameters['simlayer.threshold_milliseconds'] =
+      parameters['simlayer.threshold_milliseconds']
+    delete parameters['simlayer.threshold_milliseconds']
+  }
+
   const profileParameters: ComplexModificationsParameters = {
     'basic.to_if_alone_timeout_milliseconds': 1000,
     'basic.to_if_held_down_threshold_milliseconds': 500,

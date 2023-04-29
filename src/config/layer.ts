@@ -10,6 +10,10 @@ import { setVar } from './to'
 import { ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
 
+export const simlayerParameters = {
+  'simlayer.threshold_milliseconds': 200,
+}
+
 type LayerKeyCode = Exclude<FromKeyCode, FromOnlyKeyCode | ModifierKeyCode>
 type LayerKeyParam = Exclude<
   FromKeyParam,
@@ -56,7 +60,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
 export function simlayer(
   key: LayerKeyParam,
   varName: string,
-  threshold = 250,
+  threshold = simlayerParameters['simlayer.threshold_milliseconds'],
   onValue: ToVariable['value'] = 1,
   offValue: ToVariable['value'] = 0,
 ) {
@@ -67,7 +71,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
   constructor(
     protected readonly key: LayerKeyParam,
     protected readonly varName: string,
-    protected readonly threshold = 250,
+    protected readonly threshold: number,
     protected readonly onValue: ToVariable['value'] = 1,
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
