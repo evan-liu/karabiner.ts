@@ -116,6 +116,15 @@ describe('ManipulatorBuilder', () => {
     expect(manipulator.to).toEqual([{ sticky_modifier: { fn: 'toggle' } }])
   })
 
+  test('toCgEventDoubleClick()', () => {
+    const manipulator = new BasicManipulatorBuilder(from)
+      .toCgEventDoubleClick(1)
+      .build()[0]
+    expect(manipulator.to).toEqual([
+      { software_function: { cg_event_double_click: { button: 1 } } },
+    ])
+  })
+
   test('toMouseCursorPosition()', () => {
     expect(
       new BasicManipulatorBuilder(from)

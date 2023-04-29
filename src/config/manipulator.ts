@@ -128,6 +128,14 @@ set the clipboard to prev'`)
     return this
   }
 
+  /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/software_function/cg_event_double_click/ */
+  toCgEventDoubleClick(button: number): this {
+    this.addToEvent({
+      software_function: { cg_event_double_click: { button } },
+    })
+    return this
+  }
+
   /** Set mouse cursor position */
   toMouseCursorPosition(p: ToMouseCursorPosition): this {
     this.addToEvent({ software_function: { set_mouse_cursor_position: p } })
