@@ -141,6 +141,14 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toSleepSystem()', () => {
+    expect(
+      new BasicManipulatorBuilder(from).toSleepSystem().build()[0].to,
+    ).toEqual([
+      { software_function: { iokit_power_management_sleep_system: {} } },
+    ])
+  })
+
   test('toIfAlone()', () => {
     expect(
       new BasicManipulatorBuilder(from)

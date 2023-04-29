@@ -142,6 +142,16 @@ set the clipboard to prev'`)
     return this
   }
 
+  /** To causes a system sleep */
+  toSleepSystem(delay?: number): this {
+    this.addToEvent({
+      software_function: {
+        iokit_power_management_sleep_system: { delay_milliseconds: delay },
+      },
+    })
+    return this
+  }
+
   toIfAlone(event: ToEvent): this
   toIfAlone(
     key: ToKeyParam,
