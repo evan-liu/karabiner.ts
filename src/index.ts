@@ -7,6 +7,7 @@ export * from './utils/with-condition'
 export * from './utils/with-mapper'
 export * from './utils/with-modifier'
 
+export * from './config/complex-modifications'
 export * from './config/condition'
 export * from './config/double-tap'
 export * from './config/from'

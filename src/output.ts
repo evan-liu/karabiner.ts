@@ -1,21 +1,15 @@
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { writeFile } from 'node:fs/promises'
+import { KarabinerConfig, Rule } from './karabiner/karabiner-config'
+import { RuleBuilder } from './config/rule'
 import {
-  ComplexModificationsParameters,
-  KarabinerConfig,
-  Rule,
-} from './karabiner/karabiner-config'
-import { buildRule, RuleBuilder } from './config/rule'
-import { doubleTapParameters } from './config/double-tap'
-import { simlayerParameters } from './config/layer'
+  complexModifications,
+  ModificationParameters,
+} from './config/complex-modifications'
 
 export const karabinerConfigDir = join(homedir(), '.config/karabiner')
 export const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
-
-type Parameters = ComplexModificationsParameters &
-  Partial<typeof doubleTapParameters> &
-  Partial<typeof simlayerParameters>
 
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json
@@ -30,29 +24,8 @@ type Parameters = ComplexModificationsParameters &
 export function writeToProfile(
   name: '--dry-run' | string,
   rules: Array<Rule | RuleBuilder>,
-  parameters: Parameters = {},
+  parameters: ModificationParameters = {},
 ) {
-  if (parameters['double_tap.delay_milliseconds']) {
-    doubleTapParameters['double_tap.delay_milliseconds'] =
-      parameters['double_tap.delay_milliseconds']
-    delete parameters['double_tap.delay_milliseconds']
-  }
-
-  if (parameters['simlayer.threshold_milliseconds']) {
-    simlayerParameters['simlayer.threshold_milliseconds'] =
-      parameters['simlayer.threshold_milliseconds']
-    delete parameters['simlayer.threshold_milliseconds']
-  }
-
-  const profileParameters: ComplexModificationsParameters = {
-    'basic.to_if_alone_timeout_milliseconds': 1000,
-    'basic.to_if_held_down_threshold_milliseconds': 500,
-    'basic.to_delayed_action_delay_milliseconds': 500,
-    'basic.simultaneous_threshold_milliseconds': 50,
-    'mouse_motion_to_scroll.speed': 100,
-    ...parameters,
-  }
-
   const config: KarabinerConfig =
     name === '--dry-run'
       ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
@@ -67,17 +40,10 @@ export function writeToProfile(
  `)
 
   try {
-    profile.complex_modifications.rules = rules.map(buildRule)
+    profile.complex_modifications = complexModifications(rules, parameters)
   } catch (e) {
     exitWithError(e)
   }
-  for (const rule of profile.complex_modifications.rules) {
-    if (!rule.manipulators.length) {
-      exitWithError(`"manipulators" is empty in "${rule.description}"`)
-    }
-  }
-
-  profile.complex_modifications.parameters = profileParameters
 
   const json = JSON.stringify(config, null, 2)
 

@@ -10,21 +10,20 @@ export function rule(
 }
 
 export class BasicRuleBuilder implements RuleBuilder {
-  protected readonly rule: Rule
   protected readonly conditions: Array<Condition | ConditionBuilder>
+  protected readonly manipulatorSources: Array<
+    Manipulator | ManipulatorBuilder
+  > = []
 
   constructor(
-    description: string,
+    private readonly description: string,
     ...conditions: Array<Condition | ConditionBuilder>
   ) {
-    this.rule = { description, manipulators: [] }
     this.conditions = conditions
   }
 
   manipulators(src: Array<Manipulator | ManipulatorBuilder>): this {
-    src.forEach((v) =>
-      buildManipulators(v).forEach((m) => this.rule.manipulators.push(m)),
-    )
+    src.forEach((v) => this.manipulatorSources.push(v))
     return this
   }
 
@@ -34,7 +33,14 @@ export class BasicRuleBuilder implements RuleBuilder {
   }
 
   build(): Rule {
-    const rule = { ...this.rule }
+    const rule: Rule = {
+      description: this.description,
+      manipulators: this.manipulatorSources.reduce(
+        (r, v) => [...r, ...buildManipulators(v)],
+        [] as Manipulator[],
+      ),
+    }
+
     if (rule.manipulators.length === 0) {
       throw new Error(`"manipulators" is empty in "${rule.description}"`)
     }
