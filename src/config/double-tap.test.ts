@@ -1,6 +1,4 @@
 import { expect, test } from 'vitest'
-import { mapDoubleTap } from './double-tap'
-
 test('mapDoubleTap()', () => {
   expect(mapDoubleTap(1).to(2).build()).toEqual([
     {
@@ -38,4 +36,8 @@ test('mapDoubleTap()', () => {
   expect(mapDoubleTap(1, 11).to(2).build()[1].parameters).toEqual({
     'basic.to_delayed_action_delay_milliseconds': 11,
   })
+
+  expect(mapDoubleTap(1).build()[0].to?.length).toBe(1)
 })
+
+import { mapDoubleTap } from './double-tap'

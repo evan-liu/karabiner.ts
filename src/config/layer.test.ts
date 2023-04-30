@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import { layer, simlayer } from './layer'
 import { map } from './from'
 import { BasicManipulator } from '../karabiner/karabiner-config'
-import { toSetVar, toKey } from './to'
+import { toKey, toSetVar } from './to'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)
@@ -28,7 +28,7 @@ test('layer()', () => {
 
 test('simlayer()', () => {
   const rule = simlayer('a', 'b-mode', 1, true, false)
-    .manipulators([map('c').to('d'), map('e').to('f')])
+    .manipulators([map('c').to('d'), map('e')])
     .build()
   expect(rule.description).toBe(`Simlayer - b-mode`)
 
@@ -66,4 +66,18 @@ test('Empty manipulators error', () => {
   expect(() => simlayer('a', '').manipulators([]).build()).toThrow(
     /manipulators.*empty/,
   )
+})
+
+test('simlayer() validation errors', () => {
+  expect(() =>
+    simlayer('a', 'b')
+      .manipulators([{ type: 'mouse_motion_to_scroll' }])
+      .build(),
+  ).toThrow('type')
+
+  expect(() =>
+    simlayer('a', 'b')
+      .manipulators([{ type: 'basic' } as any])
+      .build(),
+  ).toThrow('key_code')
 })

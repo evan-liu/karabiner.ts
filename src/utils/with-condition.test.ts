@@ -10,10 +10,13 @@ test('withCondition()', () => {
   const manipulators = withCondition(ifA)([
     map(1).to(2),
     map(3).to(4).condition(ifB),
+    { type: 'mouse_motion_to_scroll' },
   ])
-  expect(manipulators.map((v) => (v as BasicManipulator).conditions)).toEqual([
-    [ifA],
-    [ifB, ifA],
-  ])
-  expect(manipulators.build().length).toBe(2)
+
+  expect(
+    manipulators.build().map((v) => (v as BasicManipulator).conditions),
+  ).toEqual([[ifA], [ifB, ifA], undefined])
+
+  // FIXME Cleanup in 2.0 after remove the array return type
+  expect(manipulators.length).toBe(3)
 })

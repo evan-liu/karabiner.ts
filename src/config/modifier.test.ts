@@ -18,6 +18,8 @@ test('parseModifierParam()', () => {
 
 test('parseFromModifierParams()', () => {
   expect(parseFromModifierParams()).toBeUndefined()
+  expect(parseFromModifierParams({})).toEqual({})
+
   expect(parseFromModifierParams('⌘')).toEqual({ mandatory: ['command'] })
   expect(parseFromModifierParams({ left: '⌥' })).toEqual({
     mandatory: ['left_option'],
@@ -33,5 +35,9 @@ test('parseFromModifierParams()', () => {
   })
   expect(parseFromModifierParams(undefined, { right: '⌥' })).toEqual({
     optional: ['right_option'],
+  })
+
+  expect(parseFromModifierParams({ left: 'win' as any })).toEqual({
+    mandatory: ['win'],
   })
 })

@@ -86,9 +86,19 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     const setVarOff = toSetVar(this.varName, this.offValue)
     const layerKey = getKeyWithAlias(this.key) as LayerKeyCode
     rule.manipulators.concat().forEach((v) => {
-      if (v.type !== 'basic' || !v.to?.length) return // TODO Throw error
-      const fromKey = (v.from as { key_code: FromKeyCode }).key_code
-      if (!fromKey) return // TODO Throw error
+      if (v.type !== 'basic') {
+        throw new Error(
+          `Unsupported manipulator type ${v.type} in simlayer ${this.key}/${this.varName}`,
+        )
+      }
+
+      const fromKey = (v.from as { key_code: FromKeyCode })?.key_code
+      if (!fromKey) {
+        throw new Error(
+          `Missing from.key_code in simlayer ${this.key}/${this.varName}`,
+        )
+      }
+
       rule.manipulators.push({
         type: 'basic',
         parameters: {
@@ -96,7 +106,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
             this.threshold ||
             simlayerParameters['simlayer.threshold_milliseconds'],
         },
-        to: [setVarOn, ...v.to],
+        to: [setVarOn, ...(v.to || [])],
         from: {
           simultaneous: [{ key_code: layerKey }, { key_code: fromKey }],
           simultaneous_options: {
