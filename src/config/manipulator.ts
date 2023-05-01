@@ -32,6 +32,7 @@ import {
   toSetVar,
   toSleepSystem,
   toStickyModifier,
+  toSuperHyper,
 } from './to'
 import { buildCondition, ConditionBuilder } from './condition'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
@@ -77,6 +78,12 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   /** To Meh key ⌥⌃⇧ */
   toMeh(options?: ToEventOptions): this {
     this.addToEvent(toMeh(options))
+    return this
+  }
+
+  /** To SuperHyper key ⌘⌥⌃⇧fn */
+  toSuperHyper(options?: ToEventOptions): this {
+    this.addToEvent(toSuperHyper(options))
     return this
   }
 

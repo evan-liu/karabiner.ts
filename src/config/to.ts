@@ -37,6 +37,11 @@ export function toMeh(options?: ToEventOptions): ToEvent {
   return toKey('left_option', '⌃⇧', options)
 }
 
+/** Create ToEvent with key_code ⌘⌥⌃⇧fn */
+export function toSuperHyper(options?: ToEventOptions): ToEvent {
+  return toKey('fn', '⌘⌥⌃⇧', options)
+}
+
 /** Create ToEvent with key_code vk_none (Disable this key) */
 export function toNone(options?: ToEventOptions): ToEvent {
   return toKey('vk_none', undefined, options)

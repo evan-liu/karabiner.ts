@@ -27,12 +27,17 @@ describe('ManipulatorBuilder', () => {
     expect(new BasicManipulatorBuilder(from).to([]).build()[0].to).toEqual([])
   })
 
-  test('toHyper(), toMeh()', () => {
+  test('toHyper(), toMeh(), toSuperHyper()', () => {
     expect(new BasicManipulatorBuilder(from).toHyper().build()[0].to).toEqual([
       { key_code: 'left_command', modifiers: ['option', 'control', 'shift'] },
     ])
     expect(new BasicManipulatorBuilder(from).toMeh().build()[0].to).toEqual([
       { key_code: 'left_option', modifiers: ['control', 'shift'] },
+    ])
+    expect(
+      new BasicManipulatorBuilder(from).toSuperHyper().build()[0].to,
+    ).toEqual([
+      { key_code: 'fn', modifiers: ['command', 'option', 'control', 'shift'] },
     ])
   })
 
