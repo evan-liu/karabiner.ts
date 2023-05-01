@@ -10,12 +10,13 @@ test('rule()', () => {
   const manipulator1 = map('a').to('b').build()[0]
   const manipulator2 = map('c').to('d').condition(condition3).build()[0]
   expect(
-    rule('test', condition1)
+    rule('test1', condition1)
+      .description('test2')
       .condition(condition2)
       .manipulators([manipulator1, manipulator2])
       .build(),
   ).toEqual({
-    description: 'test',
+    description: 'test2',
     manipulators: [
       { ...manipulator1, conditions: [condition1, condition2] },
       { ...manipulator2, conditions: [condition3, condition1, condition2] },

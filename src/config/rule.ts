@@ -16,7 +16,7 @@ export class BasicRuleBuilder implements RuleBuilder {
   > = []
 
   constructor(
-    private readonly description: string,
+    protected ruleDescription: string,
     ...conditions: Array<Condition | ConditionBuilder>
   ) {
     this.conditions = conditions
@@ -32,9 +32,14 @@ export class BasicRuleBuilder implements RuleBuilder {
     return this
   }
 
+  description(v: string): this {
+    this.ruleDescription = v
+    return this
+  }
+
   build(): Rule {
     const rule: Rule = {
-      description: this.description,
+      description: this.ruleDescription,
       manipulators: this.manipulatorSources.reduce(
         (r, v) => [...r, ...buildManipulators(v)],
         [] as Manipulator[],

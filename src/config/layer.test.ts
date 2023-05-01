@@ -27,10 +27,13 @@ test('layer()', () => {
 })
 
 test('simlayer()', () => {
-  const rule = simlayer('a', 'b-mode', 1, true, false)
-    .manipulators([map('c').to('d'), map('e')])
-    .build()
+  const layer = simlayer('a', 'b-mode', 1, true, false).manipulators([
+    map('c').to('d'),
+    map('e'),
+  ])
+  const rule = layer.build()
   expect(rule.description).toBe(`Simlayer - b-mode`)
+  expect(layer.description('test').build().description).toBe('test')
 
   const manipulators = rule.manipulators as BasicManipulator[]
   // Layer manipulator to set variable for each manipulator
