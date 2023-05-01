@@ -134,3 +134,26 @@ test('simlayer() validation errors', () => {
       .build(),
   ).toThrow('key_code')
 })
+
+test('simlayer().enableLayer()', () => {
+  expect(() => simlayer('a', 'b').enableLayer('a')).toThrowError()
+  expect(() =>
+    simlayer('a', 'b').enableLayer('c', 'd').enableLayer('c'),
+  ).toThrowError()
+
+  const rule = simlayer('a', 'b')
+    .enableLayer('c')
+    .condition(ifVar('d'))
+    .manipulators([map(1).to(2)])
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(3)
+  expect(manipulators[0]).toEqual({
+    type: 'basic',
+    from: { key_code: 'c' },
+    to: [{ set_variable: { name: 'b', value: 1 } }],
+    to_after_key_up: [{ set_variable: { name: 'b', value: 0 } }],
+    to_if_alone: [{ key_code: 'c' }],
+    conditions: [{ type: 'variable_if', name: 'd', value: 1 }],
+  })
+})
