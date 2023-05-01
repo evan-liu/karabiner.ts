@@ -24,6 +24,7 @@ import {
   toMeh,
   toMouseCursorPosition,
   toMouseKey,
+  toNone,
   toNotificationMessage,
   toPaste,
   toPointingButton,
@@ -76,6 +77,12 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   /** To Meh key ⌥⌃⇧ */
   toMeh(options?: ToEventOptions): this {
     this.addToEvent(toMeh(options))
+    return this
+  }
+
+  /** To vk_none (Disable this key) */
+  toNone(options?: ToEventOptions): this {
+    this.addToEvent(toNone(options))
     return this
   }
 

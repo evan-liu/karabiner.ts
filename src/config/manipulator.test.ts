@@ -36,6 +36,12 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toNone()', () => {
+    expect(new BasicManipulatorBuilder(from).toNone().build()[0].to).toEqual([
+      { key_code: 'vk_none' },
+    ])
+  })
+
   test('toConsumerKey()', () => {
     expect(
       new BasicManipulatorBuilder(from)
