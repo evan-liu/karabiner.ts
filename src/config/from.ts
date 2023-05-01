@@ -11,12 +11,12 @@ export type FromKeyParam = FromKeyCode | KeyAlias | NumberKeyValue
 export function map(from: FromEvent): BasicManipulatorBuilder
 export function map(
   key: FromKeyParam,
-  mandatoryModifiers?: FromModifierParam,
+  mandatoryModifiers?: FromModifierParam | '' | null,
   optionalModifiers?: FromModifierParam,
 ): BasicManipulatorBuilder
 export function map(
   keyOrEvent: FromKeyParam | FromEvent,
-  mandatoryModifiers?: FromModifierParam,
+  mandatoryModifiers?: FromModifierParam | '' | null,
   optionalModifiers?: FromModifierParam,
 ) {
   if (typeof keyOrEvent === 'object')

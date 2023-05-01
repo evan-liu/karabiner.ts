@@ -34,7 +34,7 @@ export type FromModifierParam =
   | 'any'
 
 export function parseFromModifierParams(
-  mandatoryParam?: FromModifierParam,
+  mandatoryParam?: FromModifierParam | '' | null,
   optionalParam?: FromModifierParam,
 ): FromEvent['modifiers'] {
   if (!mandatoryParam && !optionalParam) return undefined
@@ -45,7 +45,7 @@ export function parseFromModifierParams(
 }
 
 function parseFromModifiers(
-  param?: FromModifierParam,
+  param?: FromModifierParam | '' | null,
 ): Modifier[] | ['any'] | undefined {
   if (!param) return undefined
   if (param === 'any') return ['any']
