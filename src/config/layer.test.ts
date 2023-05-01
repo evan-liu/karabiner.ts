@@ -26,6 +26,21 @@ test('layer()', () => {
   ])
 })
 
+test('layer() with multiple keys', () => {
+  const rule = layer(['a', 'b'], 'c')
+    .manipulators([map(1).to(2)])
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(3)
+  const { from: fromB, to_if_alone: aloneB, ...restB } = manipulators[0]
+  const { from: fromA, to_if_alone: aloneA, ...restA } = manipulators[1]
+  expect(fromB).toEqual({ key_code: 'b' })
+  expect(aloneB).toEqual([{ key_code: 'b' }])
+  expect(fromA).toEqual({ key_code: 'a' })
+  expect(aloneA).toEqual([{ key_code: 'a' }])
+  expect(restB).toEqual(restA)
+})
+
 test('simlayer()', () => {
   const layer = simlayer('a', 'b-mode', 1, true, false).manipulators([
     map('c').to('d'),
@@ -60,6 +75,18 @@ test('simlayer()', () => {
   expect(manipulators[0].conditions).toEqual([
     { type: 'variable_if', name: 'b-mode', value: true },
   ])
+})
+
+test('simlayer() with multiple key', () => {
+  const rule = simlayer(['a', 'b'], 'c')
+    .manipulators([map(1).to(2)])
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(3)
+
+  const from = manipulators.map((v) => v.from) as any[]
+  from[1].simultaneous[0].key_code = from[2].simultaneous[0].key_code
+  expect(manipulators[1]).toEqual(manipulators[2])
 })
 
 test('Empty manipulators error', () => {
