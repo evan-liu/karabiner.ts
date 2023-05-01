@@ -3,11 +3,11 @@ import {
   FromOnlyKeyCode,
   ModifierKeyCode,
 } from '../karabiner/key-code'
-import { Rule, ToVariable } from '../karabiner/karabiner-config'
+import { Condition, Rule, ToVariable } from '../karabiner/karabiner-config'
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias'
 import { FromKeyParam, map } from './from'
 import { toSetVar } from './to'
-import { buildCondition, ifVar } from './condition'
+import { buildCondition, ConditionBuilder, ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
 
 export const defaultSimlayerThreshold = 200
@@ -32,15 +32,19 @@ export function layer(
 }
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
+  protected readonly keys: LayerKeyCode[]
   protected layerCondition = ifVar(this.varName, this.onValue)
 
   constructor(
-    protected readonly key: LayerKeyParam | LayerKeyParam[],
+    key: LayerKeyParam | LayerKeyParam[],
     protected readonly varName: string,
     protected readonly onValue: ToVariable['value'] = 1,
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
     super(`Layer - ${varName}`)
+    this.keys = (Array.isArray(key) ? key : [key]).map(
+      (v) => getKeyWithAlias(v) as LayerKeyCode,
+    )
     this.condition(this.layerCondition)
   }
 
@@ -48,16 +52,17 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     const rule = super.build()
 
     const conditions = this.conditions.filter((v) => v !== this.layerCondition)
-    const layerKeyCodes = (Array.isArray(this.key) ? this.key : [this.key]).map(
-      (v) => getKeyWithAlias(v) as LayerKeyCode,
-    )
-    for (const key_code of layerKeyCodes) {
-      const manipulator = map(key_code)
-        .toVar(this.varName, this.onValue)
-        .toAfterKeyUp(toSetVar(this.varName, this.offValue))
-        .toIfAlone({ key_code })
-      if (conditions.length > 0) manipulator.condition(...conditions)
-      rule.manipulators = [...manipulator.build(), ...rule.manipulators]
+    for (const key_code of this.keys) {
+      rule.manipulators = [
+        ...layerToggleManipulator(
+          key_code,
+          this.varName,
+          this.onValue,
+          this.offValue,
+          conditions,
+        ),
+        ...rule.manipulators,
+      ]
     }
 
     return rule
@@ -76,17 +81,40 @@ export function simlayer(
 }
 
 export class SimlayerRuleBuilder extends BasicRuleBuilder {
-  protected layerCondition = ifVar(this.varName, this.onValue)
+  protected readonly keys: LayerKeyCode[]
+  protected readonly layerCondition = ifVar(this.varName, this.onValue)
+  protected readonly sharedLayerKeys: LayerKeyCode[] = []
 
   constructor(
-    protected readonly key: LayerKeyParam | LayerKeyParam[],
+    key: LayerKeyParam | LayerKeyParam[],
     protected readonly varName: string,
     protected readonly threshold?: number,
     protected readonly onValue: ToVariable['value'] = 1,
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
     super(`Simlayer - ${varName}`)
+    this.keys = (Array.isArray(key) ? key : [key]).map(
+      (v) => getKeyWithAlias(v) as LayerKeyCode,
+    )
     this.condition(this.layerCondition)
+  }
+
+  /** Enable layer with the same variable and manipulators with this simlayer */
+  public enableLayer(...key: LayerKeyParam[]): this {
+    key
+      .map((v) => getKeyWithAlias(v) as LayerKeyCode)
+      .forEach((v) => {
+        if (this.keys.includes(v))
+          throw new Error(`Key ${v} is already used in ${this.ruleDescription}`)
+
+        if (this.sharedLayerKeys.includes(v))
+          throw new Error(
+            `Key ${v} is already used as shared layer key in  ${this.ruleDescription}`,
+          )
+
+        this.sharedLayerKeys.push(v)
+      })
+    return this
   }
 
   public build(): Rule {
@@ -101,9 +129,6 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
 
     const setVarOn = toSetVar(this.varName, this.onValue)
     const setVarOff = toSetVar(this.varName, this.offValue)
-    const layerKeys = (Array.isArray(this.key) ? this.key : [this.key]).map(
-      (v) => getKeyWithAlias(v) as LayerKeyCode,
-    )
     rule.manipulators.concat().forEach((v) => {
       if (v.type !== 'basic') {
         throw new Error(
@@ -118,7 +143,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
         )
       }
 
-      for (const layerKey of layerKeys) {
+      for (const layerKey of this.keys) {
         rule.manipulators.push({
           type: 'basic',
           parameters: {
@@ -142,6 +167,34 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
       }
     })
 
+    for (const key_code of this.sharedLayerKeys) {
+      rule.manipulators = [
+        ...layerToggleManipulator(
+          key_code,
+          this.varName,
+          this.onValue,
+          this.offValue,
+          conditions,
+        ),
+        ...rule.manipulators,
+      ]
+    }
+
     return rule
   }
+}
+
+function layerToggleManipulator(
+  key_code: LayerKeyCode,
+  varName: string,
+  onValue: ToVariable['value'],
+  offValue: ToVariable['value'],
+  conditions?: Array<Condition | ConditionBuilder>,
+) {
+  const manipulator = map(key_code)
+    .toVar(varName, onValue)
+    .toAfterKeyUp(toSetVar(varName, offValue))
+    .toIfAlone({ key_code })
+  if (conditions?.length) manipulator.condition(...conditions)
+  return manipulator.build()
 }
