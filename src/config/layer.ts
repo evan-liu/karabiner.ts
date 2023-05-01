@@ -7,7 +7,7 @@ import { Rule, ToVariable } from '../karabiner/karabiner-config'
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias'
 import { FromKeyParam, map } from './from'
 import { toSetVar } from './to'
-import { ifVar } from './condition'
+import { buildCondition, ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
 
 export const defaultSimlayerThreshold = 200
@@ -32,30 +32,32 @@ export function layer(
 }
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
+  protected layerCondition = ifVar(this.varName, this.onValue)
+
   constructor(
     protected readonly key: LayerKeyParam | LayerKeyParam[],
     protected readonly varName: string,
     protected readonly onValue: ToVariable['value'] = 1,
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
-    super(`Layer - ${varName}`, ifVar(varName, onValue))
+    super(`Layer - ${varName}`)
+    this.condition(this.layerCondition)
   }
 
   public build(): Rule {
     const rule = super.build()
 
+    const conditions = this.conditions.filter((v) => v !== this.layerCondition)
     const layerKeyCodes = (Array.isArray(this.key) ? this.key : [this.key]).map(
       (v) => getKeyWithAlias(v) as LayerKeyCode,
     )
     for (const key_code of layerKeyCodes) {
-      rule.manipulators = [
-        ...map(key_code)
-          .toVar(this.varName, this.onValue)
-          .toAfterKeyUp(toSetVar(this.varName, this.offValue))
-          .toIfAlone({ key_code })
-          .build(),
-        ...rule.manipulators,
-      ]
+      const manipulator = map(key_code)
+        .toVar(this.varName, this.onValue)
+        .toAfterKeyUp(toSetVar(this.varName, this.offValue))
+        .toIfAlone({ key_code })
+      if (conditions.length > 0) manipulator.condition(...conditions)
+      rule.manipulators = [...manipulator.build(), ...rule.manipulators]
     }
 
     return rule
@@ -74,6 +76,8 @@ export function simlayer(
 }
 
 export class SimlayerRuleBuilder extends BasicRuleBuilder {
+  protected layerCondition = ifVar(this.varName, this.onValue)
+
   constructor(
     protected readonly key: LayerKeyParam | LayerKeyParam[],
     protected readonly varName: string,
@@ -81,11 +85,19 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     protected readonly onValue: ToVariable['value'] = 1,
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
-    super(`Simlayer - ${varName}`, ifVar(varName, onValue))
+    super(`Simlayer - ${varName}`)
+    this.condition(this.layerCondition)
   }
 
   public build(): Rule {
     const rule = super.build()
+
+    const conditions =
+      this.conditions.length > 1
+        ? this.conditions
+            .filter((v) => v !== this.layerCondition)
+            .map(buildCondition)
+        : undefined
 
     const setVarOn = toSetVar(this.varName, this.onValue)
     const setVarOff = toSetVar(this.varName, this.offValue)
@@ -125,6 +137,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
               to_after_key_up: [setVarOff],
             },
           },
+          conditions,
         })
       }
     })
