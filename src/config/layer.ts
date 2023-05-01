@@ -3,7 +3,7 @@ import {
   FromOnlyKeyCode,
   ModifierKeyCode,
 } from '../karabiner/key-code'
-import { Manipulator, Rule, ToVariable } from '../karabiner/karabiner-config'
+import { Rule, ToVariable } from '../karabiner/karabiner-config'
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias'
 import { FromKeyParam, map } from './from'
 import { toSetVar } from './to'
@@ -23,7 +23,7 @@ type LayerKeyParam = Exclude<
 
 /** @see https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md#advance3 */
 export function layer(
-  key: LayerKeyParam,
+  key: LayerKeyParam | LayerKeyParam[],
   varName: string,
   onValue: ToVariable['value'] = 1,
   offValue: ToVariable['value'] = 0,
@@ -32,34 +32,39 @@ export function layer(
 }
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
-  protected readonly layerManipulators: Manipulator[]
-
   constructor(
-    protected readonly key: LayerKeyParam,
+    protected readonly key: LayerKeyParam | LayerKeyParam[],
     protected readonly varName: string,
     protected readonly onValue: ToVariable['value'] = 1,
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
     super(`Layer - ${varName}`, ifVar(varName, onValue))
-
-    const key_code = getKeyWithAlias(key) as LayerKeyCode
-    this.layerManipulators = map(key_code)
-      .toVar(varName, onValue)
-      .toAfterKeyUp(toSetVar(varName, offValue))
-      .toIfAlone({ key_code })
-      .build()
   }
 
   public build(): Rule {
     const rule = super.build()
-    rule.manipulators = [...this.layerManipulators, ...rule.manipulators]
+
+    const layerKeyCodes = (Array.isArray(this.key) ? this.key : [this.key]).map(
+      (v) => getKeyWithAlias(v) as LayerKeyCode,
+    )
+    for (const key_code of layerKeyCodes) {
+      rule.manipulators = [
+        ...map(key_code)
+          .toVar(this.varName, this.onValue)
+          .toAfterKeyUp(toSetVar(this.varName, this.offValue))
+          .toIfAlone({ key_code })
+          .build(),
+        ...rule.manipulators,
+      ]
+    }
+
     return rule
   }
 }
 
 /** @see https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md#advance3 */
 export function simlayer(
-  key: LayerKeyParam,
+  key: LayerKeyParam | LayerKeyParam[],
   varName: string,
   threshold?: number,
   onValue: ToVariable['value'] = 1,
@@ -70,7 +75,7 @@ export function simlayer(
 
 export class SimlayerRuleBuilder extends BasicRuleBuilder {
   constructor(
-    protected readonly key: LayerKeyParam,
+    protected readonly key: LayerKeyParam | LayerKeyParam[],
     protected readonly varName: string,
     protected readonly threshold?: number,
     protected readonly onValue: ToVariable['value'] = 1,
@@ -84,40 +89,44 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
 
     const setVarOn = toSetVar(this.varName, this.onValue)
     const setVarOff = toSetVar(this.varName, this.offValue)
-    const layerKey = getKeyWithAlias(this.key) as LayerKeyCode
+    const layerKeys = (Array.isArray(this.key) ? this.key : [this.key]).map(
+      (v) => getKeyWithAlias(v) as LayerKeyCode,
+    )
     rule.manipulators.concat().forEach((v) => {
       if (v.type !== 'basic') {
         throw new Error(
-          `Unsupported manipulator type ${v.type} in simlayer ${this.key}/${this.varName}`,
+          `Unsupported manipulator type ${v.type} in simlayer ${this.ruleDescription}`,
         )
       }
 
       const fromKey = (v.from as { key_code: FromKeyCode })?.key_code
       if (!fromKey) {
         throw new Error(
-          `Missing from.key_code in simlayer ${this.key}/${this.varName}`,
+          `Missing from.key_code in simlayer ${this.ruleDescription}`,
         )
       }
 
-      rule.manipulators.push({
-        type: 'basic',
-        parameters: {
-          'basic.simultaneous_threshold_milliseconds':
-            this.threshold ||
-            simlayerParameters['simlayer.threshold_milliseconds'],
-        },
-        to: [setVarOn, ...(v.to || [])],
-        from: {
-          simultaneous: [{ key_code: layerKey }, { key_code: fromKey }],
-          simultaneous_options: {
-            detect_key_down_uninterruptedly: true,
-            key_down_order: 'strict',
-            key_up_order: 'strict_inverse',
-            key_up_when: 'any',
-            to_after_key_up: [setVarOff],
+      for (const layerKey of layerKeys) {
+        rule.manipulators.push({
+          type: 'basic',
+          parameters: {
+            'basic.simultaneous_threshold_milliseconds':
+              this.threshold ||
+              simlayerParameters['simlayer.threshold_milliseconds'],
           },
-        },
-      })
+          to: [setVarOn, ...(v.to || [])],
+          from: {
+            simultaneous: [{ key_code: layerKey }, { key_code: fromKey }],
+            simultaneous_options: {
+              detect_key_down_uninterruptedly: true,
+              key_down_order: 'strict',
+              key_up_order: 'strict_inverse',
+              key_up_when: 'any',
+              to_after_key_up: [setVarOff],
+            },
+          },
+        })
+      }
     })
 
     return rule
