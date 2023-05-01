@@ -3,6 +3,7 @@ import { layer, simlayer } from './layer'
 import { map } from './from'
 import { BasicManipulator } from '../karabiner/karabiner-config'
 import { toKey, toSetVar } from './to'
+import { ifVar } from './condition'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)
@@ -39,6 +40,17 @@ test('layer() with multiple keys', () => {
   expect(fromA).toEqual({ key_code: 'a' })
   expect(aloneA).toEqual([{ key_code: 'a' }])
   expect(restB).toEqual(restA)
+})
+
+test('layer() conditions', () => {
+  const rule = layer('a', 'b')
+    .condition(ifVar('c'))
+    .manipulators([map(1).to(2)])
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators[0].conditions).toEqual([
+    { type: 'variable_if', name: 'c', value: 1 },
+  ])
 })
 
 test('simlayer()', () => {
@@ -87,6 +99,17 @@ test('simlayer() with multiple key', () => {
   const from = manipulators.map((v) => v.from) as any[]
   from[1].simultaneous[0].key_code = from[2].simultaneous[0].key_code
   expect(manipulators[1]).toEqual(manipulators[2])
+})
+
+test('simlayer() with conditions', () => {
+  const rule = simlayer('a', 'b')
+    .condition(ifVar('c'))
+    .manipulators([map(1).to(2)])
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators[1].conditions).toEqual([
+    { type: 'variable_if', name: 'c', value: 1 },
+  ])
 })
 
 test('Empty manipulators error', () => {
