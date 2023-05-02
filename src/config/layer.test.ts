@@ -3,6 +3,8 @@ import { layer } from './layer'
 import { map } from './from'
 import { BasicManipulator } from '../karabiner/karabiner-config'
 import { ifVar } from './condition'
+import { complexModifications } from './complex-modifications'
+import { simlayer } from './simlayer'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)
@@ -56,4 +58,35 @@ test('layer() empty manipulators error', () => {
   expect(() => layer('a', '').manipulators([]).build()).toThrow(
     /manipulators.*empty/,
   )
+})
+
+test('multiple layer() by same key ', () => {
+  const { rules } = complexModifications([
+    layer('a', 'v1').manipulators([map(1).to(2)]),
+    layer(['a', 'b'], 'v2').manipulators([map(1).to(2)]),
+    layer('a', 'v3')
+      .condition(ifVar('x'))
+      .manipulators([map(1).to(2)]),
+    layer('a', 'v4')
+      .condition(ifVar('x'))
+      .manipulators([map(1).to(2)]),
+    simlayer('x', 'v2')
+      .enableLayer('a')
+      .manipulators([map(1).to(2)]),
+  ])
+  expect(rules[0].manipulators.length).toBe(2)
+  expect(rules[1].manipulators.length).toBe(2)
+
+  const manipulator = rules[0].manipulators[0] as BasicManipulator
+  expect(manipulator.to).toEqual([
+    { set_variable: { name: 'v1', value: 1 } },
+    { set_variable: { name: 'v2', value: 1 } },
+  ])
+  expect(manipulator.to_after_key_up).toEqual([
+    { set_variable: { name: 'v1', value: 0 } },
+    { set_variable: { name: 'v2', value: 0 } },
+  ])
+
+  expect(rules[2].manipulators.length).toBe(2)
+  expect(rules[3].manipulators.length).toBe(1)
 })

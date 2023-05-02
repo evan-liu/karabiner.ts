@@ -1,5 +1,6 @@
 export class BuildContext {
   private readonly parameters: Record<string, string> = {}
+  private readonly cache = new Map()
 
   public setParameters<TDefaults extends {}>(v: Partial<TDefaults>): void {
     Object.assign(this.parameters, v)
@@ -13,5 +14,13 @@ export class BuildContext {
       }
     }
     return result
+  }
+
+  public getCache<T>(key: string): T {
+    return this.cache.get(key) as T
+  }
+
+  public setCache<T>(key: string, value: T) {
+    this.cache.set(key, value)
   }
 }

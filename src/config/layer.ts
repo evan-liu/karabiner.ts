@@ -3,11 +3,16 @@ import {
   FromOnlyKeyCode,
   ModifierKeyCode,
 } from '../karabiner/key-code'
-import { Condition, Rule, ToVariable } from '../karabiner/karabiner-config'
+import {
+  BasicManipulator,
+  Condition,
+  Rule,
+  ToVariable,
+} from '../karabiner/karabiner-config'
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias'
 import { FromKeyParam, map } from './from'
 import { toSetVar } from './to'
-import { ConditionBuilder, ifVar } from './condition'
+import { buildCondition, ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
 import { toArray } from '../utils/to-array'
 import { BuildContext } from '../utils/build-context'
@@ -49,7 +54,9 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   public build(context?: BuildContext): Rule {
     const rule = super.build(context)
 
-    const conditions = this.conditions.filter((v) => v !== this.layerCondition)
+    const conditions = this.conditions
+      .filter((v) => v !== this.layerCondition)
+      .map(buildCondition)
     for (const key_code of this.keys) {
       rule.manipulators = [
         ...layerToggleManipulator(
@@ -73,7 +80,7 @@ export function layerToggleManipulator(
   varName: string,
   onValue: ToVariable['value'],
   offValue: ToVariable['value'],
-  conditions?: Array<Condition | ConditionBuilder>,
+  conditions?: Condition[],
   context?: BuildContext,
 ) {
   const manipulator = map(key_code)
@@ -81,5 +88,25 @@ export function layerToggleManipulator(
     .toAfterKeyUp(toSetVar(varName, offValue))
     .toIfAlone({ key_code })
   if (conditions?.length) manipulator.condition(...conditions)
-  return manipulator.build(context)
+  if (!context) return manipulator.build()
+
+  const key = [
+    `layer_${key_code}`,
+    ...(conditions || []).map((v) => JSON.stringify(v)).sort(),
+  ].join('_')
+  const exiting = context.getCache<BasicManipulator>(key)
+  if (exiting?.to && exiting.to_after_key_up) {
+    const sameVar = exiting.to.find(
+      (v) => 'set_variable' in v && v.set_variable.name === varName,
+    )
+    if (!sameVar) {
+      exiting.to.push(toSetVar(varName, onValue))
+      exiting.to_after_key_up.push(toSetVar(varName, offValue))
+    }
+    return [] // Already added
+  }
+
+  const result = manipulator.build(context)
+  context.setCache(key, result[0])
+  return result
 }
