@@ -5,10 +5,10 @@ import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
 import { FromAndToKeyCode } from '../karabiner/key-code'
 import { ifVar } from './condition'
 import { toSetVar } from './to'
+import { BuildContext } from '../utils/build-context'
 
-export const defaultDoubleTapDelay = 200
-export const doubleTapParameters = {
-  'double_tap.delay_milliseconds': defaultDoubleTapDelay,
+export const defaultDoubleTapParameters = {
+  'double_tap.delay_milliseconds': 200,
 }
 
 export type DoubleTapParam = FromAndToKeyCode | KeyAlias | NumberKeyValue
@@ -29,7 +29,12 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
     this.varName = `double-tap-${keyCode}`
   }
 
-  public build(): BasicManipulator[] {
+  public build(context?: BuildContext): BasicManipulator[] {
+    const params =
+      context?.getParameters(defaultDoubleTapParameters) ??
+      defaultDoubleTapParameters
+    const delay = this.delay || params['double_tap.delay_milliseconds']
+
     const onCondition = ifVar(this.varName).build()
     const offCondition = ifVar(this.varName).unless().build()
 
@@ -50,8 +55,7 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
       },
     }
     toggleManipulator.parameters = {
-      'basic.to_delayed_action_delay_milliseconds':
-        this.delay || doubleTapParameters['double_tap.delay_milliseconds'],
+      'basic.to_delayed_action_delay_milliseconds': delay,
     }
 
     return [baseManipulator, toggleManipulator]

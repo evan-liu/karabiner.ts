@@ -39,9 +39,10 @@ import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 import { StickyModifierKeyCode } from '../karabiner/key-code'
 import { toArray } from '../utils/to-array'
+import { BuildContext } from '../utils/build-context'
 
 export interface ManipulatorBuilder {
-  build(): Manipulator[]
+  build(context?: BuildContext): Manipulator[]
 }
 
 export class BasicManipulatorBuilder implements ManipulatorBuilder {
@@ -278,7 +279,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     return this
   }
 
-  build(): BasicManipulator[] {
+  build(_?: BuildContext): BasicManipulator[] {
     return [{ ...this.manipulator }]
   }
 
@@ -305,6 +306,7 @@ export function isManipulatorBuilder(
 
 export function buildManipulators(
   src: Manipulator | ManipulatorBuilder,
+  context?: BuildContext,
 ): Manipulator[] {
-  return isManipulatorBuilder(src) ? src.build() : [src]
+  return isManipulatorBuilder(src) ? src.build(context) : [src]
 }

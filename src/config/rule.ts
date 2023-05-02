@@ -1,6 +1,7 @@
 import { Condition, Manipulator, Rule } from '../karabiner/karabiner-config'
 import { buildManipulators, ManipulatorBuilder } from './manipulator'
 import { buildCondition, ConditionBuilder } from './condition'
+import { BuildContext } from '../utils/build-context'
 
 export function rule(
   description: string,
@@ -37,11 +38,11 @@ export class BasicRuleBuilder implements RuleBuilder {
     return this
   }
 
-  build(): Rule {
+  build(context?: BuildContext): Rule {
     const rule: Rule = {
       description: this.ruleDescription,
       manipulators: this.manipulatorSources.reduce(
-        (r, v) => [...r, ...buildManipulators(v)],
+        (r, v) => [...r, ...buildManipulators(v, context)],
         [] as Manipulator[],
       ),
     }
@@ -63,13 +64,16 @@ export class BasicRuleBuilder implements RuleBuilder {
 }
 
 export interface RuleBuilder {
-  build(): Rule
+  build(context?: BuildContext): Rule
 }
 
 export function isRuleBuilder(src: Rule | RuleBuilder): src is RuleBuilder {
   return typeof (src as RuleBuilder).build === 'function'
 }
 
-export function buildRule(src: Rule | RuleBuilder): Rule {
-  return isRuleBuilder(src) ? src.build() : src
+export function buildRule(
+  src: Rule | RuleBuilder,
+  context?: BuildContext,
+): Rule {
+  return isRuleBuilder(src) ? src.build(context) : src
 }

@@ -7,6 +7,7 @@ import {
 } from '../karabiner/karabiner-config'
 import { FromModifierParam, parseFromModifierParams } from './modifier'
 import { buildCondition, ConditionBuilder } from './condition'
+import { BuildContext } from '../utils/build-context'
 
 export function mouseMotionToScroll() {
   return new MouseMotionToScrollManipulatorBuilder()
@@ -40,7 +41,7 @@ export class MouseMotionToScrollManipulatorBuilder
     return this
   }
 
-  public build(): Manipulator[] {
+  public build(_?: BuildContext): Manipulator[] {
     return [{ ...this.manipulator }]
   }
 }

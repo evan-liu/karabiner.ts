@@ -4,8 +4,9 @@ import {
   Rule,
 } from '../karabiner/karabiner-config'
 import { buildRule, RuleBuilder } from './rule'
-import { defaultDoubleTapDelay, doubleTapParameters } from './double-tap'
-import { defaultSimlayerThreshold, simlayerParameters } from './layer'
+import { defaultDoubleTapParameters } from './double-tap'
+import { defaultSimlayerParameters } from './simlayer'
+import { BuildContext } from '../utils/build-context'
 
 export const defaultComplexModificationsParameters: ComplexModificationsParameters =
   {
@@ -17,8 +18,8 @@ export const defaultComplexModificationsParameters: ComplexModificationsParamete
   }
 
 export type ModificationParameters = ComplexModificationsParameters &
-  Partial<typeof doubleTapParameters> &
-  Partial<typeof simlayerParameters>
+  Partial<typeof defaultDoubleTapParameters> &
+  Partial<typeof defaultSimlayerParameters>
 
 export function complexModifications(
   rules: Array<Rule | RuleBuilder>,
@@ -30,13 +31,16 @@ export function complexModifications(
     ...complexModificationsParameters
   } = parameters
 
-  doubleTapParameters['double_tap.delay_milliseconds'] =
-    doubleTapDelay || defaultDoubleTapDelay
-  simlayerParameters['simlayer.threshold_milliseconds'] =
-    simlayerThreshold || defaultSimlayerThreshold
+  const context = new BuildContext()
+  context.setParameters<typeof defaultDoubleTapParameters>({
+    'double_tap.delay_milliseconds': doubleTapDelay,
+  })
+  context.setParameters<typeof defaultSimlayerParameters>({
+    'simlayer.threshold_milliseconds': simlayerThreshold,
+  })
 
   const modifications: ComplexModifications = {
-    rules: rules.map(buildRule),
+    rules: rules.map((v) => buildRule(v, context)),
     parameters: {
       ...defaultComplexModificationsParameters,
       ...complexModificationsParameters,
