@@ -3,8 +3,8 @@ import { complexModifications } from './complex-modifications'
 import { rule } from './rule'
 import { mapDoubleTap } from './double-tap'
 import { BasicManipulator } from '../karabiner/karabiner-config'
-import { simlayer } from './layer'
 import { map } from './from'
+import { simlayer } from './simlayer'
 
 describe('complexModifications()', () => {
   test('Parameters', () => {

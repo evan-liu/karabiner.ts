@@ -5,7 +5,7 @@ import {
 } from '../karabiner/karabiner-config'
 import { buildRule, RuleBuilder } from './rule'
 import { defaultDoubleTapDelay, doubleTapParameters } from './double-tap'
-import { defaultSimlayerThreshold, simlayerParameters } from './layer'
+import { defaultSimlayerThreshold, simlayerParameters } from './simlayer'
 
 export const defaultComplexModificationsParameters: ComplexModificationsParameters =
   {
