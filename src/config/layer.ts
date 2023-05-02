@@ -10,6 +10,7 @@ import { toSetVar } from './to'
 import { ConditionBuilder, ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
 import { toArray } from '../utils/to-array'
+import { BuildContext } from '../utils/build-context'
 
 export type LayerKeyCode = Exclude<
   FromKeyCode,
@@ -45,8 +46,8 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     this.condition(this.layerCondition)
   }
 
-  public build(): Rule {
-    const rule = super.build()
+  public build(context?: BuildContext): Rule {
+    const rule = super.build(context)
 
     const conditions = this.conditions.filter((v) => v !== this.layerCondition)
     for (const key_code of this.keys) {
@@ -57,6 +58,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
           this.onValue,
           this.offValue,
           conditions,
+          context,
         ),
         ...rule.manipulators,
       ]
@@ -72,11 +74,12 @@ export function layerToggleManipulator(
   onValue: ToVariable['value'],
   offValue: ToVariable['value'],
   conditions?: Array<Condition | ConditionBuilder>,
+  context?: BuildContext,
 ) {
   const manipulator = map(key_code)
     .toVar(varName, onValue)
     .toAfterKeyUp(toSetVar(varName, offValue))
     .toIfAlone({ key_code })
   if (conditions?.length) manipulator.condition(...conditions)
-  return manipulator.build()
+  return manipulator.build(context)
 }

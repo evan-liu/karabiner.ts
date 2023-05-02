@@ -6,10 +6,10 @@ import { getKeyWithAlias } from '../utils/key-alias'
 import { toSetVar } from './to'
 import { FromKeyCode } from '../karabiner/key-code'
 import { LayerKeyCode, LayerKeyParam, layerToggleManipulator } from './layer'
+import { BuildContext } from '../utils/build-context'
 
-export const defaultSimlayerThreshold = 200
-export const simlayerParameters = {
-  'simlayer.threshold_milliseconds': defaultSimlayerThreshold,
+export const defaultSimlayerParameters = {
+  'simlayer.threshold_milliseconds': 200,
 }
 
 /** @see https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md#advance3 */
@@ -58,8 +58,13 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     return this
   }
 
-  public build(): Rule {
-    const rule = super.build()
+  public build(context?: BuildContext): Rule {
+    const rule = super.build(context)
+    const params =
+      context?.getParameters(defaultSimlayerParameters) ??
+      defaultSimlayerParameters
+    const threshold =
+      this.threshold || params['simlayer.threshold_milliseconds']
 
     const conditions =
       this.conditions.length > 1
@@ -88,9 +93,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
         rule.manipulators.push({
           type: 'basic',
           parameters: {
-            'basic.simultaneous_threshold_milliseconds':
-              this.threshold ||
-              simlayerParameters['simlayer.threshold_milliseconds'],
+            'basic.simultaneous_threshold_milliseconds': threshold,
           },
           to: [setVarOn, ...(v.to || [])],
           from: {
@@ -116,6 +119,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
           this.onValue,
           this.offValue,
           conditions,
+          context,
         ),
         ...rule.manipulators,
       ]

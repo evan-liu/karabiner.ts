@@ -1,0 +1,17 @@
+export class BuildContext {
+  private readonly parameters: Record<string, string> = {}
+
+  public setParameters<TDefaults extends {}>(v: Partial<TDefaults>): void {
+    Object.assign(this.parameters, v)
+  }
+
+  public getParameters<TDefaults extends {}>(defaults: TDefaults): TDefaults {
+    const result = { ...defaults }
+    for (const key of Object.keys(defaults)) {
+      if (key in this.parameters && this.parameters[key] !== undefined) {
+        Object.assign(result, { [key]: this.parameters[key] })
+      }
+    }
+    return result
+  }
+}

@@ -1,6 +1,7 @@
 import { Manipulator, Modifier } from '../karabiner/karabiner-config'
 import { FromModifierParam, parseFromModifierParams } from '../config/modifier'
 import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
+import { BuildContext } from './build-context'
 
 /**
  * A high-order function to add modifiers to a group of manipulators
@@ -18,13 +19,13 @@ export function withModifier(
   manipulators: Array<Manipulator | ManipulatorBuilder>,
 ) => ManipulatorBuilder {
   return (manipulators) => ({
-    build: () => {
+    build: (context?: BuildContext) => {
       const sharedModifiers = parseFromModifierParams(
         mandatoryModifiers,
         optionalModifiers,
       )!
       return manipulators
-        .map(buildManipulators)
+        .map((v) => buildManipulators(v, context))
         .reduce((result, manipulator) => result.concat(manipulator), [])
         .map((src) => {
           const modifiers = (
