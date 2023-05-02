@@ -5,6 +5,7 @@ import {
   KeyboardType,
   ToVariable,
 } from '../karabiner/karabiner-config'
+import { toArray } from '../utils/to-array'
 
 export function ifVar(
   name: string,
@@ -55,7 +56,7 @@ export function ifDevice(
 ) {
   return new ConditionBuilder({
     type: 'device_if',
-    identifiers: Array.isArray(identifier) ? identifier : [identifier],
+    identifiers: toArray(identifier),
     description,
   })
 }
@@ -66,7 +67,7 @@ export function ifDeviceExists(
 ) {
   return new ConditionBuilder({
     type: 'device_exists_if',
-    identifiers: Array.isArray(identifier) ? identifier : [identifier],
+    identifiers: toArray(identifier),
     description,
   })
 }
@@ -77,7 +78,7 @@ export function ifKeyboardType(
 ) {
   return new ConditionBuilder({
     type: 'keyboard_type_if',
-    keyboard_types: Array.isArray(keyboardType) ? keyboardType : [keyboardType],
+    keyboard_types: toArray(keyboardType),
     description,
   })
 }
@@ -88,7 +89,7 @@ export function ifInputSource(
 ) {
   return new ConditionBuilder({
     type: 'input_source_if',
-    input_sources: Array.isArray(inputSource) ? inputSource : [inputSource],
+    input_sources: toArray(inputSource),
     description,
   })
 }

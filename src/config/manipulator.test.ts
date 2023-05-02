@@ -197,6 +197,10 @@ describe('ManipulatorBuilder', () => {
         .toIfAlone('b', '⌘', { lazy: true })
         .build()[0].to_if_alone,
     ).toEqual([toEvent, toEvent])
+    expect(
+      new BasicManipulatorBuilder(from).toIfAlone([toEvent, toEvent]).build()[0]
+        .to_if_alone,
+    ).toEqual([toEvent, toEvent])
   })
 
   test('toIfHeldDown()', () => {
@@ -204,6 +208,11 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toIfHeldDown(toEvent)
         .toIfHeldDown('b', '⌘', { lazy: true })
+        .build()[0].to_if_held_down,
+    ).toEqual([toEvent, toEvent])
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toIfHeldDown([toEvent, toEvent])
         .build()[0].to_if_held_down,
     ).toEqual([toEvent, toEvent])
   })
@@ -215,13 +224,18 @@ describe('ManipulatorBuilder', () => {
         .toAfterKeyUp('b', '⌘', { lazy: true })
         .build()[0].to_after_key_up,
     ).toEqual([toEvent, toEvent])
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toAfterKeyUp([toEvent, toEvent])
+        .build()[0].to_after_key_up,
+    ).toEqual([toEvent, toEvent])
   })
 
   test('toDelayedAction()', () => {
     expect(
       new BasicManipulatorBuilder(from)
         .toDelayedAction([{ key_code: 'a' }], [{ key_code: 'b' }])
-        .toDelayedAction([{ key_code: 'c' }], [{ key_code: 'd' }])
+        .toDelayedAction([{ key_code: 'c' }], { key_code: 'd' })
         .build()[0].to_delayed_action,
     ).toEqual({
       to_if_invoked: [{ key_code: 'a' }, { key_code: 'c' }],

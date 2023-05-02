@@ -9,6 +9,7 @@ import { FromKeyParam, map } from './from'
 import { toSetVar } from './to'
 import { buildCondition, ConditionBuilder, ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
+import { toArray } from '../utils/to-array'
 
 export const defaultSimlayerThreshold = 200
 export const simlayerParameters = {
@@ -42,9 +43,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
     super(`Layer - ${varName}`)
-    this.keys = (Array.isArray(key) ? key : [key]).map(
-      (v) => getKeyWithAlias(v) as LayerKeyCode,
-    )
+    this.keys = toArray(key).map((v) => getKeyWithAlias(v) as LayerKeyCode)
     this.condition(this.layerCondition)
   }
 
@@ -93,9 +92,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
     super(`Simlayer - ${varName}`)
-    this.keys = (Array.isArray(key) ? key : [key]).map(
-      (v) => getKeyWithAlias(v) as LayerKeyCode,
-    )
+    this.keys = toArray(key).map((v) => getKeyWithAlias(v) as LayerKeyCode)
     this.condition(this.layerCondition)
   }
 

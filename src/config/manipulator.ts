@@ -38,6 +38,7 @@ import { buildCondition, ConditionBuilder } from './condition'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 import { StickyModifierKeyCode } from '../karabiner/key-code'
+import { toArray } from '../utils/to-array'
 
 export interface ManipulatorBuilder {
   build(): Manipulator[]
@@ -57,15 +58,11 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this {
-    if (Array.isArray(keyOrEvent)) {
-      this.manipulator.to = [...(this.manipulator.to || []), ...keyOrEvent]
-    } else {
-      this.addToEvent(
-        typeof keyOrEvent === 'string' || typeof keyOrEvent === 'number'
-          ? toKey(keyOrEvent, modifiers, options)
-          : keyOrEvent,
-      )
-    }
+    this.addToEvent(
+      typeof keyOrEvent === 'object'
+        ? keyOrEvent
+        : toKey(keyOrEvent, modifiers, options),
+    )
     return this
   }
 
@@ -188,79 +185,80 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     return this
   }
 
-  toIfAlone(event: ToEvent): this
+  toIfAlone(event: ToEvent | ToEvent[]): this
   toIfAlone(
     key: ToKeyParam,
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this
   toIfAlone(
-    keyOrEvent: ToEvent | ToKeyParam,
+    keyOrEvent: ToEvent | ToEvent[] | ToKeyParam,
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this {
     this.pushOrCreateList(
       this.manipulator,
       'to_if_alone',
-      typeof keyOrEvent === 'string'
-        ? toKey(keyOrEvent, modifiers, options)
-        : keyOrEvent,
+      typeof keyOrEvent === 'object'
+        ? keyOrEvent
+        : toKey(keyOrEvent, modifiers, options),
     )
     return this
   }
 
-  toIfHeldDown(event: ToEvent): this
+  toIfHeldDown(event: ToEvent | ToEvent[]): this
   toIfHeldDown(
     key: ToKeyParam,
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this
   toIfHeldDown(
-    keyOrEvent: ToEvent | ToKeyParam,
+    keyOrEvent: ToEvent | ToEvent[] | ToKeyParam,
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this {
     this.pushOrCreateList(
       this.manipulator,
       'to_if_held_down',
-      typeof keyOrEvent === 'string'
-        ? toKey(keyOrEvent, modifiers, options)
-        : keyOrEvent,
+      typeof keyOrEvent === 'object'
+        ? keyOrEvent
+        : toKey(keyOrEvent, modifiers, options),
     )
     return this
   }
 
-  toAfterKeyUp(event: ToEvent): this
+  toAfterKeyUp(event: ToEvent | ToEvent[]): this
   toAfterKeyUp(
     key: ToKeyParam,
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this
   toAfterKeyUp(
-    keyOrEvent: ToEvent | ToKeyParam,
+    keyOrEvent: ToEvent | ToEvent[] | ToKeyParam,
     modifiers?: ModifierParam,
     options?: ToEventOptions,
   ): this {
     this.pushOrCreateList(
       this.manipulator,
       'to_after_key_up',
-      typeof keyOrEvent === 'string'
-        ? toKey(keyOrEvent, modifiers, options)
-        : keyOrEvent,
+      typeof keyOrEvent === 'object'
+        ? keyOrEvent
+        : toKey(keyOrEvent, modifiers, options),
     )
     return this
   }
 
-  toDelayedAction(to_if_invoked: ToEvent[], to_if_canceled: ToEvent[]): this {
-    if (this.manipulator.to_delayed_action) {
-      this.manipulator.to_delayed_action.to_if_invoked.push(...to_if_invoked)
-      this.manipulator.to_delayed_action.to_if_canceled.push(...to_if_canceled)
-    } else {
-      this.manipulator.to_delayed_action = {
-        to_if_invoked,
-        to_if_canceled,
-      }
+  toDelayedAction(
+    ifInvoked: ToEvent | ToEvent[],
+    ifCanceled: ToEvent | ToEvent[],
+  ): this {
+    const delayedAction = this.manipulator.to_delayed_action || {
+      to_if_invoked: [],
+      to_if_canceled: [],
     }
+    toArray(ifInvoked).forEach((v) => delayedAction.to_if_invoked.push(v))
+    toArray(ifCanceled).forEach((v) => delayedAction.to_if_canceled.push(v))
+    this.manipulator.to_delayed_action = delayedAction
     return this
   }
 
@@ -284,13 +282,17 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     return [{ ...this.manipulator }]
   }
 
-  protected addToEvent(event: ToEvent) {
+  protected addToEvent(event: ToEvent | ToEvent[]) {
     this.pushOrCreateList(this.manipulator, 'to', event)
   }
 
-  protected pushOrCreateList<T extends {}>(obj: T, key: keyof T, item: any) {
-    const list = (obj[key] || []) as any[]
-    list.push(item)
+  protected pushOrCreateList<TListHolder extends {}, TItem>(
+    obj: TListHolder,
+    key: keyof TListHolder,
+    item: TItem | TItem[],
+  ) {
+    const list = (obj[key] || []) as TItem[]
+    toArray(item).forEach((v) => list.push(v))
     Object.assign(obj, { [key]: list })
   }
 }
