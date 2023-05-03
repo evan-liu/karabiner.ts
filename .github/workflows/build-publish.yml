@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/build-publish.yml'
+      - 'src/**'
+      - 'scripts/**'
+      - 'package.json'
 
 jobs:
   build-and-test:
