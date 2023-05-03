@@ -5,6 +5,7 @@ import { BasicManipulator } from '../karabiner/karabiner-config'
 import { ifVar } from './condition'
 import { complexModifications } from './complex-modifications'
 import { simlayer } from './simlayer'
+import { toKey } from './to'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)
@@ -54,8 +55,8 @@ test('layer() conditions', () => {
   ])
 })
 
-test('layer() empty manipulators error', () => {
-  expect(() => layer('a', '').manipulators([]).build()).toThrow(
+test('layer() allows empty manipulators', () => {
+  expect(() => layer('a', '').manipulators([]).build()).not.toThrow(
     /manipulators.*empty/,
   )
 })
@@ -89,4 +90,41 @@ test('multiple layer() by same key ', () => {
 
   expect(rules[2].manipulators.length).toBe(2)
   expect(rules[3].manipulators.length).toBe(1)
+})
+
+test('layer().configKey()', () => {
+  const rule = layer('a', 'v1')
+    .configKey((v) =>
+      v.to('b').toIfHeldDown('c').toDelayedAction(toKey('x'), toKey('y')),
+    )
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(1)
+  expect(manipulators[0]).toEqual({
+    type: 'basic',
+    from: { key_code: 'a' },
+    to: [{ set_variable: { name: 'v1', value: 1 } }, { key_code: 'b' }],
+    to_after_key_up: [{ set_variable: { name: 'v1', value: 0 } }],
+    to_if_alone: [{ key_code: 'a' }],
+    to_if_held_down: [{ key_code: 'c' }],
+    to_delayed_action: {
+      to_if_invoked: [{ key_code: 'x' }],
+      to_if_canceled: [{ key_code: 'y' }],
+    },
+  })
+})
+
+test('layer().configKey() replaceToIfAlone', () => {
+  const rule = layer('⇪', 'v1')
+    .configKey((v) => v.toIfAlone('b', '⌘'), true)
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(1)
+  expect(manipulators[0]).toEqual({
+    type: 'basic',
+    from: { key_code: 'caps_lock' },
+    to: [{ set_variable: { name: 'v1', value: 1 } }],
+    to_after_key_up: [{ set_variable: { name: 'v1', value: 0 } }],
+    to_if_alone: [{ key_code: 'b', modifiers: ['command'] }],
+  })
 })

@@ -15,6 +15,7 @@ export class BasicRuleBuilder implements RuleBuilder {
   protected readonly manipulatorSources: Array<
     Manipulator | ManipulatorBuilder
   > = []
+  protected allowEmptyManipulators = false
 
   constructor(
     protected ruleDescription: string,
@@ -47,7 +48,7 @@ export class BasicRuleBuilder implements RuleBuilder {
       ),
     }
 
-    if (rule.manipulators.length === 0) {
+    if (!this.allowEmptyManipulators && rule.manipulators.length === 0) {
       throw new Error(`"manipulators" is empty in "${rule.description}"`)
     }
 
