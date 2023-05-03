@@ -39,6 +39,26 @@ export type FromEvent = (
     optional?: Modifier[] | ['any']
   }
 }
+export type FromKeyCodeEvent = Extract<
+  FromEvent,
+  { key_code: FromKeyCode | number }
+>
+export type FromConsumerKeyCodeEvent = Extract<
+  FromEvent,
+  { consumer_key_code: string | number }
+>
+export type FromPointingButtonEvent = Extract<
+  FromEvent,
+  { pointing_button: string | number }
+>
+export type FromAnyKeyEvent = Extract<
+  FromEvent,
+  { any: 'key_code' | 'consumer_key_code' | 'pointing_button' }
+>
+export type FromSimultaneousEvent = Extract<
+  FromEvent,
+  { simultaneous: Array<{ key_code: string }> }
+>
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/select-input-source/ */
 export type ToInputSource = {
@@ -115,6 +135,35 @@ export type ToEvent = (
 ) &
   ToEventOptions
 
+export type ToKeyCodeEvent = Extract<ToEvent, { key_code: ToKeyCode }>
+export type ToConsumerKeyCodeEvent = Extract<
+  ToEvent,
+  { consumer_key_code: string }
+>
+export type ToPointingButtonEvent = Extract<
+  ToEvent,
+  { pointing_button: string }
+>
+export type ToShellCommandEvent = Extract<ToEvent, { shell_command: string }>
+export type ToSelectInputSourceEvent = Extract<
+  ToEvent,
+  { select_input_source: ToInputSource }
+>
+export type ToSetVariableEvent = Extract<ToEvent, { set_variable: ToVariable }>
+export type ToSetNotificationMessageEvent = Extract<
+  ToEvent,
+  { set_notification_message: ToNotificationMessage }
+>
+export type ToMouseKeyEvent = Extract<ToEvent, { mouse_key: ToMouseKey }>
+export type ToStickyModifierEvent = Extract<
+  ToEvent,
+  { sticky_modifier: ToStickyModifier }
+>
+export type ToSoftwareFunctionEvent = Extract<
+  ToEvent,
+  { software_function: ToSoftwareFunction }
+>
+
 export type DeviceIdentifier = {
   vendor_id?: number
   product_id?: number
@@ -175,6 +224,33 @@ export type Condition =
       description?: string
     }
 
+export type FrontmostApplicationCondition = Extract<
+  Condition,
+  { type: 'frontmost_application_if' | 'frontmost_application_unless' }
+>
+export type KeyboardTypeCondition = Extract<
+  Condition,
+  {
+    type:
+      | 'device_if'
+      | 'device_unless'
+      | 'device_exists_if'
+      | 'device_exists_unless'
+  }
+>
+export type InputSourceCondition = Extract<
+  Condition,
+  { type: 'keyboard_type_if' | 'keyboard_type_unless' }
+>
+export type VariableCondition = Extract<
+  Condition,
+  { type: 'input_source_if' | 'input_source_unless' }
+>
+export type EventChangedCondition = Extract<
+  Condition,
+  { type: 'variable_if' | 'variable_unless' }
+>
+
 export type BasicParameters = {
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous/#change-threshold-milliseconds */
   'basic.simultaneous_threshold_milliseconds'?: number
@@ -183,6 +259,10 @@ export type BasicParameters = {
   'basic.to_delayed_action_delay_milliseconds'?: number
 }
 
+type ToDelayedAction = {
+  to_if_invoked: ToEvent[]
+  to_if_canceled: ToEvent[]
+}
 export type BasicManipulator = {
   type: 'basic'
   from: FromEvent
@@ -194,10 +274,7 @@ export type BasicManipulator = {
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-after-key-up/ */
   to_after_key_up?: ToEvent[]
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-delayed-action/ */
-  to_delayed_action?: {
-    to_if_invoked: ToEvent[]
-    to_if_canceled: ToEvent[]
-  }
+  to_delayed_action?: ToDelayedAction
   parameters?: BasicParameters
   conditions?: Condition[]
   description?: string
