@@ -5,6 +5,10 @@ slug: /
 
 # karabiner.ts
 
+:::note 
+This Docs site is still a work in progress 🚧
+:::
+
 [Karabiner-Elements](https://karabiner-elements.pqrs.org/) configuration file is
 in JSON format as:
 

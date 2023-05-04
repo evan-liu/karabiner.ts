@@ -17,7 +17,11 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 
 <img src="https://user-images.githubusercontent.com/126383/235345521-89bd50a9-2e2e-416b-8a07-93e5d9ac6f70.png" width="640" alt="screenshot">
 
-See [more examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) and [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts).
+## Learn More
+
+- [Docs](https://evan-liu.github.io/karabiner.ts/)
+- [Examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) 
+- [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts)
 
 ## Usage
 
