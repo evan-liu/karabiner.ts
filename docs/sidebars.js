@@ -11,6 +11,7 @@ const sidebars = {
       items: [
         'rules/rule', //
         'rules/layer',
+        'rules/simlayer',
       ],
     },
   ],
