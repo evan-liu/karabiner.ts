@@ -10,6 +10,7 @@ const sidebars = {
       collapsed: false,
       items: [
         'rules/rule', //
+        'rules/layer',
       ],
     },
   ],
