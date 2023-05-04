@@ -10,7 +10,7 @@ on:
       - 'package.json'
 
 jobs:
-  build-and-test:
+  build-and-publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
