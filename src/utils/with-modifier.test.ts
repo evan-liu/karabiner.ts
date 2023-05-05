@@ -34,6 +34,27 @@ describe('withModifier()', () => {
         to: [{ key_code: 'a' }],
       },
     ])
+
+    expect(withModifier([], 'any')([map(1).to('a')]).build()[0].from).toEqual({
+      key_code: '1',
+      modifiers: { optional: ['any'] },
+    })
+    expect(
+      withModifier('optionalAny')([map(1).to('a')]).build()[0].from,
+    ).toEqual({ key_code: '1', modifiers: { optional: ['any'] } })
+    expect(
+      withModifier({ optional: 'any' })([map(1).to('a')]).build()[0].from,
+    ).toEqual({ key_code: '1', modifiers: { optional: ['any'] } })
+    expect(
+      withModifier({ optional: '⌘⌥' })([map(1, '⌘', '⌃').to('a')]).build()[0]
+        .from,
+    ).toEqual({
+      key_code: '1',
+      modifiers: {
+        mandatory: ['command'],
+        optional: ['control', 'command', 'option'],
+      },
+    })
   })
 
   test('Remove duplicated modifier', () => {

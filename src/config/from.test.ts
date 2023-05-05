@@ -13,11 +13,26 @@ test('map()', () => {
     key_code: '1',
     modifiers: { optional: ['command'] },
   })
+
+  expect(map(1, 'optionalAny').to(2).build()[0].from).toEqual({
+    key_code: '1',
+    modifiers: { optional: ['any'] },
+  })
+
+  expect(map(1, { optional: 'any' }).to(2).build()[0].from).toEqual({
+    key_code: '1',
+    modifiers: { optional: ['any'] },
+  })
+
+  expect(map(1, { optional: '⌘⌥' }).to(2).build()[0].from).toEqual({
+    key_code: '1',
+    modifiers: { optional: ['command', 'option'] },
+  })
 })
 
 test('mapSimultaneous()', () => {
   const { from, parameters } = mapSimultaneous(
-    ['a', '←', 2],
+    ['a', '←', 2, { any: 'pointing_button' }],
     { key_up_order: 'strict' },
     123,
   ).build()[0]
@@ -26,6 +41,7 @@ test('mapSimultaneous()', () => {
       { key_code: 'a' },
       { key_code: 'left_arrow' },
       { key_code: '2' },
+      { any: 'pointing_button' },
     ],
     simultaneous_options: { key_up_order: 'strict' },
   })

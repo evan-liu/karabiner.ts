@@ -8,10 +8,9 @@ describe('ManipulatorBuilder', () => {
   const toEvent: ToEvent = { key_code: 'b', modifiers: ['command'], lazy: true }
 
   test('type and from', () => {
-    expect(new BasicManipulatorBuilder(from).build()[0]).toEqual({
-      type: 'basic',
-      from,
-    })
+    const builder = new BasicManipulatorBuilder(from)
+    expect(builder.from).toEqual(from)
+    expect(builder.build()[0]).toEqual({ type: 'basic', from })
   })
 
   test('to()', () => {

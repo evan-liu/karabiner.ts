@@ -13,6 +13,7 @@ export const defaultDoubleTapParameters = {
 
 export type DoubleTapParam = FromAndToKeyCode | KeyAlias | NumberKeyValue
 
+/** Start a manipulator for double-tapping a key */
 export function mapDoubleTap(key: DoubleTapParam, delay?: number) {
   return new DoubleTapManipulatorBuilder(key, delay)
 }
@@ -22,7 +23,7 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
   private readonly varName: string
 
   constructor(key: FromKeyParam, private readonly delay?: number) {
-    const keyCode = getKeyWithAlias(key) as FromAndToKeyCode
+    const keyCode = getKeyWithAlias<FromAndToKeyCode>(key)
     super({ key_code: keyCode })
 
     this.keyCode = keyCode

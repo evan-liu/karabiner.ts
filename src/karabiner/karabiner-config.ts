@@ -4,6 +4,8 @@ import {
   StickyModifierKeyCode,
   ToKeyCode,
 } from './key-code'
+import { ConsumerKeyCode } from './consumer-key-code'
+import { PointingButton } from './pointing-button'
 
 export type Modifier =
   | ModifierKeyCode
@@ -20,15 +22,18 @@ export type SimultaneousOptions = {
   to_after_key_up?: ToEvent[]
 }
 
+export type FromKeyType =
+  | { key_code: FromKeyCode | number }
+  | { consumer_key_code: ConsumerKeyCode | number }
+  | { pointing_button: PointingButton | number }
+  | { any: 'key_code' | 'consumer_key_code' | 'pointing_button' }
+
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/ */
 export type FromEvent = (
-  | { key_code: FromKeyCode | number }
-  | { consumer_key_code: string | number }
-  | { pointing_button: string | number }
-  | { any: 'key_code' | 'consumer_key_code' | 'pointing_button' }
+  | FromKeyType
   | {
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous/ */
-      simultaneous: Array<{ key_code: string }>
+      simultaneous: FromKeyType[]
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous-options/ */
       simultaneous_options?: SimultaneousOptions
     }
@@ -57,7 +62,7 @@ export type FromAnyKeyEvent = Extract<
 >
 export type FromSimultaneousEvent = Extract<
   FromEvent,
-  { simultaneous: Array<{ key_code: string }> }
+  { simultaneous: FromKeyType[] }
 >
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/select-input-source/ */

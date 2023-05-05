@@ -52,7 +52,14 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     this.manipulator = { type: 'basic', from }
   }
 
+  /** The FromEvent of the Manipulator. */
+  get from(): FromEvent {
+    return this.manipulator.from
+  }
+  /** Set or add ToEvent(s) to the Manipulator. */
+
   to(event: ToEvent | ToEvent[]): this
+  /** Set or add a ToEvent with a key_code. */
   to(key: ToKeyParam, modifiers?: ModifierParam, options?: ToEventOptions): this
   to(
     keyOrEvent: ToEvent | ToKeyParam | ToEvent[],
