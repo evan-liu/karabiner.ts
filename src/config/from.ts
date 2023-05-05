@@ -1,6 +1,6 @@
 import { FromKeyCode } from '../karabiner/key-code'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
-import { FromModifierParam, parseFromModifierParams } from './modifier'
+import { FromModifierParam } from './modifier'
 import { BasicManipulatorBuilder } from './manipulator'
 import {
   FromEvent,
@@ -9,6 +9,11 @@ import {
 } from '../karabiner/karabiner-config'
 import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
+import {
+  FromModifierOverloadParam,
+  FromOptionalModifierParam,
+  parseFromModifierOverload,
+} from '../utils/from-modifier-overload'
 
 export type FromKeyParam = FromKeyCode | KeyAlias | NumberKeyValue
 
@@ -23,7 +28,7 @@ export function map(
 /** Start a manipulator with a from.key_code and optional modifiers */
 export function map(
   key: FromKeyParam,
-  modifiers: 'optionalAny' | { optional: FromModifierParam },
+  modifiers: FromOptionalModifierParam,
 ): BasicManipulatorBuilder
 export function map(
   keyOrEvent: FromKeyParam | FromEvent,
@@ -34,7 +39,7 @@ export function map(
     return new BasicManipulatorBuilder(keyOrEvent)
   return new BasicManipulatorBuilder({
     key_code: getKeyWithAlias<FromKeyCode>(keyOrEvent),
-    modifiers: parseModifierOverload(mandatoryModifiers, optionalModifiers),
+    modifiers: parseFromModifierOverload(mandatoryModifiers, optionalModifiers),
   })
 }
 
@@ -65,7 +70,7 @@ export function mapConsumerKey(
 ) {
   return new BasicManipulatorBuilder({
     consumer_key_code: code,
-    modifiers: parseModifierOverload(mandatoryModifiers, optionalModifiers),
+    modifiers: parseFromModifierOverload(mandatoryModifiers, optionalModifiers),
   })
 }
 
@@ -83,31 +88,6 @@ export function mapPointingButton(
 ) {
   return new BasicManipulatorBuilder({
     pointing_button: button,
-    modifiers: parseModifierOverload(mandatoryModifiers, optionalModifiers),
+    modifiers: parseFromModifierOverload(mandatoryModifiers, optionalModifiers),
   })
-}
-
-type FromModifierOverloadParam =
-  | FromModifierParam
-  | ''
-  | null
-  | 'optionalAny'
-  | { optional: FromModifierParam }
-
-function parseModifierOverload(
-  mandatoryModifiers?: FromModifierOverloadParam,
-  optionalModifiers?: FromModifierParam,
-) {
-  if (!mandatoryModifiers) {
-    return parseFromModifierParams(mandatoryModifiers, optionalModifiers)
-  } else if (mandatoryModifiers === 'optionalAny') {
-    return parseFromModifierParams('', 'any')
-  } else if (
-    typeof mandatoryModifiers === 'object' &&
-    'optional' in mandatoryModifiers
-  ) {
-    return parseFromModifierParams('', mandatoryModifiers.optional)
-  } else {
-    return parseFromModifierParams(mandatoryModifiers, optionalModifiers)
-  }
 }
