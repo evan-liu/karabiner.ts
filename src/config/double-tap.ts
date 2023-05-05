@@ -1,11 +1,21 @@
 import { BasicManipulatorBuilder } from './manipulator'
-import { BasicManipulator } from '../karabiner/karabiner-config'
-import { FromKeyParam } from './from'
+import {
+  BasicManipulator,
+  FromKeyCodeEvent,
+  Modifier,
+  ToEvent,
+} from '../karabiner/karabiner-config'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
 import { FromAndToKeyCode } from '../karabiner/key-code'
 import { ifVar } from './condition'
 import { toSetVar } from './to'
 import { BuildContext } from '../utils/build-context'
+import { FromModifierParam } from './modifier'
+import {
+  FromModifierOverloadParam,
+  FromOptionalModifierParam,
+  parseFromModifierOverload,
+} from '../utils/from-modifier-overload'
 
 export const defaultDoubleTapParameters = {
   'double_tap.delay_milliseconds': 200,
@@ -13,46 +23,130 @@ export const defaultDoubleTapParameters = {
 
 export type DoubleTapParam = FromAndToKeyCode | KeyAlias | NumberKeyValue
 
+/** Start a manipulator for double-tapping a key with modifiers */
+export function mapDoubleTap(
+  key: DoubleTapParam,
+  mandatoryModifiers: FromModifierParam | '' | null,
+  optionalModifiers?: FromModifierParam,
+  delay?: number,
+): DoubleTapManipulatorBuilder
+/** Start a manipulator for double-tapping a key with modifiers */
+export function mapDoubleTap(
+  key: DoubleTapParam,
+  modifiers: FromModifierParam | FromOptionalModifierParam,
+  delay?: number,
+): DoubleTapManipulatorBuilder
 /** Start a manipulator for double-tapping a key */
-export function mapDoubleTap(key: DoubleTapParam, delay?: number) {
-  return new DoubleTapManipulatorBuilder(key, delay)
+export function mapDoubleTap(
+  key: DoubleTapParam,
+  delay?: number,
+): DoubleTapManipulatorBuilder
+/** Start a manipulator for double-tapping a key */
+export function mapDoubleTap(
+  key: DoubleTapParam,
+  arg1?: FromModifierOverloadParam | number,
+  arg2?: FromModifierParam | number,
+  arg3?: number,
+) {
+  const builder = new DoubleTapManipulatorBuilder({
+    key_code: getKeyWithAlias<FromAndToKeyCode>(key),
+  })
+  if (arg3) {
+    builder.delay(arg3)
+    builder.from.modifiers = parseFromModifierOverload(
+      arg1 as FromModifierOverloadParam,
+      arg2 as FromModifierParam,
+    )
+  } else if (arg2) {
+    if (typeof arg2 === 'number') {
+      builder.delay(arg2)
+      builder.from.modifiers = parseFromModifierOverload(
+        arg1 as FromModifierOverloadParam,
+      )
+    } else {
+      builder.from.modifiers = parseFromModifierOverload(
+        arg1 as FromModifierOverloadParam,
+        arg2 as FromModifierParam,
+      )
+    }
+  } else if (arg1) {
+    if (typeof arg1 === 'number') {
+      builder.delay(arg1)
+    } else {
+      builder.from.modifiers = parseFromModifierOverload(
+        arg1 as FromModifierOverloadParam,
+      )
+    }
+  }
+  return builder
 }
 
 export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
-  private readonly keyCode: FromAndToKeyCode
-  private readonly varName: string
+  private singleTapEvent?: ToEvent | null = undefined
+  private delayParam?: number
 
-  constructor(key: FromKeyParam, private readonly delay?: number) {
-    const keyCode = getKeyWithAlias<FromAndToKeyCode>(key)
-    super({ key_code: keyCode })
+  constructor(from: FromKeyCodeEvent & { key_code: FromAndToKeyCode }) {
+    super(from)
+  }
 
-    this.keyCode = keyCode
-    this.varName = `double-tap-${keyCode}`
+  /** Set single tap which is from key by default; null to disable */
+  public singleTap(v: ToEvent | null): this {
+    this.singleTapEvent = v
+    return this
+  }
+
+  /** Set the delay parameter */
+  public delay(v: number): this {
+    this.delayParam = v
+    return this
   }
 
   public build(context?: BuildContext): BasicManipulator[] {
     const params =
       context?.getParameters(defaultDoubleTapParameters) ??
       defaultDoubleTapParameters
-    const delay = this.delay || params['double_tap.delay_milliseconds']
+    const delay = this.delayParam || params['double_tap.delay_milliseconds']
 
-    const onCondition = ifVar(this.varName).build()
-    const offCondition = ifVar(this.varName).unless().build()
+    const keyCode = (this.from as FromKeyCodeEvent).key_code as FromAndToKeyCode
+
+    if (this.singleTapEvent === undefined) {
+      this.singleTapEvent = { key_code: keyCode }
+      const modifiers = this.manipulator.from.modifiers?.mandatory as Array<
+        Modifier | 'any'
+      >
+      if (modifiers) {
+        this.singleTapEvent.modifiers = modifiers.filter(
+          (v) => v !== 'any',
+        ) as Modifier[]
+      }
+    }
+
+    const varNameParts = ['double-tap', keyCode]
+    if (this.from.modifiers) {
+      ;[this.from.modifiers.mandatory, this.from.modifiers.optional]
+        .map((v) => (v?.length ? v.join(',') : ''))
+        .forEach((v) => v && varNameParts.push(v))
+    }
+    const varName = varNameParts.join('-')
+
+    const onCondition = ifVar(varName).build()
+    const offCondition = ifVar(varName).unless().build()
 
     const baseManipulator: BasicManipulator = {
       ...this.manipulator,
       conditions: [...(this.manipulator.conditions || []), onCondition],
-      to: [...(this.manipulator.to || []), toSetVar(this.varName)],
     }
 
     const toggleManipulator: BasicManipulator = {
-      type: 'basic',
-      from: { key_code: this.keyCode },
-      to: [toSetVar(this.varName, 1)],
+      ...this.manipulator,
+      to: [toSetVar(varName, 1)],
       conditions: [offCondition],
       to_delayed_action: {
-        to_if_invoked: [{ key_code: this.keyCode }, toSetVar(this.varName, 0)],
-        to_if_canceled: [toSetVar(this.varName, 0)],
+        to_if_invoked: [
+          ...(this.singleTapEvent ? [this.singleTapEvent] : []),
+          toSetVar(varName, 0),
+        ],
+        to_if_canceled: [toSetVar(varName, 0)],
       },
     }
     toggleManipulator.parameters = {
