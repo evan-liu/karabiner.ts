@@ -19,6 +19,7 @@ const sidebars = {
       items: [
         //
         'manipulators/from',
+        'manipulators/double-tap',
       ],
     },
   ],
