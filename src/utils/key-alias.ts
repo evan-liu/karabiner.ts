@@ -57,8 +57,8 @@ const keyAliases: Record<string, string> = {
   '⇪': modifierKeyAliases['⇪'],
 } /* c8 ignore next */ satisfies Record<KeyAlias, KeyCode>
 
-export function getKeyWithAlias(
+export function getKeyWithAlias<T extends KeyCode = KeyCode>(
   key: KeyCode | KeyAlias | NumberKeyValue,
-): KeyCode {
-  return (keyAliases[key] || '' + key) as KeyCode
+): T {
+  return (keyAliases[key] || '' + key) as T
 }

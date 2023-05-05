@@ -52,7 +52,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
     super(`Layer - ${varName}`)
-    this.keys = toArray(key).map((v) => getKeyWithAlias(v) as LayerKeyCode)
+    this.keys = toArray(key).map((v) => getKeyWithAlias<LayerKeyCode>(v))
     this.condition(this.layerCondition)
     this.allowEmptyManipulators = true
   }

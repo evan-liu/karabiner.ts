@@ -22,7 +22,7 @@ export function toKey(
 ): ToEvent {
   return {
     ...options,
-    key_code: getKeyWithAlias(key) as ToKeyCode,
+    key_code: getKeyWithAlias<ToKeyCode>(key),
     modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
   }
 }
