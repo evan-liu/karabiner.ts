@@ -7,11 +7,18 @@ const sidebars = {
     {
       type: 'category',
       label: 'Rules',
-      collapsed: false,
       items: [
         'rules/rule', //
         'rules/layer',
         'rules/simlayer',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Manipulators',
+      items: [
+        //
+        'manipulators/from',
       ],
     },
   ],
