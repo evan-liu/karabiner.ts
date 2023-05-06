@@ -24,6 +24,7 @@ const sidebars = {
         'manipulators/mouse_motion_to_scroll',
       ],
     },
+    'utils',
   ],
 }
 
