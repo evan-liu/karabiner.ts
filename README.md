@@ -23,14 +23,16 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 - [Examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) 
 - [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts)
 
-## Usage
+## Install 
 
 (Install [Node.js](https://nodejs.org/en) first if not already installed)
 
-1. [Download](https://github.com/evan-liu/karabiner.ts.examples/archive/refs/heads/main.zip) (or clone | [fork](https://github.com/evan-liu/karabiner.ts.examples/fork)) the [examples/starter repo](https://github.com/evan-liu/karabiner.ts.examples).
-2. Run `npm install`.
-3. Update to your own [configs](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts).
-4. Set the profile name. Create a new Karabiner-Elements profile if needed.
-5. Run `npm run build`.
+`npx create-karabiner-config@latest`
+
+Then: 
+
+1. Write your key mapping in `src/index.ts`.
+2. Set the profile name. Create a new Karabiner-Elements profile if needed.
+3. Run `npm run build`.
 
 Alternatively, you can install the `karabiner.ts` npm package and call `writeToProfile()` in a Node.js script in your preferred way.
