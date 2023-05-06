@@ -17,9 +17,9 @@ const sidebars = {
       type: 'category',
       label: 'Manipulators',
       items: [
-        //
         'manipulators/from',
         'manipulators/double-tap',
+        'manipulators/to',
       ],
     },
   ],
