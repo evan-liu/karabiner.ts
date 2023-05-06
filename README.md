@@ -27,7 +27,7 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 
 (Install [Node.js](https://nodejs.org/en) first if not already installed)
 
-`npx create-karabiner-config@latest`
+    npx create-karabiner-config@latest
 
 Then: 
 
