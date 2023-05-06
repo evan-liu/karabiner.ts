@@ -4,7 +4,7 @@ import {
   StickyModifierKeyCode,
   ToKeyCode,
 } from './key-code'
-import { ConsumerKeyCode } from './consumer-key-code'
+import { FromConsumerKeyCode, ToConsumerKeyCode } from './consumer-key-code'
 import { PointingButton } from './pointing-button'
 
 export type Modifier =
@@ -24,7 +24,7 @@ export type SimultaneousOptions = {
 
 export type FromKeyType =
   | { key_code: FromKeyCode | number }
-  | { consumer_key_code: ConsumerKeyCode | number }
+  | { consumer_key_code: FromConsumerKeyCode | number }
   | { pointing_button: PointingButton | number }
   | { any: 'key_code' | 'consumer_key_code' | 'pointing_button' }
 
@@ -127,9 +127,9 @@ export type ToEventOptions = {
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/ */
 export type ToEvent = (
-  | { key_code: ToKeyCode }
-  | { consumer_key_code: string }
-  | { pointing_button: string }
+  | { key_code: ToKeyCode | number }
+  | { consumer_key_code: ToConsumerKeyCode | number }
+  | { pointing_button: PointingButton | number }
   | { shell_command: string }
   | { select_input_source: ToInputSource }
   | { set_variable: ToVariable }
