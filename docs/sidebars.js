@@ -20,6 +20,7 @@ const sidebars = {
         'manipulators/from',
         'manipulators/double-tap',
         'manipulators/to',
+        'manipulators/condition',
         'manipulators/mouse_motion_to_scroll',
       ],
     },
