@@ -41,6 +41,8 @@ Then:
 2. Set the profile name. Create a new Karabiner-Elements profile if needed.
 3. Run `npm run build`.
 
+To update to the latest version, run `npm run update` (or `npm update karabiner.ts`). 
+
 ### Option 2
 
 1. [Download](https://github.com/evan-liu/karabiner.ts.examples/archive/refs/heads/main.zip) (or clone | [fork](https://github.com/evan-liu/karabiner.ts.examples/fork)) the [examples/starter repo](https://github.com/evan-liu/karabiner.ts.examples).
