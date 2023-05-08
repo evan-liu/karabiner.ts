@@ -2,11 +2,7 @@ import { FromKeyCode } from '../karabiner/key-code'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
 import { FromModifierParam } from './modifier'
 import { BasicManipulatorBuilder } from './manipulator'
-import {
-  FromEvent,
-  FromKeyType,
-  SimultaneousOptions,
-} from '../karabiner/karabiner-config'
+import { FromEvent } from '../karabiner/karabiner-config'
 import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 import {
@@ -41,25 +37,6 @@ export function map(
     key_code: getKeyWithAlias<FromKeyCode>(keyOrEvent),
     modifiers: parseFromModifierOverload(mandatoryModifiers, optionalModifiers),
   })
-}
-
-/** Start a manipulator with from.simultaneous */
-export function mapSimultaneous(
-  keys: Array<FromKeyParam | FromKeyType>,
-  options?: SimultaneousOptions,
-  threshold?: number,
-) {
-  const manipulatorBuilder = new BasicManipulatorBuilder({
-    simultaneous: keys.map((v) =>
-      typeof v === 'object' ? v : { key_code: getKeyWithAlias<FromKeyCode>(v) },
-    ),
-    simultaneous_options: options,
-  })
-  return threshold
-    ? manipulatorBuilder.parameters({
-        'basic.simultaneous_threshold_milliseconds': threshold,
-      })
-    : manipulatorBuilder
 }
 
 /** Start a manipulator with from.consumer_key_code and modifiers */
