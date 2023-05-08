@@ -27,6 +27,8 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 
 (Install [Node.js](https://nodejs.org/en) first if not already installed)
 
+### Option 1
+
     npx create-karabiner-config@latest
 
 The default directory name is `karabiner-config`. You can pass another `project-name`:
@@ -39,5 +41,15 @@ Then:
 2. Set the profile name. Create a new Karabiner-Elements profile if needed.
 3. Run `npm run build`.
 
-Alternatively, you can install the `karabiner.ts` npm package and call 
-`writeToProfile()` from a Node.js script in your preferred way.
+### Option 2
+
+1. [Download](https://github.com/evan-liu/karabiner.ts.examples/archive/refs/heads/main.zip) (or clone | [fork](https://github.com/evan-liu/karabiner.ts.examples/fork)) the [examples/starter repo](https://github.com/evan-liu/karabiner.ts.examples).
+2. Run `npm install`.
+
+Then write and build the config same as Option 1.
+
+### Option 3
+
+    npm install karabiner.ts
+
+(or install with `yarn`, `pnpm`, etc) then call `writeToProfile()` from any Node.js script in your preferred way.
