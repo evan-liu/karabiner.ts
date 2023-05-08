@@ -216,6 +216,12 @@ mapSimultaneous(
 
 </details>
 
+### Modifiers
+
+To set `from.modifiers` use `mapSimultaneous().modifiers(/* ... */)`.
+
+### Threshold
+
 The threshold parameter can also be set at `writeToProfile()` for the profile. 
 
 ```typescript
