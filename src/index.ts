@@ -21,6 +21,7 @@ export { withModifier } from './utils/with-modifier'
 
 // From
 export * from './config/from'
+export { mapSimultaneous } from './config/simultaneous'
 export type { DoubleTapParam } from './config/double-tap'
 export { mapDoubleTap } from './config/double-tap'
 export { mouseMotionToScroll } from './config/mouse-motion-to-scroll'
