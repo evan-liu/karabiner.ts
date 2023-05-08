@@ -32,6 +32,7 @@ test('simlayer()', () => {
         key_up_when: 'any',
         to_after_key_up: [toSetVar('b-mode', false)],
       },
+      modifiers: { optional: ['any'] },
     },
   })
 
@@ -39,6 +40,7 @@ test('simlayer()', () => {
   expect(manipulators[0].conditions).toEqual([
     { type: 'variable_if', name: 'b-mode', value: true },
   ])
+  expect(manipulators[0].from.modifiers).toEqual({ optional: ['any'] })
 })
 
 test('simlayer() with multiple key', () => {
@@ -103,4 +105,27 @@ test('simlayer().enableLayer()', () => {
     to_if_alone: [{ key_code: 'c' }],
     conditions: [{ type: 'variable_if', name: 'd', value: 1 }],
   })
+})
+
+test('simlayer().modifiers()', () => {
+  expect(
+    simlayer('a', 'b')
+      .modifiers('⌘')
+      .manipulators([map(1).to(2)])
+      .build().manipulators[1].from?.modifiers,
+  ).toEqual({ mandatory: ['command'] })
+
+  expect(
+    simlayer('a', 'b')
+      .modifiers({ optional: '⇪' })
+      .manipulators([map(1).to(2)])
+      .build().manipulators[1].from?.modifiers,
+  ).toEqual({ optional: ['caps_lock'] })
+
+  expect(
+    simlayer('a', 'b')
+      .modifiers(null)
+      .manipulators([map(1).to(2)])
+      .build().manipulators[1].from?.modifiers,
+  ).toBeUndefined()
 })

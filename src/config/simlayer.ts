@@ -1,12 +1,18 @@
 import { BasicRuleBuilder } from './rule'
 import { buildCondition, ifVar } from './condition'
-import { Rule, ToVariable } from '../karabiner/karabiner-config'
+import { FromEvent, Rule, ToVariable } from '../karabiner/karabiner-config'
 import { toArray } from '../utils/to-array'
 import { getKeyWithAlias } from '../utils/key-alias'
 import { toSetVar } from './to'
 import { FromKeyCode } from '../karabiner/key-code'
 import { LayerKeyCode, LayerKeyParam, layerToggleManipulator } from './layer'
 import { BuildContext } from '../utils/build-context'
+import {
+  FromModifierOverloadParam,
+  FromOptionalModifierParam,
+  parseFromModifierOverload,
+} from '../utils/from-modifier-overload'
+import { FromModifierParam } from './modifier'
 
 export const defaultSimlayerParameters = {
   'simlayer.threshold_milliseconds': 200,
@@ -27,6 +33,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
   protected readonly keys: LayerKeyCode[]
   protected readonly layerCondition = ifVar(this.varName, this.onValue)
   protected readonly sharedLayerKeys: LayerKeyCode[] = []
+  protected layerModifiers: FromEvent['modifiers'] = { optional: ['any'] }
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
@@ -38,6 +45,24 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     super(`Simlayer - ${varName}`)
     this.keys = toArray(key).map((v) => getKeyWithAlias<LayerKeyCode>(v))
     this.condition(this.layerCondition)
+  }
+
+  /** Set the simlayer modifiers. Default optionalAny. Set to null to remove. */
+  public modifiers(
+    mandatoryModifiers?: FromModifierOverloadParam,
+    optionalModifiers?: FromModifierParam,
+  ): this
+  /** Set the simlayer modifiers to { optional: [...]} (default optionalAny) */
+  public modifiers(modifiers: FromOptionalModifierParam): this
+  public modifiers(
+    mandatoryModifiers?: FromModifierOverloadParam,
+    optionalModifiers?: FromModifierParam,
+  ): this {
+    this.layerModifiers =
+      mandatoryModifiers || optionalModifiers
+        ? parseFromModifierOverload(mandatoryModifiers, optionalModifiers)
+        : undefined
+    return this
   }
 
   /** Enable layer with the same variable and manipulators with this simlayer */
@@ -89,6 +114,13 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
         )
       }
 
+      if (this.layerModifiers) {
+        v.from.modifiers = {
+          ...v.from.modifiers,
+          ...this.layerModifiers,
+        }
+      }
+
       for (const layerKey of this.keys) {
         rule.manipulators.push({
           type: 'basic',
@@ -105,6 +137,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
               key_up_when: 'any',
               to_after_key_up: [setVarOff],
             },
+            modifiers: this.layerModifiers,
           },
           conditions,
         })
