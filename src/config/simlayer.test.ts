@@ -1,7 +1,10 @@
 import { expect, test } from 'vitest'
 import { simlayer } from './simlayer'
 import { map } from './from'
-import { BasicManipulator } from '../karabiner/karabiner-config'
+import {
+  BasicManipulator,
+  FromSimultaneousEvent,
+} from '../karabiner/karabiner-config'
 import { toKey, toSetVar } from './to'
 import { ifVar } from './condition'
 
@@ -128,4 +131,15 @@ test('simlayer().modifiers()', () => {
       .manipulators([map(1).to(2)])
       .build().manipulators[1].from?.modifiers,
   ).toBeUndefined()
+})
+
+test('simlayer().options()', () => {
+  expect(
+    (
+      simlayer('a', 'b')
+        .options({ to_after_key_up: [toKey('x')] })
+        .manipulators([map(1).to(2)])
+        .build().manipulators[1].from as FromSimultaneousEvent
+    ).simultaneous_options?.to_after_key_up?.[0],
+  ).toEqual({ key_code: 'x' })
 })

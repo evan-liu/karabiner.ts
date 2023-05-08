@@ -1,6 +1,11 @@
 import { BasicRuleBuilder } from './rule'
 import { buildCondition, ifVar } from './condition'
-import { FromEvent, Rule, ToVariable } from '../karabiner/karabiner-config'
+import {
+  FromEvent,
+  Rule,
+  SimultaneousOptions,
+  ToVariable,
+} from '../karabiner/karabiner-config'
 import { toArray } from '../utils/to-array'
 import { getKeyWithAlias } from '../utils/key-alias'
 import { toSetVar } from './to'
@@ -33,6 +38,12 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
   protected readonly keys: LayerKeyCode[]
   protected readonly layerCondition = ifVar(this.varName, this.onValue)
   protected readonly sharedLayerKeys: LayerKeyCode[] = []
+  protected readonly simultaneousOptions: SimultaneousOptions = {
+    detect_key_down_uninterruptedly: true,
+    key_down_order: 'strict',
+    key_up_order: 'strict_inverse',
+    key_up_when: 'any',
+  }
   protected layerModifiers: FromEvent['modifiers'] = { optional: ['any'] }
 
   constructor(
@@ -62,6 +73,12 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
       mandatoryModifiers || optionalModifiers
         ? parseFromModifierOverload(mandatoryModifiers, optionalModifiers)
         : undefined
+    return this
+  }
+
+  /** Set simultaneous_options on the simlayer toggle manipulator */
+  public options(v: Partial<SimultaneousOptions>): this {
+    Object.assign(this.simultaneousOptions, v)
     return this
   }
 
@@ -131,11 +148,11 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
           from: {
             simultaneous: [{ key_code: layerKey }, { key_code: fromKey }],
             simultaneous_options: {
-              detect_key_down_uninterruptedly: true,
-              key_down_order: 'strict',
-              key_up_order: 'strict_inverse',
-              key_up_when: 'any',
-              to_after_key_up: [setVarOff],
+              ...this.simultaneousOptions,
+              to_after_key_up: [
+                ...(this.simultaneousOptions.to_after_key_up || []),
+                setVarOff,
+              ],
             },
             modifiers: this.layerModifiers,
           },
