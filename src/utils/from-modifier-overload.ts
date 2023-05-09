@@ -1,7 +1,13 @@
-import { FromModifierParam, parseFromModifierParams } from '../config/modifier'
+import {
+  FromModifierParam,
+  ModifierParam,
+  parseFromModifierParams,
+  parseModifierParam,
+} from '../config/modifier'
 import {
   FromOptionalModifierParam,
   isOptionalAnyAlias,
+  isOptionalModifierAlias,
 } from './optional-modifiers'
 
 export type FromModifierOverloadParam =
@@ -16,14 +22,29 @@ export function parseFromModifierOverload(
 ) {
   if (!mandatoryModifiers) {
     return parseFromModifierParams(mandatoryModifiers, optionalModifiers)
-  } else if (isOptionalAnyAlias(mandatoryModifiers)) {
+  }
+
+  if (isOptionalAnyAlias(mandatoryModifiers)) {
     return parseFromModifierParams('', 'any')
-  } else if (
+  }
+
+  if (typeof mandatoryModifiers === 'string') {
+    if (isOptionalModifierAlias(mandatoryModifiers)) {
+      return parseFromModifierParams(
+        '',
+        parseModifierParam(mandatoryModifiers.slice(1) as ModifierParam),
+      )
+    } else if (mandatoryModifiers.startsWith('?')) {
+      throw new Error(`${mandatoryModifiers} is not valid optional alias`)
+    }
+  }
+
+  if (
     typeof mandatoryModifiers === 'object' &&
     'optional' in mandatoryModifiers
   ) {
     return parseFromModifierParams('', mandatoryModifiers.optional)
-  } else {
-    return parseFromModifierParams(mandatoryModifiers, optionalModifiers)
   }
+
+  return parseFromModifierParams(mandatoryModifiers, optionalModifiers)
 }

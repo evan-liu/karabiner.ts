@@ -30,6 +30,13 @@ test('map()', () => {
     key_code: '1',
     modifiers: { optional: ['command', 'option'] },
   })
+
+  expect(map(1, '?⌘⌥').to(2).build()[0].from).toEqual({
+    key_code: '1',
+    modifiers: { optional: ['command', 'option'] },
+  })
+
+  expect(() => map(1, '?⌘⌥x' as any)).toThrow()
 })
 
 test('mapConsumerKey()', () => {
