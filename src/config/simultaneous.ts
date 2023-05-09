@@ -9,10 +9,10 @@ import { FromKeyCode } from '../karabiner/key-code'
 import { FromKeyParam } from './from'
 import {
   FromModifierOverloadParam,
-  FromOptionalModifierParam,
   parseFromModifierOverload,
 } from '../utils/from-modifier-overload'
 import { FromModifierParam } from './modifier'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers'
 
 /** Start a manipulator with from.simultaneous */
 export function mapSimultaneous(

@@ -7,9 +7,9 @@ import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 import {
   FromModifierOverloadParam,
-  FromOptionalModifierParam,
   parseFromModifierOverload,
 } from '../utils/from-modifier-overload'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers'
 
 export type FromKeyParam = FromKeyCode | KeyAlias | NumberKeyValue
 

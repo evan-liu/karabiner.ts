@@ -1,8 +1,8 @@
 import { FromModifierParam, parseFromModifierParams } from '../config/modifier'
-
-export type FromOptionalModifierParam =
-  | 'optionalAny'
-  | { optional: FromModifierParam }
+import {
+  FromOptionalModifierParam,
+  isOptionalAnyAlias,
+} from './optional-modifiers'
 
 export type FromModifierOverloadParam =
   | FromModifierParam
@@ -16,7 +16,7 @@ export function parseFromModifierOverload(
 ) {
   if (!mandatoryModifiers) {
     return parseFromModifierParams(mandatoryModifiers, optionalModifiers)
-  } else if (mandatoryModifiers === 'optionalAny') {
+  } else if (isOptionalAnyAlias(mandatoryModifiers)) {
     return parseFromModifierParams('', 'any')
   } else if (
     typeof mandatoryModifiers === 'object' &&
