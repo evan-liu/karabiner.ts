@@ -191,7 +191,7 @@ simlayer('a', 'a-mode')
 
 ## The simultaneous_options
 
-The default `simultaneous_options` set by `simlayer`:
+The default [`simultaneous_options`](https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous-options/) set by `simlayer`:
 
 ```typescript
 {
