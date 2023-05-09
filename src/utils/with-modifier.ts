@@ -2,10 +2,8 @@ import { Manipulator, Modifier } from '../karabiner/karabiner-config'
 import { FromModifierParam } from '../config/modifier'
 import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
 import { BuildContext } from './build-context'
-import {
-  FromOptionalModifierParam,
-  parseFromModifierOverload,
-} from './from-modifier-overload'
+import { parseFromModifierOverload } from './from-modifier-overload'
+import { FromOptionalModifierParam } from './optional-modifiers'
 
 /**
  * A high-order function to add modifiers to a group of manipulators

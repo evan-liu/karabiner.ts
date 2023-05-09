@@ -13,9 +13,9 @@ import { BuildContext } from '../utils/build-context'
 import { FromModifierParam } from './modifier'
 import {
   FromModifierOverloadParam,
-  FromOptionalModifierParam,
   parseFromModifierOverload,
 } from '../utils/from-modifier-overload'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers'
 
 export const defaultDoubleTapParameters = {
   'double_tap.delay_milliseconds': 200,

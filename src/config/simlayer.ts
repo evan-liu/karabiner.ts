@@ -14,10 +14,10 @@ import { LayerKeyCode, LayerKeyParam, layerToggleManipulator } from './layer'
 import { BuildContext } from '../utils/build-context'
 import {
   FromModifierOverloadParam,
-  FromOptionalModifierParam,
   parseFromModifierOverload,
 } from '../utils/from-modifier-overload'
 import { FromModifierParam } from './modifier'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers'
 
 export const defaultSimlayerParameters = {
   'simlayer.threshold_milliseconds': 200,
