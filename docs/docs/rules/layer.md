@@ -158,12 +158,13 @@ layer(['a', ';'], 'a-mode').manipulators([
 The same key can also trigger multiple layers
 
 ```typescript
-layer(['a', ';'], 'a-mode').manipulators([
-  map(1).to(2), 
+layer('a', 'a-mode').manipulators([
+  map(1).to(2),
+])
+layer('a', 'b-mode').manipulators([
+  map(3).to(4),
 ])
 ```
-
-
 
 <details>
 <summary>Generated JSON in profiles.complex_modifications.rules</summary>
