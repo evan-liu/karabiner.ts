@@ -28,6 +28,7 @@ export { mouseMotionToScroll } from './config/mouse-motion-to-scroll'
 
 // To
 export * from './config/to'
+export * from './config/to-type-sequence'
 
 // Condition
 export * from './config/condition'

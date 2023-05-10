@@ -40,6 +40,7 @@ import { PointingButton } from '../karabiner/pointing-button'
 import { StickyModifierKeyCode } from '../karabiner/key-code'
 import { toArray } from '../utils/to-array'
 import { BuildContext } from '../utils/build-context'
+import { toTypeSequence } from './to-type-sequence'
 
 export interface ManipulatorBuilder {
   build(context?: BuildContext): Manipulator[]
@@ -190,6 +191,12 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   /** To causes a system sleep */
   toSleepSystem(delay?: number): this {
     this.addToEvent(toSleepSystem(delay))
+    return this
+  }
+
+  /** To type a string of keys */
+  toTypeSequence(src: string, map?: Record<string, ToEvent>): this {
+    this.addToEvent(toTypeSequence(src, map))
     return this
   }
 
