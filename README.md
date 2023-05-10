@@ -15,8 +15,6 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 - Strong-typed abstractions and key aliases with IDE support
 - Structured config files instead of one big file
 
-<img src="https://user-images.githubusercontent.com/126383/235345521-89bd50a9-2e2e-416b-8a07-93e5d9ac6f70.png" width="640" alt="screenshot">
-
 ## Learn More
 
 - [Docs](https://evan-liu.github.io/karabiner.ts/)
