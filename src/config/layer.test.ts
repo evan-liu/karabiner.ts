@@ -140,3 +140,40 @@ test('layer().configKey() replaceToIfAlone', () => {
     to_if_alone: [{ key_code: 'b', modifiers: ['command'] }],
   })
 })
+
+test('layer().modifier()', () => {
+  expect(
+    (
+      layer('a', 'v')
+        .manipulators([map(1).to(2)])
+        .build().manipulators[0] as BasicManipulator
+    ).from.modifiers,
+  ).toBeUndefined()
+
+  expect(
+    (
+      layer('a', 'v')
+        .modifiers()
+        .manipulators([map(1).to(2)])
+        .build().manipulators[0] as BasicManipulator
+    ).from.modifiers,
+  ).toBeUndefined()
+
+  expect(
+    (
+      layer('a', 'v')
+        .modifiers('', '›⌥')
+        .manipulators([map(1).to(2)])
+        .build().manipulators[0] as BasicManipulator
+    ).from.modifiers,
+  ).toEqual({ optional: ['right_option'] })
+
+  expect(
+    (
+      layer('a', 'v')
+        .modifiers('Hyper')
+        .manipulators([map(1).to(2)])
+        .build().manipulators[0] as BasicManipulator
+    ).from.modifiers,
+  ).toEqual({ mandatory: ['command', 'option', 'control', 'shift'] })
+})

@@ -9,6 +9,7 @@ import {
 import {
   BasicManipulator,
   Condition,
+  FromEvent,
   Rule,
   ToVariable,
 } from '../karabiner/karabiner-config'
@@ -20,7 +21,12 @@ import { BasicRuleBuilder } from './rule'
 import { toArray } from '../utils/to-array'
 import { BuildContext } from '../utils/build-context'
 import { BasicManipulatorBuilder } from './manipulator'
-import { SideModifierAlias } from './modifier'
+import { FromModifierParam, SideModifierAlias } from './modifier'
+import {
+  FromModifierOverloadParam,
+  parseFromModifierOverload,
+} from '../utils/from-modifier-overload'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers'
 
 export type LayerKeyCode = Exclude<
   FromKeyCode,
@@ -58,6 +64,8 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   protected layerKeyManipulator?: BasicManipulatorBuilder
   protected replaceLayerKeyToIfAlone = false
 
+  protected layerModifiers?: FromEvent['modifiers']
+
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
     protected readonly varName: string,
@@ -70,6 +78,24 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     )
     this.condition(this.layerCondition)
     this.allowEmptyManipulators = true
+  }
+
+  /** Set the layer modifiers. */
+  public modifiers(
+    mandatoryModifiers?: FromModifierOverloadParam,
+    optionalModifiers?: FromModifierParam,
+  ): this
+  /** Set the layer modifiers to { optional: [...]} */
+  public modifiers(modifiers: FromOptionalModifierParam): this
+  public modifiers(
+    mandatoryModifiers?: FromModifierOverloadParam,
+    optionalModifiers?: FromModifierParam,
+  ): this {
+    this.layerModifiers =
+      mandatoryModifiers || optionalModifiers
+        ? parseFromModifierOverload(mandatoryModifiers, optionalModifiers)
+        : undefined
+    return this
   }
 
   /** Config the layer key. */
@@ -103,6 +129,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
           this.varName,
           this.onValue,
           this.offValue,
+          this.layerModifiers,
           conditions,
           context,
           this.layerKeyManipulator,
@@ -121,6 +148,7 @@ export function layerToggleManipulator(
   varName: string,
   onValue: ToVariable['value'],
   offValue: ToVariable['value'],
+  modifiers?: FromEvent['modifiers'],
   conditions?: Condition[],
   context?: BuildContext,
   layerKeyManipulator?: BasicManipulatorBuilder,
@@ -165,7 +193,7 @@ export function layerToggleManipulator(
     return to
   }
 
-  const manipulator = map(key_code)
+  const manipulator = map({ key_code, modifiers })
     .toVar(varName, onValue)
     .toAfterKeyUp(toSetVar(varName, offValue))
     .toIfAlone({ key_code })
@@ -174,6 +202,7 @@ export function layerToggleManipulator(
 
   const key = [
     `layer_${key_code}`,
+    ...(modifiers ? [JSON.stringify(modifiers)] : []),
     ...(conditions || []).map((v) => JSON.stringify(v)).sort(),
   ].join('_')
   const exiting = context.getCache<BasicManipulator>(key)
