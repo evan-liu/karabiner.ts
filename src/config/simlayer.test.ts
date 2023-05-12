@@ -113,14 +113,21 @@ test('simlayer().enableLayer()', () => {
 test('simlayer().modifiers()', () => {
   expect(
     simlayer('a', 'b')
-      .modifiers('⌘')
+      .modifiers('›⌘')
       .manipulators([map(1).to(2)])
       .build().manipulators[1].from?.modifiers,
-  ).toEqual({ mandatory: ['command'] })
+  ).toEqual({ mandatory: ['right_command'] })
 
   expect(
     simlayer('a', 'b')
       .modifiers({ optional: '⇪' })
+      .manipulators([map(1).to(2)])
+      .build().manipulators[1].from?.modifiers,
+  ).toEqual({ optional: ['caps_lock'] })
+
+  expect(
+    simlayer('a', 'b')
+      .modifiers('?⇪')
       .manipulators([map(1).to(2)])
       .build().manipulators[1].from?.modifiers,
   ).toEqual({ optional: ['caps_lock'] })

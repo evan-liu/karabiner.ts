@@ -22,4 +22,17 @@ test('mouseMotionToScroll()', () => {
       speed_multiplier: 2,
     },
   })
+
+  expect(
+    mouseMotionToScroll().modifiers('›⌘⌥', '⌃').build()[0].from?.modifiers,
+  ).toEqual({
+    mandatory: ['right_command', 'right_option'],
+    optional: ['control'],
+  })
+
+  expect(
+    mouseMotionToScroll().modifiers('?›⌥').build()[0].from?.modifiers,
+  ).toEqual({
+    optional: ['right_option'],
+  })
 })

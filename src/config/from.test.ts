@@ -37,6 +37,22 @@ test('map()', () => {
   })
 
   expect(() => map(1, '?⌘⌥x' as any)).toThrow()
+
+  expect(map(1, '?‹⌘⌥').to(2).build()[0].from).toEqual({
+    key_code: '1',
+    modifiers: { optional: ['left_command', 'left_option'] },
+  })
+
+  expect(map(1, '?r⇧').to(2).build()[0].from).toEqual({
+    key_code: '1',
+    modifiers: { optional: ['right_shift'] },
+  })
+
+  expect(map('r⌘').build()[0].from).toEqual({
+    key_code: 'right_command',
+  })
+
+  expect(() => map('‹⌘⌥' as any).build()).toThrow()
 })
 
 test('mapConsumerKey()', () => {

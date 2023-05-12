@@ -4,6 +4,11 @@ import {
   KeyCode,
 } from '../karabiner/key-code'
 import { Modifier } from '../karabiner/karabiner-config'
+import {
+  isSideMultiModifierAlias,
+  parseSideMultiModifierAlias,
+  SideModifierAlias,
+} from '../config/modifier'
 
 export const modifierKeyAliases = {
   '⌘': 'command',
@@ -58,7 +63,18 @@ const keyAliases: Record<string, string> = {
 } /* c8 ignore next */ satisfies Record<KeyAlias, KeyCode>
 
 export function getKeyWithAlias<T extends KeyCode = KeyCode>(
-  key: KeyCode | KeyAlias | NumberKeyValue,
+  key: KeyCode | KeyAlias | NumberKeyValue | SideModifierAlias,
 ): T {
-  return (keyAliases[key] || '' + key) as T
+  if (typeof key === 'number') return `${key}` as T
+
+  if (key.length > 1 && isSideMultiModifierAlias(key)) {
+    const modifiers = parseSideMultiModifierAlias(key)
+    if (modifiers?.length === 1) {
+      return modifiers[0] as T
+    } else {
+      throw new Error(`Invalid key ${key}`)
+    }
+  }
+
+  return (keyAliases[key] || key) as T
 }

@@ -97,6 +97,14 @@ describe('mapDoubleTap()', () => {
       key_code: '1',
       modifiers: { optional: ['any'] },
     })
+    expect(mapDoubleTap(1, '‹⌘', '›⌥').to(2).build()[1].from).toEqual({
+      key_code: '1',
+      modifiers: { mandatory: ['left_command'], optional: ['right_option'] },
+    })
+    expect(mapDoubleTap(1, '?>⌘').to(2).build()[1].from).toEqual({
+      key_code: '1',
+      modifiers: { optional: ['right_command'] },
+    })
 
     expect(
       [

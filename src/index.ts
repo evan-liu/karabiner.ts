@@ -3,7 +3,15 @@ export type * from './karabiner/key-code'
 export type * from './karabiner/karabiner-config'
 
 // Types
-export type { ModifierParam, FromModifierParam } from './config/modifier'
+export type {
+  LeftModifierFlag,
+  RightModifierFlag,
+  SideModifierFlag,
+  SideModifierAlias,
+  SideMultiModifierAlias,
+  ModifierParam,
+  FromModifierParam,
+} from './config/modifier'
 export type { ModificationParameters } from './config/complex-modifications'
 export type { MultiModifierAlias } from './utils/multi-modifier'
 export type {
