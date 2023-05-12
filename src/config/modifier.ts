@@ -100,11 +100,13 @@ const sidedModifiers = new Set<string>([
   'shift',
 ] /* c8 ignore next */ satisfies Modifier[])
 
-function isSideMultiModifierAlias(src: string): src is SideMultiModifierAlias {
+export function isSideMultiModifierAlias(
+  src: string,
+): src is SideMultiModifierAlias {
   return leftModifierRegExp.test(src) || rightModifierRegExp.test(src)
 }
 
-function parseSideMultiModifierAlias(
+export function parseSideMultiModifierAlias(
   src: SideMultiModifierAlias,
 ): Modifier[] | undefined {
   const leftMatched = src.match(leftModifierRegExp)

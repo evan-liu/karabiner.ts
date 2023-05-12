@@ -17,6 +17,7 @@ import { BasicRuleBuilder } from './rule'
 import { toArray } from '../utils/to-array'
 import { BuildContext } from '../utils/build-context'
 import { BasicManipulatorBuilder } from './manipulator'
+import { SideModifierAlias } from './modifier'
 
 export type LayerKeyCode = Exclude<
   FromKeyCode,
@@ -25,7 +26,10 @@ export type LayerKeyCode = Exclude<
 export type LayerKeyParam =
   | Exclude<
       FromKeyParam,
-      FromOnlyKeyCode | StickyModifierKeyCode | ModifierKeyAlias
+      | FromOnlyKeyCode
+      | StickyModifierKeyCode
+      | ModifierKeyAlias
+      | SideModifierAlias
     >
   | '⇪'
 

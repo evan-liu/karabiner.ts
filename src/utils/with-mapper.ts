@@ -1,4 +1,3 @@
-import { FromKeyParam } from '../config/from'
 import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
 import { Manipulator } from '../karabiner/karabiner-config'
 
@@ -33,13 +32,13 @@ export function withMapper<const K extends string | number, const V>(
 export function withMapper(
   src: any[] | Partial<Record<any, any>>,
 ): (
-  mapper: (key: FromKeyParam, value?: any) => Manipulator | ManipulatorBuilder,
+  mapper: (key: any, value?: any) => Manipulator | ManipulatorBuilder,
 ) => ManipulatorBuilder {
   return (mapper) => ({
     build: () => {
-      const entries = (
-        Array.isArray(src) ? src.map((v, i) => [v, i]) : Object.entries(src)
-      ) as Array<[FromKeyParam, any]>
+      const entries = Array.isArray(src)
+        ? src.map((v, i) => [v, i])
+        : Object.entries(src)
       return entries.reduce(
         (r, [k, v]) => [...r, ...buildManipulators(mapper(k, v))],
         [] as Manipulator[],

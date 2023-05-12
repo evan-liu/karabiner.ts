@@ -24,6 +24,9 @@ test('toKey()', () => {
     'right_option',
   ])
   expect(toKey(1, '›⌘⇧').modifiers).toEqual(['right_command', 'right_shift'])
+
+  expect(toKey('r')).toEqual({ key_code: 'r' })
+  expect(toKey('r⌘')).toEqual({ key_code: 'right_command' })
 })
 
 test('setVar()', () => {

@@ -1,4 +1,8 @@
-import { ModifierParam, parseModifierParam } from './modifier'
+import {
+  ModifierParam,
+  parseModifierParam,
+  SideModifierAlias,
+} from './modifier'
 import {
   ToEvent,
   ToEventOptions,
@@ -12,7 +16,11 @@ import { StickyModifierKeyCode, ToKeyCode } from '../karabiner/key-code'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 
-export type ToKeyParam = ToKeyCode | KeyAlias | NumberKeyValue
+export type ToKeyParam =
+  | ToKeyCode
+  | KeyAlias
+  | NumberKeyValue
+  | SideModifierAlias
 
 /** Create ToEvent with key_code */
 export function toKey(

@@ -1,6 +1,6 @@
 import { FromKeyCode } from '../karabiner/key-code'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
-import { FromModifierParam } from './modifier'
+import { FromModifierParam, SideModifierAlias } from './modifier'
 import { BasicManipulatorBuilder } from './manipulator'
 import { FromEvent } from '../karabiner/karabiner-config'
 import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
@@ -11,7 +11,11 @@ import {
 } from '../utils/from-modifier-overload'
 import { FromOptionalModifierParam } from '../utils/optional-modifiers'
 
-export type FromKeyParam = FromKeyCode | KeyAlias | NumberKeyValue
+export type FromKeyParam =
+  | FromKeyCode
+  | KeyAlias
+  | NumberKeyValue
+  | SideModifierAlias
 
 /** Start a manipulator with a FromEvent */
 export function map(from: FromEvent): BasicManipulatorBuilder
