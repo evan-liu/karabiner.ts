@@ -5,9 +5,14 @@ import {
   MouseMotionToScrollManipulator,
   MouseMotionToScrollOptions,
 } from '../karabiner/karabiner-config'
-import { FromModifierParam, parseFromModifierParams } from './modifier'
+import { FromModifierParam } from './modifier'
 import { buildCondition, ConditionBuilder } from './condition'
 import { BuildContext } from '../utils/build-context'
+import {
+  FromModifierOverloadParam,
+  parseFromModifierOverload,
+} from '../utils/from-modifier-overload'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers'
 
 export function mouseMotionToScroll() {
   return new MouseMotionToScrollManipulatorBuilder()
@@ -20,12 +25,20 @@ export class MouseMotionToScrollManipulatorBuilder
     type: 'mouse_motion_to_scroll',
   }
 
-  modifiers(
-    mandatoryModifiers?: FromModifierParam,
+  public modifiers(
+    mandatoryModifiers?: FromModifierOverloadParam,
+    optionalModifiers?: FromModifierParam,
+  ): this
+  public modifiers(modifiers: FromOptionalModifierParam): this
+  public modifiers(
+    mandatoryModifiers?: FromModifierOverloadParam,
     optionalModifiers?: FromModifierParam,
   ): this {
     this.manipulator.from = {
-      modifiers: parseFromModifierParams(mandatoryModifiers, optionalModifiers),
+      modifiers: parseFromModifierOverload(
+        mandatoryModifiers,
+        optionalModifiers,
+      ),
     }
     return this
   }

@@ -12,6 +12,18 @@ test('toKey()', () => {
   expect(toKey('/')).toEqual({ key_code: 'slash' })
   // NumberKeyValue
   expect(toKey(1)).toEqual({ key_code: '1' })
+
+  expect(toKey(1).modifiers).toBeUndefined()
+  expect(toKey(1, '⌘⌥').modifiers).toEqual(['command', 'option'])
+  expect(toKey(1, { left: '⌘', right: '⌥' }).modifiers).toEqual([
+    'left_command',
+    'right_option',
+  ])
+  expect(toKey(1, ['‹⌘', '›⌥']).modifiers).toEqual([
+    'left_command',
+    'right_option',
+  ])
+  expect(toKey(1, '›⌘⇧').modifiers).toEqual(['right_command', 'right_shift'])
 })
 
 test('setVar()', () => {

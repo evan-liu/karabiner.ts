@@ -40,4 +40,19 @@ test('parseFromModifierParams()', () => {
   expect(parseFromModifierParams({ left: 'win' as any })).toEqual({
     mandatory: ['win'],
   })
+
+  expect(parseFromModifierParams({ l: '⌘', r: '⌥⌃' })).toEqual({
+    mandatory: ['left_command', 'right_option', 'right_control'],
+  })
+
+  expect(parseFromModifierParams('l⌘', ['‹⌘', '›⌥⌃'])).toEqual({
+    mandatory: ['left_command'],
+    optional: ['left_command', 'right_option', 'right_control'],
+  })
+
+  expect(parseFromModifierParams('l' as any)).toEqual({})
+
+  expect(parseFromModifierParams(['l⌘', '⌥', 'l', ''] as any)).toEqual({
+    mandatory: ['left_command', 'option'],
+  })
 })

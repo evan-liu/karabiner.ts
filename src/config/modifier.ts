@@ -3,6 +3,7 @@ import { ModifierKeyAlias, modifierKeyAliases } from '../utils/key-alias'
 import {
   MultiModifierAlias,
   multiModifierAliases,
+  NamedMultiModifierAlias,
 } from '../utils/multi-modifier'
 
 export type ModifierParam =
@@ -10,28 +11,68 @@ export type ModifierParam =
   | ModifierKeyAlias
   | Array<Modifier | ModifierKeyAlias>
   | MultiModifierAlias
+  | { left?: ModifierParam; right?: ModifierParam }
+  | { l?: ModifierParam; r?: ModifierParam }
+  | SideMultiModifierAlias
+  | SideMultiModifierAlias[]
 
 export function parseModifierParam(
   src?: ModifierParam,
 ): Modifier[] | undefined {
   if (!src) return undefined
 
-  if (typeof src !== 'string') return src.map(getModifierWithAlias)
+  if (typeof src === 'string') {
+    if (isSideMultiModifierAlias(src)) {
+      return parseSideMultiModifierAlias(src)
+    }
+    if (src in modifierKeyAliases)
+      return [modifierKeyAliases[src as ModifierKeyAlias]]
 
-  if (src in modifierKeyAliases)
-    return [modifierKeyAliases[src as ModifierKeyAlias]]
-
-  if (src in multiModifierAliases) {
-    return multiModifierAliases[src as MultiModifierAlias]
+    if (src in multiModifierAliases) {
+      return multiModifierAliases[src as MultiModifierAlias]
+    }
+    return [src as Modifier]
   }
 
-  return [src as Modifier]
+  if (Array.isArray(src)) {
+    if (isSideMultiModifierAliases(src)) {
+      return parseSideMultiModifierAliases(src)
+    }
+    return src.map(getModifierWithAlias)
+  }
+
+  let left: Modifier[] | undefined = undefined
+  if ('left' in src) {
+    left = parseSideModifier('left', src.left)
+  } else if ('l' in src) {
+    left = parseSideModifier('left', src.l)
+  }
+  let right: Modifier[] | undefined = undefined
+  if ('right' in src) {
+    right = parseSideModifier('right', src.right)
+  } else if ('r' in src) {
+    right = parseSideModifier('right', src.r)
+  }
+  if (!left?.length && !right?.length) return undefined
+
+  return [...(left || []), ...(right || [])]
 }
 
-export type FromModifierParam =
-  | ModifierParam
-  | { left?: ModifierParam; right?: ModifierParam }
-  | 'any'
+export type LeftModifierFlag = 'left' | 'l' | '<' | '‹'
+export type RightModifierFlag = 'right' | 'r' | '>' | '›'
+export type SideModifierFlag = LeftModifierFlag | RightModifierFlag
+export type SideModifierAlias = `${SideModifierFlag}${Exclude<
+  ModifierKeyAlias,
+  '⇪'
+>}`
+export type SideMultiModifierAlias = `${SideModifierFlag}${
+  | Exclude<ModifierKeyAlias, '⇪'>
+  | Exclude<MultiModifierAlias, NamedMultiModifierAlias>}`
+
+export type FromModifierParam = ModifierParam | 'any'
+
+const leftModifierRegExp = /^(left|l|<|‹)([⌘⌥⌃⇧]*)$/
+const rightModifierRegExp = /^(right|r|>|›)([⌘⌥⌃⇧]*)$/
 
 export function parseFromModifierParams(
   mandatoryParam?: FromModifierParam | '' | null,
@@ -49,16 +90,7 @@ function parseFromModifiers(
 ): Modifier[] | ['any'] | undefined {
   if (!param) return undefined
   if (param === 'any') return ['any']
-
-  if (typeof param === 'string' || Array.isArray(param)) {
-    return parseModifierParam(param)
-  }
-
-  const left = parseSideModifier('left', param.left)
-  const right = parseSideModifier('right', param.right)
-  if (!left?.length && !right?.length) return undefined
-
-  return [...(left || []), ...(right || [])]
+  return parseModifierParam(param)
 }
 
 const sidedModifiers = new Set<string>([
@@ -67,6 +99,43 @@ const sidedModifiers = new Set<string>([
   'control',
   'shift',
 ] /* c8 ignore next */ satisfies Modifier[])
+
+function isSideMultiModifierAlias(src: string): src is SideMultiModifierAlias {
+  return leftModifierRegExp.test(src) || rightModifierRegExp.test(src)
+}
+
+function parseSideMultiModifierAlias(
+  src: SideMultiModifierAlias,
+): Modifier[] | undefined {
+  const leftMatched = src.match(leftModifierRegExp)
+  if (leftMatched) {
+    return parseSideModifier('left', leftMatched[2] as ModifierParam)
+  }
+  const rightMatched = src.match(rightModifierRegExp)
+  if (rightMatched) {
+    return parseSideModifier('right', rightMatched[2] as ModifierParam)
+  }
+}
+
+function isSideMultiModifierAliases(
+  src: string[],
+): src is SideMultiModifierAlias[] {
+  return src.some(isSideMultiModifierAlias)
+}
+
+function parseSideMultiModifierAliases(
+  src: SideMultiModifierAlias[],
+): Modifier[] | undefined {
+  return src.reduce(
+    (r, v) => [
+      ...r,
+      ...(isSideMultiModifierAlias(v)
+        ? parseSideMultiModifierAlias(v) || []
+        : parseModifierParam(v) || []),
+    ],
+    [] as Modifier[],
+  )
+}
 
 function parseSideModifier(
   side: 'left' | 'right',

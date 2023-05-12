@@ -1,11 +1,14 @@
-import { FromModifierParam } from '../config/modifier'
-import { ModifierKeyAlias, modifierKeyAliases } from './key-alias'
-import { MultiModifierAlias, multiModifierAliases } from './multi-modifier'
+import { FromModifierParam, SideMultiModifierAlias } from '../config/modifier'
+import { ModifierKeyAlias } from './key-alias'
+import { MultiModifierAlias, NamedMultiModifierAlias } from './multi-modifier'
 
 const optionalAnyAliases = ['optionalAny', '?any', '??'] as const
 export type OptionalAnyAlias = (typeof optionalAnyAliases)[number]
 
-export type OptionalModifierAlias = `?${ModifierKeyAlias | MultiModifierAlias}`
+export type OptionalModifierAlias = `?${
+  | ModifierKeyAlias
+  | Exclude<MultiModifierAlias, NamedMultiModifierAlias>
+  | SideMultiModifierAlias}`
 
 export function isOptionalAnyAlias(src: any): src is OptionalAnyAlias {
   if (!src || typeof src !== 'string') return false
@@ -17,13 +20,8 @@ export type FromOptionalModifierParam =
   | { optional: FromModifierParam }
   | OptionalModifierAlias
 
-const optionalModifierAliases = [
-  ...Object.keys(modifierKeyAliases),
-  ...Object.keys(multiModifierAliases),
-].map((v) => `?${v}`)
-
 export function isOptionalModifierAlias(
   src: string,
 ): src is OptionalModifierAlias {
-  return optionalModifierAliases.includes(src)
+  return /^\?(left|l|<|‹|right|r|>|›)?([⌘⌥⌃⇧⇪]*)$/.test(src)
 }
