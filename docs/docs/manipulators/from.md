@@ -129,10 +129,18 @@ layer(['z', '/'], 'emoji-mode').manipulators([
   withMapper(['←', '→', '↑', '↓', '␣', '⏎', '⇥', '⎋', '⌫', '⌦', '⇪'])((k) =>
     map(k).toPaste(k),
   ),
+  map(',').toPaste('‹'), // left_{modifier}
+  map('.').toPaste('›'), // right_{modifier}
 ])
 ```
 
 </details>
+
+:::tip
+- `map('‹⌘')`, `‹⌘` is `left_command`, can also be `<⌘`, `l⌘`, `left⌘`
+- `map(1, '??')`, `??` is `optionalAny`, can also be`?any`, `{ optional: 'any' }`
+- `map(1, '?›⌘⌥')`, `?›⌘⌥` is `{ optional: ['right_command', 'right_option'] }`
+:::
 
 ## mapConsumerKey() {#map-consumer-key}
 
