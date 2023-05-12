@@ -1,4 +1,4 @@
-import { FromKeyCode } from '../karabiner/key-code'
+import { FromKeyCode, toOnlyKeyCodes } from '../karabiner/key-code'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
 import { FromModifierParam, SideModifierAlias } from './modifier'
 import { BasicManipulatorBuilder } from './manipulator'
@@ -37,8 +37,14 @@ export function map(
 ) {
   if (typeof keyOrEvent === 'object')
     return new BasicManipulatorBuilder(keyOrEvent)
+
+  const keyCode = getKeyWithAlias<FromKeyCode>(
+    keyOrEvent,
+    toOnlyKeyCodes,
+    'for from.key_code',
+  )
   return new BasicManipulatorBuilder({
-    key_code: getKeyWithAlias<FromKeyCode>(keyOrEvent),
+    key_code: keyCode,
     modifiers: parseFromModifierOverload(mandatoryModifiers, optionalModifiers),
   })
 }

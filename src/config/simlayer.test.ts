@@ -7,6 +7,11 @@ import {
 } from '../karabiner/karabiner-config'
 import { toKey, toSetVar } from './to'
 import { ifVar } from './condition'
+import {
+  fromOnlyKeyCodes,
+  stickyModifierKeyCodes,
+  toOnlyKeyCodes,
+} from '../karabiner/key-code'
 
 test('simlayer()', () => {
   const layer = simlayer('a', 'b-mode', 1, true, false).manipulators([
@@ -149,4 +154,23 @@ test('simlayer().options()', () => {
         .build().manipulators[1].from as FromSimultaneousEvent
     ).simultaneous_options?.to_after_key_up?.[0],
   ).toEqual({ key_code: 'x' })
+})
+
+test('simlayer() invalid key', () => {
+  expect(() => simlayer('' as any, '')).toThrow('key_code')
+  expect(() => simlayer(toOnlyKeyCodes[0] as any, '')).toThrow('layer key')
+  expect(() => simlayer(fromOnlyKeyCodes[0] as any, '')).toThrow('layer key')
+  expect(() => simlayer(stickyModifierKeyCodes[0] as any, '')).toThrow(
+    'layer key',
+  )
+  expect(() => simlayer(1, '').enableLayer('' as any)).toThrow('key_code')
+  expect(() => simlayer(1, '').enableLayer(toOnlyKeyCodes[0] as any)).toThrow(
+    'layer key',
+  )
+  expect(() => simlayer(1, '').enableLayer(fromOnlyKeyCodes[0] as any)).toThrow(
+    'layer key',
+  )
+  expect(() =>
+    simlayer(1, '').enableLayer(stickyModifierKeyCodes[0] as any),
+  ).toThrow('layer key')
 })

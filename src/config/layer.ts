@@ -1,7 +1,10 @@
 import {
   FromKeyCode,
   FromOnlyKeyCode,
+  fromOnlyKeyCodes,
   StickyModifierKeyCode,
+  stickyModifierKeyCodes,
+  toOnlyKeyCodes,
 } from '../karabiner/key-code'
 import {
   BasicManipulator,
@@ -33,6 +36,12 @@ export type LayerKeyParam =
     >
   | '⇪'
 
+export const excludeFromLayerKeys = [
+  ...toOnlyKeyCodes,
+  ...fromOnlyKeyCodes,
+  ...stickyModifierKeyCodes,
+]
+
 /** @see https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md#advance3 */
 export function layer(
   key: LayerKeyParam | LayerKeyParam[],
@@ -56,7 +65,9 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
     super(`Layer - ${varName}`)
-    this.keys = toArray(key).map((v) => getKeyWithAlias<LayerKeyCode>(v))
+    this.keys = toArray(key).map((v) =>
+      getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as layer key'),
+    )
     this.condition(this.layerCondition)
     this.allowEmptyManipulators = true
   }

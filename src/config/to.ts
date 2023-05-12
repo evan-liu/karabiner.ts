@@ -12,7 +12,11 @@ import {
   ToVariable,
 } from '../karabiner/karabiner-config'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
-import { StickyModifierKeyCode, ToKeyCode } from '../karabiner/key-code'
+import {
+  fromOnlyKeyCodes,
+  StickyModifierKeyCode,
+  ToKeyCode,
+} from '../karabiner/key-code'
 import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
 import { PointingButton } from '../karabiner/pointing-button'
 
@@ -28,9 +32,14 @@ export function toKey(
   modifiers?: ModifierParam,
   options?: ToEventOptions,
 ): ToEvent {
+  const keyCode = getKeyWithAlias<ToKeyCode>(
+    key,
+    fromOnlyKeyCodes,
+    'as to.key_code',
+  )
   return {
     ...options,
-    key_code: getKeyWithAlias<ToKeyCode>(key),
+    key_code: keyCode,
     modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
   }
 }

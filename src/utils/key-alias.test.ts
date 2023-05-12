@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 import { getKeyWithAlias } from './key-alias'
+import { toOnlyKeyCodes } from '../karabiner/key-code'
 
 test('getKeyWithAlias()', () => {
   // KeyCode
@@ -10,4 +11,10 @@ test('getKeyWithAlias()', () => {
 
   // NumberKeyValue
   expect(getKeyWithAlias(1)).toBe('1')
+
+  // Invalid keys
+  expect(() => getKeyWithAlias('' as any)).toThrow('key_code')
+  expect(() => getKeyWithAlias(toOnlyKeyCodes[0], toOnlyKeyCodes)).toThrow(
+    'here',
+  )
 })

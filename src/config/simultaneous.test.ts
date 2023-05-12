@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 import { mapSimultaneous } from './simultaneous'
+import { toOnlyKeyCodes } from '../karabiner/key-code'
 
 test('mapSimultaneous()', () => {
   const { from, parameters } = mapSimultaneous(
@@ -29,4 +30,9 @@ test('mapSimultaneous()', () => {
   expect(
     mapSimultaneous([1, 2]).modifiers('⌘').build()[0].from.modifiers,
   ).toEqual({ mandatory: ['command'] })
+
+  expect(() => mapSimultaneous([''] as any)).toThrow('key_code')
+  expect(() => mapSimultaneous([toOnlyKeyCodes[0]] as any)).toThrow(
+    'simultaneous',
+  )
 })

@@ -53,6 +53,8 @@ test('map()', () => {
   })
 
   expect(() => map('‹⌘⌥' as any).build()).toThrow()
+
+  expect(() => map('‹x' as any).build()).toThrow('key_code')
 })
 
 test('mapConsumerKey()', () => {

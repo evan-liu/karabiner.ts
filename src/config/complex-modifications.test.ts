@@ -5,6 +5,7 @@ import { mapDoubleTap } from './double-tap'
 import { BasicManipulator } from '../karabiner/karabiner-config'
 import { map } from './from'
 import { simlayer } from './simlayer'
+import { fromOnlyKeyCodes, toOnlyKeyCodes } from '../karabiner/key-code'
 
 describe('complexModifications()', () => {
   test('Parameters', () => {
@@ -44,5 +45,14 @@ describe('complexModifications()', () => {
     expect(() =>
       complexModifications([{ manipulators: [], description: '' }]),
     ).toThrow()
+  })
+
+  test('Check key', () => {
+    expect(() => mapDoubleTap(fromOnlyKeyCodes[0] as any)).toThrow(
+      /key.*double\s*tap/i,
+    )
+    expect(() => mapDoubleTap(toOnlyKeyCodes[0] as any)).toThrow(
+      /key.*double\s*tap/i,
+    )
   })
 })

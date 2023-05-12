@@ -1,7 +1,21 @@
 import {
   ArrowKeyCode,
+  arrowKeyCodes,
   ControlOrSymbolKeyCode,
+  controlOrSymbolKeyCodes,
+  fromOnlyKeyCodes,
+  functionKeyCodes,
+  internationalKeyCodes,
+  japaneseKeyCodes,
   KeyCode,
+  keypadKeyCodes,
+  letterKeyCodes,
+  modifierKeyCodes,
+  numberKeyCodes,
+  otherKeyCodes,
+  pcKeyboardKeyCodes,
+  stickyModifierKeyCodes,
+  toOnlyKeyCodes,
 } from '../karabiner/key-code'
 import { Modifier } from '../karabiner/karabiner-config'
 import {
@@ -62,8 +76,27 @@ const keyAliases: Record<string, string> = {
   '⇪': modifierKeyAliases['⇪'],
 } /* c8 ignore next */ satisfies Record<KeyAlias, KeyCode>
 
+const allKeyCodes = [
+  ...stickyModifierKeyCodes,
+  ...modifierKeyCodes,
+  ...controlOrSymbolKeyCodes,
+  ...arrowKeyCodes,
+  ...letterKeyCodes,
+  ...numberKeyCodes,
+  ...functionKeyCodes,
+  ...keypadKeyCodes,
+  ...pcKeyboardKeyCodes,
+  ...internationalKeyCodes,
+  ...japaneseKeyCodes,
+  ...otherKeyCodes,
+  ...fromOnlyKeyCodes,
+  ...toOnlyKeyCodes,
+]
+
 export function getKeyWithAlias<T extends KeyCode = KeyCode>(
   key: KeyCode | KeyAlias | NumberKeyValue | SideModifierAlias,
+  excludeKeys?: readonly KeyCode[],
+  excludeLabel?: string,
 ): T {
   if (typeof key === 'number') return `${key}` as T
 
@@ -76,5 +109,18 @@ export function getKeyWithAlias<T extends KeyCode = KeyCode>(
     }
   }
 
-  return (keyAliases[key] || key) as T
+  if (key in keyAliases) {
+    return keyAliases[key] as T
+  }
+
+  const code = key as T
+  if (!allKeyCodes.includes(code)) {
+    throw new Error(`${code} is not valid key_code`)
+  }
+
+  if (excludeKeys?.includes(code)) {
+    throw new Error(`Key ${key} cannot be used ${excludeLabel || 'here'}`)
+  }
+
+  return code
 }

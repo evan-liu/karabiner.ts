@@ -10,7 +10,12 @@ import { toArray } from '../utils/to-array'
 import { getKeyWithAlias } from '../utils/key-alias'
 import { toSetVar } from './to'
 import { FromKeyCode } from '../karabiner/key-code'
-import { LayerKeyCode, LayerKeyParam, layerToggleManipulator } from './layer'
+import {
+  excludeFromLayerKeys,
+  LayerKeyCode,
+  LayerKeyParam,
+  layerToggleManipulator,
+} from './layer'
 import { BuildContext } from '../utils/build-context'
 import {
   FromModifierOverloadParam,
@@ -54,7 +59,9 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
     super(`Simlayer - ${varName}`)
-    this.keys = toArray(key).map((v) => getKeyWithAlias<LayerKeyCode>(v))
+    this.keys = toArray(key).map((v) =>
+      getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as simlayer key'),
+    )
     this.condition(this.layerCondition)
   }
 
@@ -85,7 +92,9 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
   /** Enable layer with the same variable and manipulators with this simlayer */
   public enableLayer(...key: LayerKeyParam[]): this {
     key
-      .map((v) => getKeyWithAlias<LayerKeyCode>(v))
+      .map((v) =>
+        getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as layer key'),
+      )
       .forEach((v) => {
         if (this.keys.includes(v))
           throw new Error(`Key ${v} is already used in ${this.ruleDescription}`)

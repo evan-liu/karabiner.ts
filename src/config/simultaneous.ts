@@ -5,7 +5,7 @@ import {
 } from '../karabiner/karabiner-config'
 import { BasicManipulatorBuilder } from './manipulator'
 import { getKeyWithAlias } from '../utils/key-alias'
-import { FromKeyCode } from '../karabiner/key-code'
+import { FromKeyCode, toOnlyKeyCodes } from '../karabiner/key-code'
 import { FromKeyParam } from './from'
 import {
   FromModifierOverloadParam,
@@ -20,9 +20,11 @@ export function mapSimultaneous(
   options?: SimultaneousOptions,
   threshold?: number,
 ) {
+  const getKeyCode = (v: FromKeyParam) =>
+    getKeyWithAlias<FromKeyCode>(v, toOnlyKeyCodes, 'for from.simultaneous')
   const manipulatorBuilder = new SimultaneousManipulatorBuilder({
     simultaneous: keys.map((v) =>
-      typeof v === 'object' ? v : { key_code: getKeyWithAlias<FromKeyCode>(v) },
+      typeof v === 'object' ? v : { key_code: getKeyCode(v) },
     ),
     simultaneous_options: options,
   })

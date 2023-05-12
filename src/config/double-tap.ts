@@ -6,7 +6,11 @@ import {
   ToEvent,
 } from '../karabiner/karabiner-config'
 import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
-import { FromAndToKeyCode } from '../karabiner/key-code'
+import {
+  FromAndToKeyCode,
+  fromOnlyKeyCodes,
+  toOnlyKeyCodes,
+} from '../karabiner/key-code'
 import { ifVar } from './condition'
 import { toSetVar } from './to'
 import { BuildContext } from '../utils/build-context'
@@ -48,9 +52,12 @@ export function mapDoubleTap(
   arg2?: FromModifierParam | number,
   arg3?: number,
 ) {
-  const builder = new DoubleTapManipulatorBuilder({
-    key_code: getKeyWithAlias<FromAndToKeyCode>(key),
-  })
+  const keyCode = getKeyWithAlias<FromAndToKeyCode>(
+    key,
+    [...fromOnlyKeyCodes, ...toOnlyKeyCodes],
+    'for double tap',
+  )
+  const builder = new DoubleTapManipulatorBuilder({ key_code: keyCode })
   if (arg3) {
     builder.delay(arg3)
     builder.from.modifiers = parseFromModifierOverload(

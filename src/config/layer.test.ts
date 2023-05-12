@@ -6,6 +6,11 @@ import { ifVar } from './condition'
 import { complexModifications } from './complex-modifications'
 import { simlayer } from './simlayer'
 import { toKey } from './to'
+import {
+  fromOnlyKeyCodes,
+  stickyModifierKeyCodes,
+  toOnlyKeyCodes,
+} from '../karabiner/key-code'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)
@@ -27,6 +32,13 @@ test('layer()', () => {
   expect(manipulators[1].conditions).toEqual([
     { type: 'variable_if', name: 'b-mode', value: 2 },
   ])
+})
+
+test('layer() with invalid key', () => {
+  expect(() => layer('' as any, '')).toThrow('key_code')
+  expect(() => layer(toOnlyKeyCodes[0] as any, '')).toThrow('layer key')
+  expect(() => layer(fromOnlyKeyCodes[0] as any, '')).toThrow('layer key')
+  expect(() => layer(stickyModifierKeyCodes[0] as any, '')).toThrow('layer key')
 })
 
 test('layer() with multiple keys', () => {
