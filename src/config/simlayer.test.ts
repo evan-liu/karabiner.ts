@@ -107,7 +107,7 @@ test('simlayer().enableLayer()', () => {
   expect(manipulators.length).toBe(3)
   expect(manipulators[0]).toEqual({
     type: 'basic',
-    from: { key_code: 'c' },
+    from: { key_code: 'c', modifiers: { optional: ['any'] } },
     to: [{ set_variable: { name: 'b', value: 1 } }],
     to_after_key_up: [{ set_variable: { name: 'b', value: 0 } }],
     to_if_alone: [{ key_code: 'c' }],

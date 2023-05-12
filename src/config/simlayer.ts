@@ -177,6 +177,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
           this.varName,
           this.onValue,
           this.offValue,
+          this.layerModifiers,
           conditions,
           context,
         ),
