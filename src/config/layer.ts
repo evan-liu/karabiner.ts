@@ -17,7 +17,7 @@ import {
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias'
 import { FromKeyParam, map } from './from'
 import { toSetVar } from './to'
-import { buildCondition, ifVar } from './condition'
+import { buildCondition, ConditionBuilder, ifVar } from './condition'
 import { BasicRuleBuilder } from './rule'
 import { toArray } from '../utils/to-array'
 import { BuildContext } from '../utils/build-context'
@@ -52,7 +52,7 @@ export const excludeFromLayerKeys = [
 /** @see https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md#advance3 */
 export function layer(
   key: LayerKeyParam | LayerKeyParam[],
-  varName: string,
+  varName?: string,
   onValue: ToVariable['value'] = 1,
   offValue: ToVariable['value'] = 0,
 ) {
@@ -61,7 +61,8 @@ export function layer(
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
   protected readonly keys: LayerKeyCode[]
-  protected layerCondition = ifVar(this.varName, this.onValue)
+  protected varName: string
+  protected layerCondition: ConditionBuilder
   protected layerKeyManipulator?: BasicManipulatorBuilder
   protected replaceLayerKeyToIfAlone = false
 
@@ -69,14 +70,21 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
-    protected readonly varName: string,
+    varName?: string,
     protected readonly onValue: ToVariable['value'] = 1,
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
-    super(`Layer - ${varName}`)
-    this.keys = toArray(key).map((v) =>
+    const keys = toArray(key).map((v) =>
       getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as layer key'),
     )
+    if (!varName) {
+      varName = `layer-${keys.join('-')}`
+    }
+
+    super(`Layer - ${varName}`)
+    this.keys = keys
+    this.varName = varName
+    this.layerCondition = ifVar(this.varName, this.onValue)
     this.condition(this.layerCondition)
     this.allowEmptyManipulators = true
   }

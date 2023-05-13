@@ -51,6 +51,16 @@ test('simlayer()', () => {
   expect(manipulators[0].from.modifiers).toEqual({ optional: ['any'] })
 })
 
+test('simlayer() default varName', () => {
+  const rule = simlayer('a')
+    .manipulators([map('c').to('d')])
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators[0].conditions).toEqual([
+    { type: 'variable_if', name: 'simlayer-a', value: 1 },
+  ])
+})
+
 test('simlayer() with multiple key', () => {
   const rule = simlayer(['a', 'b'], 'c')
     .manipulators([map(1).to(2)])

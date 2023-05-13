@@ -1,5 +1,5 @@
 import { BasicRuleBuilder } from './rule'
-import { buildCondition, ifVar } from './condition'
+import { buildCondition, ConditionBuilder, ifVar } from './condition'
 import {
   FromEvent,
   Rule,
@@ -31,7 +31,7 @@ export const defaultSimlayerParameters = {
 /** @see https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md#advance3 */
 export function simlayer(
   key: LayerKeyParam | LayerKeyParam[],
-  varName: string,
+  varName?: string,
   threshold?: number,
   onValue: ToVariable['value'] = 1,
   offValue: ToVariable['value'] = 0,
@@ -41,7 +41,8 @@ export function simlayer(
 
 export class SimlayerRuleBuilder extends BasicRuleBuilder {
   protected readonly keys: LayerKeyCode[]
-  protected readonly layerCondition = ifVar(this.varName, this.onValue)
+  protected varName: string
+  protected readonly layerCondition: ConditionBuilder
   protected readonly sharedLayerKeys: LayerKeyCode[] = []
   protected readonly simultaneousOptions: SimultaneousOptions = {
     detect_key_down_uninterruptedly: true,
@@ -53,15 +54,22 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
-    protected readonly varName: string,
+    varName?: string,
     protected readonly threshold?: number,
     protected readonly onValue: ToVariable['value'] = 1,
     protected readonly offValue: ToVariable['value'] = 0,
   ) {
-    super(`Simlayer - ${varName}`)
-    this.keys = toArray(key).map((v) =>
+    const keys = toArray(key).map((v) =>
       getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as simlayer key'),
     )
+    if (!varName) {
+      varName = `simlayer-${keys.join('-')}`
+    }
+
+    super(`Simlayer - ${varName}`)
+    this.keys = keys
+    this.varName = varName
+    this.layerCondition = ifVar(this.varName, this.onValue)
     this.condition(this.layerCondition)
   }
 

@@ -35,6 +35,18 @@ test('layer()', () => {
   ])
 })
 
+test('layer() default varName', () => {
+  const rule = layer('a')
+    .manipulators([map('c').to('d')])
+    .build()
+  expect(rule.description).toBe(`Layer - layer-a`)
+
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators[1].conditions).toEqual([
+    { type: 'variable_if', name: 'layer-a', value: 1 },
+  ])
+})
+
 test('layer() with invalid key', () => {
   expect(() => layer('' as any, '')).toThrow('key_code')
   expect(() => layer(toOnlyKeyCodes[0] as any, '')).toThrow('layer key')
