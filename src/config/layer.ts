@@ -22,7 +22,7 @@ import { BasicRuleBuilder } from './rule'
 import { toArray } from '../utils/to-array'
 import { BuildContext } from '../utils/build-context'
 import { BasicManipulatorBuilder } from './manipulator'
-import { FromModifierParam, SideModifierAlias } from './modifier'
+import { FromModifierParam, ModifierParam, SideModifierAlias } from './modifier'
 import {
   FromModifierOverloadParam,
   parseFromModifierOverload,
@@ -57,6 +57,25 @@ export function layer(
   offValue: ToVariable['value'] = 0,
 ) {
   return new LayerRuleBuilder(key, varName, onValue, offValue)
+}
+
+export function modifierLayer(
+  modifiers: ModifierParam,
+  key: LayerKeyParam | LayerKeyParam[],
+  varName?: string,
+  onValue: ToVariable['value'] = 1,
+  offValue: ToVariable['value'] = 0,
+) {
+  return layer(key, varName, onValue, offValue).modifiers(modifiers)
+}
+
+export function hyperLayer(
+  key: LayerKeyParam | LayerKeyParam[],
+  varName?: string,
+  onValue: ToVariable['value'] = 1,
+  offValue: ToVariable['value'] = 0,
+) {
+  return modifierLayer('Hyper', key, varName, onValue, offValue)
 }
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
