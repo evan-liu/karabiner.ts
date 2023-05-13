@@ -76,8 +76,7 @@ layer('a', 'a-mode')
   // highlight-next-line
   .modifiers('⌘')
   .manipulators([
-    // highlight-next-line
-    map(1, 'any').to(2),
+    map(1).to(2),
   ])
 ```
 
@@ -124,10 +123,9 @@ layer('a', 'a-mode')
 ```
 </details>
 
-:::caution
-It is important to set modifiers to `mandatory: ['any']` as in map(1, 'any'), so
-that the layer modifiers are not sent with the mapping. 
-:::
+`from.modifiers` is set to `{"mandatory": ["any"]}` for all manipulators on the 
+layer, so that the layer modifiers are not sent to manipulators to events. So 
+the manipulators on the layer cannot have other modifiers. 
 
 ## Config the layer key
 
