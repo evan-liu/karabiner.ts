@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { layer } from './layer'
+import { hyperLayer, layer } from './layer'
 import { map } from './from'
 import { BasicManipulator } from '../karabiner/karabiner-config'
 import { ifVar } from './condition'
@@ -184,6 +184,16 @@ test('layer().modifier()', () => {
   expect(
     layer('a', 'v')
       .modifiers('Hyper')
+      .manipulators([map(1).to(2)])
+      .build()
+      .manipulators.map((v) => v.from?.modifiers),
+  ).toEqual([
+    { mandatory: ['command', 'option', 'control', 'shift'] },
+    { mandatory: ['any'] },
+  ])
+
+  expect(
+    hyperLayer('a')
       .manipulators([map(1).to(2)])
       .build()
       .manipulators.map((v) => v.from?.modifiers),
