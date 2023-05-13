@@ -11,6 +11,7 @@ import {
   stickyModifierKeyCodes,
   toOnlyKeyCodes,
 } from '../karabiner/key-code'
+import { mouseMotionToScroll } from './mouse-motion-to-scroll'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)
@@ -169,11 +170,46 @@ test('layer().modifier()', () => {
   ).toEqual({ optional: ['right_option'] })
 
   expect(
-    (
-      layer('a', 'v')
-        .modifiers('Hyper')
-        .manipulators([map(1).to(2)])
-        .build().manipulators[0] as BasicManipulator
-    ).from.modifiers,
-  ).toEqual({ mandatory: ['command', 'option', 'control', 'shift'] })
+    layer('a', 'v')
+      .modifiers('Hyper')
+      .manipulators([map(1).to(2)])
+      .build()
+      .manipulators.map((v) => v.from?.modifiers),
+  ).toEqual([
+    { mandatory: ['command', 'option', 'control', 'shift'] },
+    { mandatory: ['any'] },
+  ])
+
+  expect(
+    layer('a', 'v')
+      .modifiers('⌘')
+      .manipulators([
+        map(1, {}).to(2),
+        map(1, {}, {}).to(2),
+        map(1, 'any').to(2),
+        mouseMotionToScroll().modifiers('⌘'),
+      ])
+      .build()
+      .manipulators.map((v) => v.from?.modifiers),
+  ).toEqual([
+    { mandatory: ['command'] },
+    { mandatory: ['any'] },
+    { mandatory: ['any'] },
+    { mandatory: ['any'] },
+    { mandatory: ['command'] },
+  ])
+
+  expect(() =>
+    layer('a', 'v')
+      .modifiers('⌘')
+      .manipulators([map(1, '⌥').to(2)])
+      .build(),
+  ).toThrow()
+
+  expect(() =>
+    layer('a', 'v')
+      .modifiers('⌘')
+      .manipulators([map(1, '??').to(2)])
+      .build(),
+  ).toThrow()
 })

@@ -10,6 +10,7 @@ import {
   BasicManipulator,
   Condition,
   FromEvent,
+  Manipulator,
   Rule,
   ToVariable,
 } from '../karabiner/karabiner-config'
@@ -122,6 +123,14 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     const conditions = this.conditions
       .filter((v) => v !== this.layerCondition)
       .map(buildCondition)
+
+    if (
+      this.layerModifiers?.mandatory?.length ||
+      this.layerModifiers?.optional?.length
+    ) {
+      rule.manipulators.forEach((v) => this.addModifierAnyToManipulator(v))
+    }
+
     for (const key_code of this.keys) {
       rule.manipulators = [
         ...layerToggleManipulator(
@@ -140,6 +149,23 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     }
 
     return rule
+  }
+
+  // If the layer has modifiers, set manipulator modifiers to { mandatory: ['any'] }
+  private addModifierAnyToManipulator(manipulator: Manipulator) {
+    if (manipulator.type !== 'basic') return
+    if (manipulator.from.modifiers) {
+      const { mandatory, optional } = manipulator.from.modifiers
+      if (
+        optional?.length ||
+        (mandatory?.length && (mandatory.length > 1 || mandatory[0] !== 'any'))
+      ) {
+        throw new Error(
+          'Layers with modifiers cannot have modifiers on manipulators',
+        )
+      }
+    }
+    manipulator.from.modifiers = { mandatory: ['any'] }
   }
 }
 
