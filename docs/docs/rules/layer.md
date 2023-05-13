@@ -66,6 +66,69 @@ The layer key is still functional if it is tapped alone
 "to_if_alone": [ {"key_code": "a"} ]
 ```
 
+## Layer modifiers
+
+Layers can have modifiers, so that the layer is only active when the key and the
+modifiers are all pressed and held. 
+
+```typescript
+layer('a', 'a-mode')
+  // highlight-next-line
+  .modifiers('⌘')
+  .manipulators([
+    // highlight-next-line
+    map(1, 'any').to(2),
+  ])
+```
+
+<details>
+<summary>Generated JSON in profiles.complex_modifications.rules</summary>
+
+```json
+{
+  "description": "Layer - a-mode",
+  "manipulators": [
+    {
+      "type": "basic",
+      "from": {
+        "key_code": "a", 
+        // highlight-next-line
+        "modifiers": {"mandatory": ["command"]}
+      },
+      "to": [
+        {"set_variable": {"name": "a-mode", "value": 1}}
+      ],
+      "to_after_key_up": [
+        {"set_variable": {"name": "a-mode", "value": 0}}
+      ],
+      "to_if_alone": [
+        {"key_code": "a"}
+      ]
+    },
+    {
+      "type": "basic",
+      "from": {
+        "key_code": "1",
+        // highlight-next-line
+        "modifiers": {"mandatory": ["any"]}
+      },
+      "to": [
+        {"key_code": "2"}
+      ],
+      "conditions": [
+        {"type": "variable_if", "name": "a-mode", "value": 1}
+      ]
+    }
+  ]
+}
+```
+</details>
+
+:::caution
+It is important to set modifiers to `mandatory: ['any']` as in map(1, 'any'), so
+that the layer modifiers are not sent with the mapping. 
+:::
+
 ## Config the layer key
 
 The layer key can also be mapped to something else by `layer().configKey()`
