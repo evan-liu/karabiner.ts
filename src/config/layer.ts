@@ -79,19 +79,19 @@ export function hyperLayer(
 }
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
-  protected readonly keys: LayerKeyCode[]
-  protected varName: string
-  protected layerCondition: ConditionBuilder
-  protected layerKeyManipulator?: BasicManipulatorBuilder
-  protected replaceLayerKeyToIfAlone = false
+  private readonly keys: LayerKeyCode[]
+  private readonly varName: string
+  private readonly layerCondition: ConditionBuilder
+  private layerKeyManipulator?: BasicManipulatorBuilder
+  private replaceLayerKeyToIfAlone = false
 
-  protected layerModifiers?: FromEvent['modifiers']
+  private layerModifiers?: FromEvent['modifiers']
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
     varName?: string,
-    protected readonly onValue: ToVariable['value'] = 1,
-    protected readonly offValue: ToVariable['value'] = 0,
+    private readonly onValue: ToVariable['value'] = 1,
+    private readonly offValue: ToVariable['value'] = 0,
   ) {
     const keys = toArray(key).map((v) =>
       getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as layer key'),

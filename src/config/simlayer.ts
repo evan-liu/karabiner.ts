@@ -40,24 +40,24 @@ export function simlayer(
 }
 
 export class SimlayerRuleBuilder extends BasicRuleBuilder {
-  protected readonly keys: LayerKeyCode[]
-  protected varName: string
-  protected readonly layerCondition: ConditionBuilder
-  protected readonly sharedLayerKeys: LayerKeyCode[] = []
-  protected readonly simultaneousOptions: SimultaneousOptions = {
+  private readonly keys: LayerKeyCode[]
+  private readonly varName: string
+  private readonly layerCondition: ConditionBuilder
+  private readonly sharedLayerKeys: LayerKeyCode[] = []
+  private readonly simultaneousOptions: SimultaneousOptions = {
     detect_key_down_uninterruptedly: true,
     key_down_order: 'strict',
     key_up_order: 'strict_inverse',
     key_up_when: 'any',
   }
-  protected layerModifiers: FromEvent['modifiers'] = { optional: ['any'] }
+  private layerModifiers: FromEvent['modifiers'] = { optional: ['any'] }
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
     varName?: string,
-    protected readonly threshold?: number,
-    protected readonly onValue: ToVariable['value'] = 1,
-    protected readonly offValue: ToVariable['value'] = 0,
+    private readonly threshold?: number,
+    private readonly onValue: ToVariable['value'] = 1,
+    private readonly offValue: ToVariable['value'] = 0,
   ) {
     const keys = toArray(key).map((v) =>
       getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as simlayer key'),

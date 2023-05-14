@@ -7,6 +7,7 @@ import { buildRule, RuleBuilder } from './rule'
 import { defaultDoubleTapParameters } from './double-tap'
 import { defaultSimlayerParameters } from './simlayer'
 import { BuildContext } from '../utils/build-context'
+import { defaultDuoLayerParameters } from './duo-layer'
 
 export const defaultComplexModificationsParameters: ComplexModificationsParameters =
   {
@@ -19,7 +20,8 @@ export const defaultComplexModificationsParameters: ComplexModificationsParamete
 
 export type ModificationParameters = ComplexModificationsParameters &
   Partial<typeof defaultDoubleTapParameters> &
-  Partial<typeof defaultSimlayerParameters>
+  Partial<typeof defaultSimlayerParameters> &
+  Partial<typeof defaultDuoLayerParameters>
 
 export function complexModifications(
   rules: Array<Rule | RuleBuilder>,
