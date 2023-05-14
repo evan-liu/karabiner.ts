@@ -7,6 +7,7 @@ import { buildRule, RuleBuilder } from './rule'
 import { defaultDoubleTapParameters } from './double-tap'
 import { defaultSimlayerParameters } from './simlayer'
 import { BuildContext } from '../utils/build-context'
+import { defaultDuoLayerParameters } from './duo-layer'
 
 export const defaultComplexModificationsParameters: ComplexModificationsParameters =
   {
@@ -19,7 +20,8 @@ export const defaultComplexModificationsParameters: ComplexModificationsParamete
 
 export type ModificationParameters = ComplexModificationsParameters &
   Partial<typeof defaultDoubleTapParameters> &
-  Partial<typeof defaultSimlayerParameters>
+  Partial<typeof defaultSimlayerParameters> &
+  Partial<typeof defaultDuoLayerParameters>
 
 export function complexModifications(
   rules: Array<Rule | RuleBuilder>,
@@ -39,8 +41,9 @@ export function complexModifications(
     'simlayer.threshold_milliseconds': simlayerThreshold,
   })
 
+  const builtRules = rules.map((v) => buildRule(v, context))
   const modifications: ComplexModifications = {
-    rules: rules.map((v) => buildRule(v, context)),
+    rules: builtRules.filter((v) => v.manipulators.length),
     parameters: {
       ...defaultComplexModificationsParameters,
       ...complexModificationsParameters,
@@ -51,10 +54,13 @@ export function complexModifications(
     throw new Error(`complex_modifications "rules" is empty `)
   }
 
-  for (const rule of modifications.rules) {
-    if (!rule.manipulators.length) {
-      throw new Error(`"manipulators" is empty in "${rule.description}"`)
-    }
+  if (modifications.rules.length < builtRules.length) {
+    console.warn(`Rules with empty manipulators are ignored: 
+${builtRules
+  .filter((v) => v.manipulators.length === 0)
+  .map((v) => '- ' + v.description)
+  .join('\n')}
+`)
   }
 
   return modifications

@@ -44,8 +44,9 @@ export * from './config/condition'
 // Rules
 export { rule } from './config/rule'
 export type { LayerKeyCode, LayerKeyParam } from './config/layer'
-export { layer } from './config/layer'
+export { layer, hyperLayer, modifierLayer } from './config/layer'
 export { simlayer } from './config/simlayer'
+export { duoLayer } from './config/duo-layer'
 
 // Output
 export { writeToProfile } from './output'
