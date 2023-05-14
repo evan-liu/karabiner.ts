@@ -45,6 +45,13 @@ describe('complexModifications()', () => {
     expect(() =>
       complexModifications([{ manipulators: [], description: '' }]),
     ).toThrow()
+
+    expect(() =>
+      complexModifications([
+        { manipulators: map(1).to(2).build(), description: '' },
+        { manipulators: [], description: '' },
+      ]),
+    ).not.toThrow()
   })
 
   test('Check key', () => {
