@@ -3,6 +3,8 @@ import { withCondition } from './with-condition'
 import { ifVar } from '../config/condition'
 import { map } from '../config/from'
 import { BasicManipulator } from '../karabiner/karabiner-config'
+import { rule } from '../config/rule'
+import { toKey } from '../config/to'
 
 test('withCondition()', () => {
   const ifA = ifVar('a').build()
@@ -19,4 +21,22 @@ test('withCondition()', () => {
 
   // FIXME Cleanup in 2.0 after remove the array return type
   expect(manipulators.length).toBe(3)
+})
+
+test('manipulators map', () => {
+  expect(
+    rule('')
+      .manipulators([withCondition(ifVar('b'))({ a: toKey('b') })])
+      .build(),
+  ).toEqual({
+    description: '',
+    manipulators: [
+      {
+        type: 'basic',
+        from: { key_code: 'a' },
+        to: [{ key_code: 'b' }],
+        conditions: [{ name: 'b', type: 'variable_if', value: 1 }],
+      },
+    ],
+  })
 })

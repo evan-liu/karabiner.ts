@@ -2,6 +2,8 @@ import { describe, expect, test } from 'vitest'
 import { withModifier } from './with-modifier'
 import { map } from '../config/from'
 import { BasicManipulator } from '../karabiner/karabiner-config'
+import { rule } from '../config/rule'
+import { toKey } from '../config/to'
 
 describe('withModifier()', () => {
   test('Add the shared modifiers to `from` but not `to`', () => {
@@ -67,5 +69,22 @@ describe('withModifier()', () => {
     expect(
       withModifier('⌘')([map(1, 'any').to('a')]).build()[0].from?.modifiers,
     ).toEqual({ mandatory: ['any'] })
+  })
+})
+
+test('manipulators map', () => {
+  expect(
+    rule('')
+      .manipulators([withModifier('⌘')({ 1: toKey('b') })])
+      .build(),
+  ).toEqual({
+    description: '',
+    manipulators: [
+      {
+        type: 'basic',
+        from: { key_code: '1', modifiers: { mandatory: ['command'] } },
+        to: [{ key_code: 'b' }],
+      },
+    ],
   })
 })

@@ -41,10 +41,15 @@ import { StickyModifierKeyCode } from '../karabiner/key-code'
 import { toArray } from '../utils/to-array'
 import { BuildContext } from '../utils/build-context'
 import { toTypeSequence } from './to-type-sequence'
+import { FromKeyParam, map } from './from'
 
 export interface ManipulatorBuilder {
   build(context?: BuildContext): Manipulator[]
 }
+
+// TODO Make the type FromKeyParam.
+//  Current TypeScript version gives errors for some keys, like numbers.
+export type ManipulatorMap = Partial<Record<string | number, ToEvent>>
 
 export class BasicManipulatorBuilder implements ManipulatorBuilder {
   protected readonly manipulator: BasicManipulator
@@ -57,6 +62,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   get from(): FromEvent {
     return this.manipulator.from
   }
+
   /** Set or add ToEvent(s) to the Manipulator. */
 
   to(event: ToEvent | ToEvent[]): this
@@ -313,14 +319,21 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
 }
 
 export function isManipulatorBuilder(
-  src: Manipulator | ManipulatorBuilder,
+  src: Manipulator | ManipulatorBuilder | ManipulatorMap,
 ): src is ManipulatorBuilder {
   return typeof (src as ManipulatorBuilder).build === 'function'
 }
 
 export function buildManipulators(
-  src: Manipulator | ManipulatorBuilder,
+  src: Manipulator | ManipulatorBuilder | ManipulatorMap,
   context?: BuildContext,
 ): Manipulator[] {
-  return isManipulatorBuilder(src) ? src.build(context) : [src]
+  if (isManipulatorBuilder(src)) return src.build(context)
+  if ('type' in src) return [src as Manipulator]
+
+  const entries = Object.entries(src) as Array<[FromKeyParam, ToEvent]>
+  return entries.reduce(
+    (r, [k, v]) => [...r, ...map(k).to(v).build(context)],
+    [] as Manipulator[],
+  )
 }
