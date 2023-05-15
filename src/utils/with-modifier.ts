@@ -1,6 +1,10 @@
 import { Manipulator, Modifier } from '../karabiner/karabiner-config'
 import { FromModifierParam } from '../config/modifier'
-import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
+import {
+  buildManipulators,
+  ManipulatorBuilder,
+  ManipulatorMap,
+} from '../config/manipulator'
 import { BuildContext } from './build-context'
 import { parseFromModifierOverload } from './from-modifier-overload'
 import { FromOptionalModifierParam } from './optional-modifiers'
@@ -17,7 +21,11 @@ import { FromOptionalModifierParam } from './optional-modifiers'
 export function withModifier(
   mandatoryModifiers: FromModifierParam,
   optionalModifiers?: FromModifierParam,
-): (manipulators: Array<Manipulator | ManipulatorBuilder>) => ManipulatorBuilder
+): (
+  manipulators:
+    | ManipulatorMap
+    | Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
+) => ManipulatorBuilder
 /**
  * A high-order function to add optional modifiers to a group of manipulators
  *
@@ -29,12 +37,18 @@ export function withModifier(
  */
 export function withModifier(
   modifiers: FromOptionalModifierParam,
-): (manipulators: Array<Manipulator | ManipulatorBuilder>) => ManipulatorBuilder
+): (
+  manipulators:
+    | ManipulatorMap
+    | Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
+) => ManipulatorBuilder
 export function withModifier(
   mandatoryModifiers: FromModifierParam | FromOptionalModifierParam,
   optionalModifiers?: FromModifierParam,
 ): (
-  manipulators: Array<Manipulator | ManipulatorBuilder>,
+  manipulators:
+    | ManipulatorMap
+    | Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
 ) => ManipulatorBuilder {
   return (manipulators) => ({
     build: (context?: BuildContext) => {
@@ -42,7 +56,11 @@ export function withModifier(
         mandatoryModifiers,
         optionalModifiers,
       )!
-      return manipulators
+
+      const src = Array.isArray(manipulators)
+        ? manipulators
+        : buildManipulators(manipulators)
+      return src
         .map((v) => buildManipulators(v, context))
         .reduce((result, manipulator) => result.concat(manipulator), [])
         .map((src) => {

@@ -1,5 +1,9 @@
 import { Condition, Manipulator } from '../karabiner/karabiner-config'
-import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
+import {
+  buildManipulators,
+  ManipulatorBuilder,
+  ManipulatorMap,
+} from '../config/manipulator'
 import { buildCondition, ConditionBuilder } from '../config/condition'
 
 /**
@@ -10,9 +14,11 @@ import { buildCondition, ConditionBuilder } from '../config/condition'
 export function withCondition(
   ...conditions: Array<Condition | ConditionBuilder>
 ): (
-  manipulators: Array<Manipulator | ManipulatorBuilder>,
+  manipulators:
+    | ManipulatorMap
+    | Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
 ) => Manipulator[] & ManipulatorBuilder {
-  return (manipulators: Array<Manipulator | ManipulatorBuilder>) => {
+  return (manipulators) => {
     const sharedConditions = conditions.map(buildCondition)
     function addSharedConditions(manipulator: Manipulator) {
       if (manipulator.type !== 'basic') return manipulator
@@ -22,7 +28,10 @@ export function withCondition(
       }
     }
 
-    const result = manipulators.reduce(
+    const src = Array.isArray(manipulators)
+      ? manipulators
+      : buildManipulators(manipulators)
+    const result = src.reduce(
       (r, v) => [...r, ...buildManipulators(v).map(addSharedConditions)],
       [] as Manipulator[],
     )

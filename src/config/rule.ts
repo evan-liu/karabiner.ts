@@ -1,5 +1,9 @@
 import { Condition, Manipulator, Rule } from '../karabiner/karabiner-config'
-import { buildManipulators, ManipulatorBuilder } from './manipulator'
+import {
+  buildManipulators,
+  ManipulatorBuilder,
+  ManipulatorMap,
+} from './manipulator'
 import { buildCondition, ConditionBuilder } from './condition'
 import { BuildContext } from '../utils/build-context'
 
@@ -13,7 +17,7 @@ export function rule(
 export class BasicRuleBuilder implements RuleBuilder {
   protected readonly conditions: Array<Condition | ConditionBuilder>
   protected readonly manipulatorSources: Array<
-    Manipulator | ManipulatorBuilder
+    Manipulator | ManipulatorBuilder | ManipulatorMap
   > = []
   protected allowEmptyManipulators = false
 
@@ -24,8 +28,16 @@ export class BasicRuleBuilder implements RuleBuilder {
     this.conditions = conditions
   }
 
-  manipulators(src: Array<Manipulator | ManipulatorBuilder>): this {
-    src.forEach((v) => this.manipulatorSources.push(v))
+  manipulators(
+    src:
+      | ManipulatorMap
+      | Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
+  ): this {
+    if (Array.isArray(src)) {
+      src.forEach((v) => this.manipulatorSources.push(v))
+    } else {
+      this.manipulatorSources.push(src)
+    }
     return this
   }
 

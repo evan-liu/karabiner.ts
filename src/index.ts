@@ -12,7 +12,6 @@ export type {
   ModifierParam,
   FromModifierParam,
 } from './config/modifier'
-export type { ModificationParameters } from './config/complex-modifications'
 export type { MultiModifierAlias } from './utils/multi-modifier'
 export type {
   ModifierKeyAlias,
@@ -21,6 +20,7 @@ export type {
   KeyAlias,
   NumberKeyValue,
 } from './utils/key-alias'
+export type { ManipulatorMap } from './config/manipulator'
 
 // Utils
 export { withCondition } from './utils/with-condition'
@@ -47,6 +47,13 @@ export type { LayerKeyCode, LayerKeyParam } from './config/layer'
 export { layer, hyperLayer, modifierLayer } from './config/layer'
 export { simlayer } from './config/simlayer'
 export { duoLayer } from './config/duo-layer'
+
+// Configs
+export type { ModificationParameters } from './config/complex-modifications'
+export { defaultComplexModificationsParameters } from './config/complex-modifications'
+export { defaultDoubleTapParameters } from './config/double-tap'
+export { defaultSimlayerParameters } from './config/simlayer'
+export { defaultDuoLayerParameters } from './config/duo-layer'
 
 // Output
 export { writeToProfile } from './output'

@@ -2,6 +2,7 @@ import { expect, test } from 'vitest'
 import { BasicRuleBuilder, isRuleBuilder, rule } from './rule'
 import { ifVar } from './condition'
 import { map } from './from'
+import { toKey } from './to'
 
 test('rule()', () => {
   const condition1 = ifVar('v1').build()
@@ -33,4 +34,27 @@ test('Empty manipulators error', () => {
 test('isRuleBuilder()', () => {
   expect(isRuleBuilder({ description: 'a', manipulators: [] })).toBe(false)
   expect(isRuleBuilder(new BasicRuleBuilder('b'))).toBe(true)
+})
+
+test('manipulators map', () => {
+  expect(
+    rule('')
+      .manipulators({ '›⌘': toKey('b') })
+      .build(),
+  ).toEqual({
+    description: '',
+    manipulators: [
+      {
+        type: 'basic',
+        from: { key_code: 'right_command' },
+        to: [{ key_code: 'b' }],
+      },
+    ],
+  })
+
+  expect(() =>
+    rule('')
+      .manipulators({ xyz: toKey(1) })
+      .build(),
+  ).toThrow(/key_code/)
 })
