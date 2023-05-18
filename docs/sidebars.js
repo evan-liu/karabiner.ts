@@ -11,6 +11,8 @@ const sidebars = {
         'rules/rule', //
         'rules/layer',
         'rules/simlayer',
+        'rules/hyper-layer',
+        'rules/duo-layer',
       ],
     },
     {

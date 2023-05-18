@@ -221,3 +221,8 @@ writeToProfile(
   { 'simlayer.threshold_milliseconds': 100 }, // parameters 
 )
 ```
+
+## Problems in simlayer
+
+The other key(s) on the simlayer must be quickly pressed after the layer key,
+otherwise the simlayer key is triggered. 

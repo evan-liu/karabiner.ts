@@ -286,5 +286,3 @@ Both variables are set by one manipulator as
 > we trigger the "1" in w layer rather than insert "w1". 
 > When we keep press w key down, the w key won't repeat. 
 > There won't be a "wwwwwwwwwwwwwwwwwwww". - [Goku](https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md#simlayers)
-
-To solve those problems, use [simlayer](./simlayer).
