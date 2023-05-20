@@ -43,7 +43,7 @@ in JSON format as:
 }
 ```
 
-`karabiner.ts` allows you to write `complex_modifications` in TypeScript:
+[`karabiner.ts`](https://github.com/evan-liu/karabiner.ts) allows you to write `complex_modifications` in TypeScript:
 
 ```typescript
 writeToProfile('Default', [ // 1 profile to config complex_modifications
