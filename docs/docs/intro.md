@@ -6,9 +6,12 @@ slug: /
 # karabiner.ts
 
 [Karabiner-Elements](https://karabiner-elements.pqrs.org/) configuration file is
-in JSON format as:
+in JSON format.
 
-```json title="~/.config/karabiner/karabiner.json"
+<details>
+<summary>~/.config/karabiner/karabiner.json</summary>
+
+```json
 {
   "profiles": [
     {
@@ -42,6 +45,8 @@ in JSON format as:
   ]
 }
 ```
+
+</details>
 
 [`karabiner.ts`](https://github.com/evan-liu/karabiner.ts) allows you to write `complex_modifications` in TypeScript:
 
