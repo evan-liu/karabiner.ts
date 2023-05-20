@@ -56,4 +56,5 @@ export { defaultSimlayerParameters } from './config/simlayer'
 export { defaultDuoLayerParameters } from './config/duo-layer'
 
 // Output
+export { complexModifications } from './config/complex-modifications'
 export { writeToProfile } from './output'
