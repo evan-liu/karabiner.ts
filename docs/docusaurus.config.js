@@ -45,18 +45,12 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'karabiner.ts',
+        title: '📝 Docs',
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'docs',
-            position: 'left',
-            label: 'Docs',
-          },
-          {
             href: 'https://github.com/evan-liu/karabiner.ts',
-            label: 'GitHub',
-            position: 'right',
+            label: 'karabiner.ts',
+            position: 'left',
           },
         ],
       },
