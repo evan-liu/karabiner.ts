@@ -8,9 +8,6 @@ import {
   ModificationParameters,
 } from './config/complex-modifications'
 
-export const karabinerConfigDir = join(homedir(), '.config/karabiner')
-export const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
-
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json
  *
@@ -26,6 +23,9 @@ export function writeToProfile(
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
 ) {
+  const karabinerConfigDir = join(homedir(), '.config/karabiner')
+  const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
+
   const config: KarabinerConfig =
     name === '--dry-run'
       ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
