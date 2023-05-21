@@ -17,10 +17,10 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 
 ## Learn More
 
-- 🛝 [Try it out at the online playground](https://stackblitz.com/edit/karabiner-ts?file=rules.js)
-- [Docs](https://evan-liu.github.io/karabiner.ts/)
+- [📝 Docs](https://evan-liu.github.io/karabiner.ts/)
+  - [🛝 Playground](https://evan-liu.github.io/karabiner.ts/playground)
 - [Examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) 
-- [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts)
+  - [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts)
 
 ## Usage
 
