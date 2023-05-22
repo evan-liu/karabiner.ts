@@ -52,11 +52,6 @@ const config = {
             label: 'karabiner.ts',
             position: 'left',
           },
-          {
-            href: 'https://stackblitz.com/edit/karabiner-ts?file=rules.js',
-            label: 'playground',
-            position: 'left',
-          },
         ],
       },
       footer: {},
