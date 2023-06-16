@@ -42,7 +42,7 @@ export * from './config/to-type-sequence'
 export * from './config/condition'
 
 // Rules
-export { rule } from './config/rule'
+export { rule, RuleBuilder } from './config/rule'
 export type { LayerKeyCode, LayerKeyParam } from './config/layer'
 export { layer, hyperLayer, modifierLayer } from './config/layer'
 export { simlayer } from './config/simlayer'
