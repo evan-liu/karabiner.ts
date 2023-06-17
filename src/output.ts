@@ -1,12 +1,36 @@
-import { homedir } from 'node:os'
-import { join } from 'node:path'
-import { writeFile } from 'node:fs/promises'
 import { KarabinerConfig, Rule } from './karabiner/karabiner-config.ts'
 import { RuleBuilder } from './config/rule.ts'
 import {
   complexModifications,
   ModificationParameters,
 } from './config/complex-modifications.ts'
+
+export const writeContext = {
+  karabinerConfigDir() {
+    return require('node:path').join(
+      require('node:os').homedir(),
+      '.config/karabiner',
+    )
+  },
+  karabinerConfigFile() {
+    return require('node:path').join(
+      this.karabinerConfigDir(),
+      'karabiner.json',
+    )
+  },
+  async readKarabinerConfig() {
+    return await require(this.karabinerConfigFile())
+  },
+  async writeKarabinerConfig(json: any) {
+    return await require('node:fs/promises').writeFile(
+      this.karabinerConfigFile(),
+      json,
+    )
+  },
+  exit(code = 0): never {
+    process.exit(code)
+  },
+}
 
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json
@@ -18,22 +42,19 @@ import {
  *
  * @see https://karabiner-elements.pqrs.org/docs/json/root-data-structure/
  */
-export function writeToProfile(
+export async function writeToProfile(
   name: '--dry-run' | string,
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
 ) {
-  const karabinerConfigDir = join(homedir(), '.config/karabiner')
-  const karabinerConfigFile = join(karabinerConfigDir, 'karabiner.json')
-
   const config: KarabinerConfig =
     name === '--dry-run'
       ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
-      : require(karabinerConfigFile)
+      : await writeContext.readKarabinerConfig()
 
   const profile = config?.profiles.find((v) => v.name === name)
   if (!profile)
-    exitWithError(`⚠️ Profile ${name} not found in ${karabinerConfigFile}.\n
+    exitWithError(`⚠️ Profile ${name} not found in ${writeContext.karabinerConfigFile()}.\n
 ℹ️ Please check the profile name in the Karabiner-Elements UI and 
     - Update the profile name at writeToProfile()
     - Create a new profile if needed
@@ -52,7 +73,7 @@ export function writeToProfile(
     return
   }
 
-  writeFile(karabinerConfigFile, json).catch(exitWithError)
+  writeContext.writeKarabinerConfig(json).catch(exitWithError)
 
   console.log(`✓ Profile ${name} updated.`)
 }
@@ -65,5 +86,5 @@ function exitWithError(err: any): never {
       console.error((err as Error).message || err)
     }
   }
-  process.exit(1)
+  return writeContext.exit(1)
 }
