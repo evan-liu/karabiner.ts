@@ -16,13 +16,13 @@ import {
   pcKeyboardKeyCodes,
   stickyModifierKeyCodes,
   toOnlyKeyCodes,
-} from '../karabiner/key-code'
-import { Modifier } from '../karabiner/karabiner-config'
+} from '../karabiner/key-code.ts'
+import { Modifier } from '../karabiner/karabiner-config.ts'
 import {
   isSideMultiModifierAlias,
   parseSideMultiModifierAlias,
   SideModifierAlias,
-} from '../config/modifier'
+} from '../config/modifier.ts'
 
 export const modifierKeyAliases = {
   '⌘': 'command',

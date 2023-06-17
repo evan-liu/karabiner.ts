@@ -3,12 +3,12 @@ import {
   ModifierParam,
   parseFromModifierParams,
   parseModifierParam,
-} from '../config/modifier'
+} from '../config/modifier.ts'
 import {
   FromOptionalModifierParam,
   isOptionalAnyAlias,
   isOptionalModifierAlias,
-} from './optional-modifiers'
+} from './optional-modifiers.ts'
 
 export type FromModifierOverloadParam =
   | FromModifierParam

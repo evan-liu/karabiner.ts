@@ -1,13 +1,13 @@
-import { Manipulator, Modifier } from '../karabiner/karabiner-config'
-import { FromModifierParam } from '../config/modifier'
+import { Manipulator, Modifier } from '../karabiner/karabiner-config.ts'
+import { FromModifierParam } from '../config/modifier.ts'
 import {
   buildManipulators,
   ManipulatorBuilder,
   ManipulatorMap,
-} from '../config/manipulator'
-import { BuildContext } from './build-context'
-import { parseFromModifierOverload } from './from-modifier-overload'
-import { FromOptionalModifierParam } from './optional-modifiers'
+} from '../config/manipulator.ts'
+import { BuildContext } from './build-context.ts'
+import { parseFromModifierOverload } from './from-modifier-overload.ts'
+import { FromOptionalModifierParam } from './optional-modifiers.ts'
 
 /**
  * A high-order function to add modifiers to a group of manipulators

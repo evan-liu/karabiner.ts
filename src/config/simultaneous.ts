@@ -2,17 +2,17 @@ import {
   FromEvent,
   FromKeyType,
   SimultaneousOptions,
-} from '../karabiner/karabiner-config'
-import { BasicManipulatorBuilder } from './manipulator'
-import { getKeyWithAlias } from '../utils/key-alias'
-import { FromKeyCode, toOnlyKeyCodes } from '../karabiner/key-code'
-import { FromKeyParam } from './from'
+} from '../karabiner/karabiner-config.ts'
+import { BasicManipulatorBuilder } from './manipulator.ts'
+import { getKeyWithAlias } from '../utils/key-alias.ts'
+import { FromKeyCode, toOnlyKeyCodes } from '../karabiner/key-code.ts'
+import { FromKeyParam } from './from.ts'
 import {
   FromModifierOverloadParam,
   parseFromModifierOverload,
-} from '../utils/from-modifier-overload'
-import { FromModifierParam } from './modifier'
-import { FromOptionalModifierParam } from '../utils/optional-modifiers'
+} from '../utils/from-modifier-overload.ts'
+import { FromModifierParam } from './modifier.ts'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
 
 /** Start a manipulator with from.simultaneous */
 export function mapSimultaneous(

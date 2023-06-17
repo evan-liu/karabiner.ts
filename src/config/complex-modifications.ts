@@ -2,12 +2,12 @@ import {
   ComplexModifications,
   ComplexModificationsParameters,
   Rule,
-} from '../karabiner/karabiner-config'
-import { buildRule, RuleBuilder } from './rule'
-import { defaultDoubleTapParameters } from './double-tap'
-import { defaultSimlayerParameters } from './simlayer'
-import { BuildContext } from '../utils/build-context'
-import { defaultDuoLayerParameters } from './duo-layer'
+} from '../karabiner/karabiner-config.ts'
+import { buildRule, RuleBuilder } from './rule.ts'
+import { defaultDoubleTapParameters } from './double-tap.ts'
+import { defaultSimlayerParameters } from './simlayer.ts'
+import { BuildContext } from '../utils/build-context.ts'
+import { defaultDuoLayerParameters } from './duo-layer.ts'
 
 export const defaultComplexModificationsParameters: ComplexModificationsParameters =
   {

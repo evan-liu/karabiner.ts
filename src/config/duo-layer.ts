@@ -1,16 +1,16 @@
-import { LayerKeyParam } from './layer'
+import { LayerKeyParam } from './layer.ts'
 import {
   BasicManipulator,
   FromSimultaneousEvent,
   Rule,
   SimultaneousOptions,
   ToVariable,
-} from '../karabiner/karabiner-config'
-import { BasicRuleBuilder } from './rule'
-import { buildCondition, ConditionBuilder, ifVar } from './condition'
-import { BuildContext } from '../utils/build-context'
-import { mapSimultaneous } from './simultaneous'
-import { toSetVar } from './to'
+} from '../karabiner/karabiner-config.ts'
+import { BasicRuleBuilder } from './rule.ts'
+import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
+import { BuildContext } from '../utils/build-context.ts'
+import { mapSimultaneous } from './simultaneous.ts'
+import { toSetVar } from './to.ts'
 
 export const defaultDuoLayerParameters = {
   'duo_layer.threshold_milliseconds': 200,

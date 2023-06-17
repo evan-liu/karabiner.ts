@@ -10,8 +10,8 @@ import {
   ToMouseCursorPosition,
   ToMouseKey,
   ToVariable,
-} from '../karabiner/karabiner-config'
-import { ModifierParam } from './modifier'
+} from '../karabiner/karabiner-config.ts'
+import { ModifierParam } from './modifier.ts'
 import {
   to$,
   toApp,
@@ -33,15 +33,15 @@ import {
   toSleepSystem,
   toStickyModifier,
   toSuperHyper,
-} from './to'
-import { buildCondition, ConditionBuilder } from './condition'
-import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
-import { PointingButton } from '../karabiner/pointing-button'
-import { StickyModifierKeyCode } from '../karabiner/key-code'
-import { toArray } from '../utils/to-array'
-import { BuildContext } from '../utils/build-context'
-import { toTypeSequence } from './to-type-sequence'
-import { FromKeyParam, map } from './from'
+} from './to.ts'
+import { buildCondition, ConditionBuilder } from './condition.ts'
+import { ToConsumerKeyCode } from '../karabiner/consumer-key-code.ts'
+import { PointingButton } from '../karabiner/pointing-button.ts'
+import { StickyModifierKeyCode } from '../karabiner/key-code.ts'
+import { toArray } from '../utils/to-array.ts'
+import { BuildContext } from '../utils/build-context.ts'
+import { toTypeSequence } from './to-type-sequence.ts'
+import { FromKeyParam, map } from './from.ts'
 
 export interface ManipulatorBuilder {
   build(context?: BuildContext): Manipulator[]

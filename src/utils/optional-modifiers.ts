@@ -1,6 +1,12 @@
-import { FromModifierParam, SideMultiModifierAlias } from '../config/modifier'
-import { ModifierKeyAlias } from './key-alias'
-import { MultiModifierAlias, NamedMultiModifierAlias } from './multi-modifier'
+import {
+  FromModifierParam,
+  SideMultiModifierAlias,
+} from '../config/modifier.ts'
+import { ModifierKeyAlias } from './key-alias.ts'
+import {
+  MultiModifierAlias,
+  NamedMultiModifierAlias,
+} from './multi-modifier.ts'
 
 const optionalAnyAliases = ['optionalAny', '?any', '??'] as const
 export type OptionalAnyAlias = (typeof optionalAnyAliases)[number]

@@ -1,6 +1,6 @@
 // Karabiner
-export type * from './karabiner/key-code'
-export type * from './karabiner/karabiner-config'
+export type * from './karabiner/key-code.ts'
+export type * from './karabiner/karabiner-config.ts'
 
 // Types
 export type {
@@ -11,52 +11,52 @@ export type {
   SideMultiModifierAlias,
   ModifierParam,
   FromModifierParam,
-} from './config/modifier'
-export type { MultiModifierAlias } from './utils/multi-modifier'
+} from './config/modifier.ts'
+export type { MultiModifierAlias } from './utils/multi-modifier.ts'
 export type {
   ModifierKeyAlias,
   ArrowKeyAlias,
   ControlOrSymbolKeyAlias,
   KeyAlias,
   NumberKeyValue,
-} from './utils/key-alias'
-export type { ManipulatorMap } from './config/manipulator'
+} from './utils/key-alias.ts'
+export type { ManipulatorMap } from './config/manipulator.ts'
 
 // Utils
-export { withCondition } from './utils/with-condition'
-export { withMapper } from './utils/with-mapper'
-export { withModifier } from './utils/with-modifier'
+export { withCondition } from './utils/with-condition.ts'
+export { withMapper } from './utils/with-mapper.ts'
+export { withModifier } from './utils/with-modifier.ts'
 
 // From
-export * from './config/from'
-export { mapSimultaneous } from './config/simultaneous'
-export type { DoubleTapParam } from './config/double-tap'
-export { mapDoubleTap } from './config/double-tap'
-export { mouseMotionToScroll } from './config/mouse-motion-to-scroll'
+export * from './config/from.ts'
+export { mapSimultaneous } from './config/simultaneous.ts'
+export type { DoubleTapParam } from './config/double-tap.ts'
+export { mapDoubleTap } from './config/double-tap.ts'
+export { mouseMotionToScroll } from './config/mouse-motion-to-scroll.ts'
 
 // To
-export * from './config/to'
-export * from './config/to-type-sequence'
+export * from './config/to.ts'
+export * from './config/to-type-sequence.ts'
 
 // Condition
-export * from './config/condition'
+export * from './config/condition.ts'
 
 // Rules
-export type { BuildContext } from './utils/build-context'
-export type { RuleBuilder } from './config/rule'
-export { rule } from './config/rule'
-export type { LayerKeyCode, LayerKeyParam } from './config/layer'
-export { layer, hyperLayer, modifierLayer } from './config/layer'
-export { simlayer } from './config/simlayer'
-export { duoLayer } from './config/duo-layer'
+export type { BuildContext } from './utils/build-context.ts'
+export type { RuleBuilder } from './config/rule.ts'
+export { rule } from './config/rule.ts'
+export type { LayerKeyCode, LayerKeyParam } from './config/layer.ts'
+export { layer, hyperLayer, modifierLayer } from './config/layer.ts'
+export { simlayer } from './config/simlayer.ts'
+export { duoLayer } from './config/duo-layer.ts'
 
 // Configs
-export type { ModificationParameters } from './config/complex-modifications'
-export { defaultComplexModificationsParameters } from './config/complex-modifications'
-export { defaultDoubleTapParameters } from './config/double-tap'
-export { defaultSimlayerParameters } from './config/simlayer'
-export { defaultDuoLayerParameters } from './config/duo-layer'
+export type { ModificationParameters } from './config/complex-modifications.ts'
+export { defaultComplexModificationsParameters } from './config/complex-modifications.ts'
+export { defaultDoubleTapParameters } from './config/double-tap.ts'
+export { defaultSimlayerParameters } from './config/simlayer.ts'
+export { defaultDuoLayerParameters } from './config/duo-layer.ts'
 
 // Output
-export { complexModifications } from './config/complex-modifications'
-export { writeToProfile } from './output'
+export { complexModifications } from './config/complex-modifications.ts'
+export { writeToProfile } from './output.ts'

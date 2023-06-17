@@ -1,28 +1,28 @@
-import { BasicRuleBuilder } from './rule'
-import { buildCondition, ConditionBuilder, ifVar } from './condition'
+import { BasicRuleBuilder } from './rule.ts'
+import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
 import {
   FromEvent,
   Rule,
   SimultaneousOptions,
   ToVariable,
-} from '../karabiner/karabiner-config'
-import { toArray } from '../utils/to-array'
-import { getKeyWithAlias } from '../utils/key-alias'
-import { toSetVar } from './to'
-import { FromKeyCode } from '../karabiner/key-code'
+} from '../karabiner/karabiner-config.ts'
+import { toArray } from '../utils/to-array.ts'
+import { getKeyWithAlias } from '../utils/key-alias.ts'
+import { toSetVar } from './to.ts'
+import { FromKeyCode } from '../karabiner/key-code.ts'
 import {
   excludeFromLayerKeys,
   LayerKeyCode,
   LayerKeyParam,
   layerToggleManipulator,
-} from './layer'
-import { BuildContext } from '../utils/build-context'
+} from './layer.ts'
+import { BuildContext } from '../utils/build-context.ts'
 import {
   FromModifierOverloadParam,
   parseFromModifierOverload,
-} from '../utils/from-modifier-overload'
-import { FromModifierParam } from './modifier'
-import { FromOptionalModifierParam } from '../utils/optional-modifiers'
+} from '../utils/from-modifier-overload.ts'
+import { FromModifierParam } from './modifier.ts'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
 
 export const defaultSimlayerParameters = {
   'simlayer.threshold_milliseconds': 200,
