@@ -1,9 +1,10 @@
 # karabiner.ts
 
 [![License](https://img.shields.io/npm/l/karabiner.ts.svg)](LICENSE)
+[![Wallaby.js](https://img.shields.io/badge/wallaby.js-pofqwered-blue.svg?style=flat&logo=github)](https://wallabyjs.com/oss/)
 [![Coverage Status](https://coveralls.io/repos/github/evan-liu/karabiner.ts/badge.svg)](https://coveralls.io/github/evan-liu/karabiner.ts)
 [![npm](https://img.shields.io/npm/v/karabiner.ts.svg)](https://www.npmjs.com/package/karabiner.ts)
-[![Wallaby.js](https://img.shields.io/badge/wallaby.js-powered-blue.svg?style=flat&logo=github)](https://wallabyjs.com/oss/)
+[![deno module](https://shield.deno.dev/x/karabinerts)](https://deno.land/x/karabinerts)
 
 Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) configuration in TypeScript.
 
@@ -22,7 +23,7 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 - [Examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) 
   - [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts)
 
-## Usage
+## Usage with Node.js
 
 (Install [Node.js](https://nodejs.org/en) first if not already installed)
 
@@ -54,3 +55,21 @@ Then write and build the config same as Option 1.
     npm install karabiner.ts
 
 (or install with `yarn`, `pnpm`, etc) then call `writeToProfile()` from any Node.js script in your preferred way.
+
+## Usage with Deno
+
+In deno script file:
+
+```typescript
+import { map, rule, writeToProfile } from 'https://deno.land/x/karabinerts@1.19.0/deno.ts'
+
+writeToProfile('Default', [
+  rule('test').manipulators([
+    map(...
+  ]),
+])
+```
+
+Then run it with:
+
+    deno run --allow-env --allow-read --allow-write [file_name]
