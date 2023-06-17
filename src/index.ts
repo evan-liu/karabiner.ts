@@ -42,6 +42,8 @@ export * from './config/to-type-sequence'
 export * from './config/condition'
 
 // Rules
+export type { BuildContext } from './utils/build-context'
+export type { RuleBuilder } from './config/rule'
 export { rule } from './config/rule'
 export type { LayerKeyCode, LayerKeyParam } from './config/layer'
 export { layer, hyperLayer, modifierLayer } from './config/layer'
