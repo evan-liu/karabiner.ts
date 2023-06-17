@@ -1,4 +1,4 @@
-import { Modifier } from '../karabiner/karabiner-config'
+import { Modifier } from '../karabiner/karabiner-config.ts'
 
 export const namedMultiModifierAliases = {
   Meh: ['option', 'control', 'shift'],

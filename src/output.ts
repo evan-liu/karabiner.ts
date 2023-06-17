@@ -1,12 +1,12 @@
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { writeFile } from 'node:fs/promises'
-import { KarabinerConfig, Rule } from './karabiner/karabiner-config'
-import { RuleBuilder } from './config/rule'
+import { KarabinerConfig, Rule } from './karabiner/karabiner-config.ts'
+import { RuleBuilder } from './config/rule.ts'
 import {
   complexModifications,
   ModificationParameters,
-} from './config/complex-modifications'
+} from './config/complex-modifications.ts'
 
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json

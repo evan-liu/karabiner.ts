@@ -1,10 +1,10 @@
-import { FromEvent, Modifier } from '../karabiner/karabiner-config'
-import { ModifierKeyAlias, modifierKeyAliases } from '../utils/key-alias'
+import { FromEvent, Modifier } from '../karabiner/karabiner-config.ts'
+import { ModifierKeyAlias, modifierKeyAliases } from '../utils/key-alias.ts'
 import {
   MultiModifierAlias,
   multiModifierAliases,
   NamedMultiModifierAlias,
-} from '../utils/multi-modifier'
+} from '../utils/multi-modifier.ts'
 
 export type ModifierParam =
   | Modifier

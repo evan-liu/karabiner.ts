@@ -2,7 +2,7 @@ import {
   ModifierParam,
   parseModifierParam,
   SideModifierAlias,
-} from './modifier'
+} from './modifier.ts'
 import {
   ToEvent,
   ToEventOptions,
@@ -10,15 +10,19 @@ import {
   ToMouseCursorPosition,
   ToMouseKey,
   ToVariable,
-} from '../karabiner/karabiner-config'
-import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
+} from '../karabiner/karabiner-config.ts'
+import {
+  getKeyWithAlias,
+  KeyAlias,
+  NumberKeyValue,
+} from '../utils/key-alias.ts'
 import {
   fromOnlyKeyCodes,
   StickyModifierKeyCode,
   ToKeyCode,
-} from '../karabiner/key-code'
-import { ToConsumerKeyCode } from '../karabiner/consumer-key-code'
-import { PointingButton } from '../karabiner/pointing-button'
+} from '../karabiner/key-code.ts'
+import { ToConsumerKeyCode } from '../karabiner/consumer-key-code.ts'
+import { PointingButton } from '../karabiner/pointing-button.ts'
 
 export type ToKeyParam =
   | ToKeyCode

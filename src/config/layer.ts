@@ -5,7 +5,7 @@ import {
   StickyModifierKeyCode,
   stickyModifierKeyCodes,
   toOnlyKeyCodes,
-} from '../karabiner/key-code'
+} from '../karabiner/key-code.ts'
 import {
   BasicManipulator,
   Condition,
@@ -13,21 +13,25 @@ import {
   Manipulator,
   Rule,
   ToVariable,
-} from '../karabiner/karabiner-config'
-import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias'
-import { FromKeyParam, map } from './from'
-import { toSetVar } from './to'
-import { buildCondition, ConditionBuilder, ifVar } from './condition'
-import { BasicRuleBuilder } from './rule'
-import { toArray } from '../utils/to-array'
-import { BuildContext } from '../utils/build-context'
-import { BasicManipulatorBuilder } from './manipulator'
-import { FromModifierParam, ModifierParam, SideModifierAlias } from './modifier'
+} from '../karabiner/karabiner-config.ts'
+import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias.ts'
+import { FromKeyParam, map } from './from.ts'
+import { toSetVar } from './to.ts'
+import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
+import { BasicRuleBuilder } from './rule.ts'
+import { toArray } from '../utils/to-array.ts'
+import { BuildContext } from '../utils/build-context.ts'
+import { BasicManipulatorBuilder } from './manipulator.ts'
+import {
+  FromModifierParam,
+  ModifierParam,
+  SideModifierAlias,
+} from './modifier.ts'
 import {
   FromModifierOverloadParam,
   parseFromModifierOverload,
-} from '../utils/from-modifier-overload'
-import { FromOptionalModifierParam } from '../utils/optional-modifiers'
+} from '../utils/from-modifier-overload.ts'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
 
 export type LayerKeyCode = Exclude<
   FromKeyCode,

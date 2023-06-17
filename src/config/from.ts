@@ -1,15 +1,19 @@
-import { FromKeyCode, toOnlyKeyCodes } from '../karabiner/key-code'
-import { getKeyWithAlias, KeyAlias, NumberKeyValue } from '../utils/key-alias'
-import { FromModifierParam, SideModifierAlias } from './modifier'
-import { BasicManipulatorBuilder } from './manipulator'
-import { FromEvent } from '../karabiner/karabiner-config'
-import { FromConsumerKeyCode } from '../karabiner/consumer-key-code'
-import { PointingButton } from '../karabiner/pointing-button'
+import { FromKeyCode, toOnlyKeyCodes } from '../karabiner/key-code.ts'
+import {
+  getKeyWithAlias,
+  KeyAlias,
+  NumberKeyValue,
+} from '../utils/key-alias.ts'
+import { FromModifierParam, SideModifierAlias } from './modifier.ts'
+import { BasicManipulatorBuilder } from './manipulator.ts'
+import { FromEvent } from '../karabiner/karabiner-config.ts'
+import { FromConsumerKeyCode } from '../karabiner/consumer-key-code.ts'
+import { PointingButton } from '../karabiner/pointing-button.ts'
 import {
   FromModifierOverloadParam,
   parseFromModifierOverload,
-} from '../utils/from-modifier-overload'
-import { FromOptionalModifierParam } from '../utils/optional-modifiers'
+} from '../utils/from-modifier-overload.ts'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
 
 export type FromKeyParam =
   | FromKeyCode

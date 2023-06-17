@@ -1,10 +1,10 @@
-import { Condition, Manipulator } from '../karabiner/karabiner-config'
+import { Condition, Manipulator } from '../karabiner/karabiner-config.ts'
 import {
   buildManipulators,
   ManipulatorBuilder,
   ManipulatorMap,
-} from '../config/manipulator'
-import { buildCondition, ConditionBuilder } from '../config/condition'
+} from '../config/manipulator.ts'
+import { buildCondition, ConditionBuilder } from '../config/condition.ts'
 
 /**
  * A high-order function to add condition to a group of manipulators

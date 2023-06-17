@@ -3,9 +3,9 @@ import {
   ModifierKeyCode,
   StickyModifierKeyCode,
   ToKeyCode,
-} from './key-code'
-import { FromConsumerKeyCode, ToConsumerKeyCode } from './consumer-key-code'
-import { PointingButton } from './pointing-button'
+} from './key-code.ts'
+import { FromConsumerKeyCode, ToConsumerKeyCode } from './consumer-key-code.ts'
+import { PointingButton } from './pointing-button.ts'
 
 export type Modifier =
   | ModifierKeyCode

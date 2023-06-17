@@ -1,5 +1,5 @@
-import { buildManipulators, ManipulatorBuilder } from '../config/manipulator'
-import { Manipulator } from '../karabiner/karabiner-config'
+import { buildManipulators, ManipulatorBuilder } from '../config/manipulator.ts'
+import { Manipulator } from '../karabiner/karabiner-config.ts'
 
 /**
  *  A high-order function to map an array of keys.

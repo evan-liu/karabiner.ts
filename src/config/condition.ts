@@ -4,8 +4,8 @@ import {
   InputSource,
   KeyboardType,
   ToVariable,
-} from '../karabiner/karabiner-config'
-import { toArray } from '../utils/to-array'
+} from '../karabiner/karabiner-config.ts'
+import { toArray } from '../utils/to-array.ts'
 
 export function ifVar(
   name: string,
