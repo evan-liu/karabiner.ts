@@ -18,11 +18,11 @@ export const writeContext = {
       'karabiner.json',
     )
   },
-  async readKarabinerConfig() {
-    return await require(this.karabinerConfigFile())
+  readKarabinerConfig() {
+    return require(this.karabinerConfigFile())
   },
-  async writeKarabinerConfig(json: any) {
-    return await require('node:fs/promises').writeFile(
+  writeKarabinerConfig(json: any) {
+    return require('node:fs/promises').writeFile(
       this.karabinerConfigFile(),
       json,
     )
@@ -42,7 +42,7 @@ export const writeContext = {
  *
  * @see https://karabiner-elements.pqrs.org/docs/json/root-data-structure/
  */
-export async function writeToProfile(
+export function writeToProfile(
   name: '--dry-run' | string,
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
@@ -50,7 +50,7 @@ export async function writeToProfile(
   const config: KarabinerConfig =
     name === '--dry-run'
       ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
-      : await writeContext.readKarabinerConfig()
+      : writeContext.readKarabinerConfig()
 
   const profile = config?.profiles.find((v) => v.name === name)
   if (!profile)

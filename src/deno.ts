@@ -10,13 +10,11 @@ Object.assign(writeContext, {
   karabinerConfigFile() {
     return join(this.karabinerConfigDir(), 'karabiner.json')
   },
-  async readKarabinerConfig() {
-    return (
-      await import(this.karabinerConfigFile(), { assert: { type: 'json' } })
-    ).default
+  readKarabinerConfig() {
+    return JSON.parse(Deno.readTextFileSync(this.karabinerConfigFile()))
   },
-  async writeKarabinerConfig(json: any) {
-    return await Deno.writeTextFile(this.karabinerConfigFile(), json)
+  writeKarabinerConfig(json: any) {
+    return Deno.writeTextFile(this.karabinerConfigFile(), json)
   },
   exit(code = 0): never {
     Deno.exit(code)
