@@ -1,8 +1,10 @@
 # karabiner.ts
 
 [![License](https://img.shields.io/npm/l/karabiner.ts.svg)](LICENSE)
-[![Wallaby.js](https://img.shields.io/badge/wallaby.js-pofqwered-blue.svg?style=flat&logo=github)](https://wallabyjs.com/oss/)
 [![Coverage Status](https://coveralls.io/repos/github/evan-liu/karabiner.ts/badge.svg)](https://coveralls.io/github/evan-liu/karabiner.ts)
+[![Wallaby.js](https://img.shields.io/badge/wallaby.js-powered-blue.svg?style=flat&logo=github)](https://wallabyjs.com/oss/)
+[![npm](https://img.shields.io/npm/v/karabiner.ts.svg)](https://www.npmjs.com/package/karabiner.ts)
+[![deno module](https://shield.deno.dev/x/karabinerts)](https://deno.land/x/karabinerts)
 
 Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) configuration in TypeScript.
 
