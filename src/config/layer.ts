@@ -159,7 +159,10 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
       this.layerModifiers?.mandatory?.length ||
       this.layerModifiers?.optional?.length
     ) {
-      rule.manipulators.forEach((v) => this.addModifierAnyToManipulator(v))
+      const isOptionalAny = isModifiersAny(this.layerModifiers) === 'optional'
+      rule.manipulators.forEach((v) =>
+        this.addModifierAnyToManipulator(v, isOptionalAny),
+      )
     }
 
     for (const key_code of this.keys) {
@@ -183,20 +186,30 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   }
 
   // If the layer has modifiers, set manipulator modifiers to { mandatory: ['any'] }
-  private addModifierAnyToManipulator(manipulator: Manipulator) {
+  private addModifierAnyToManipulator(
+    manipulator: Manipulator,
+    isOptionalAny: boolean,
+  ) {
     if (manipulator.type !== 'basic') return
     if (manipulator.from.modifiers) {
       const { mandatory, optional } = manipulator.from.modifiers
-      if (
-        optional?.length ||
-        (mandatory?.length && (mandatory.length > 1 || mandatory[0] !== 'any'))
-      ) {
-        throw new Error(
-          'Layers with modifiers cannot have modifiers on manipulators',
-        )
+      if (optional?.length || mandatory?.length) {
+        const isAny = isModifiersAny(manipulator.from.modifiers)
+        if (isAny === 'mandatory') {
+          manipulator.from.modifiers = { mandatory: ['any'] }
+        } else if (isAny === 'optional') {
+          manipulator.from.modifiers = { optional: ['any'] }
+        } else {
+          throw new Error(
+            'Layers with modifiers cannot have modifiers on manipulators',
+          )
+        }
+        return
       }
     }
-    manipulator.from.modifiers = { mandatory: ['any'] }
+    manipulator.from.modifiers = isOptionalAny
+      ? { optional: ['any'] }
+      : { mandatory: ['any'] }
   }
 }
 
@@ -278,4 +291,15 @@ export function layerToggleManipulator(
   const result = manipulator.build(context)
   context.setCache(key, result[0])
   return mergeManipulator(result)
+}
+
+function isModifiersAny({
+  mandatory,
+  optional,
+}: NonNullable<FromEvent['modifiers']>):
+  | keyof NonNullable<FromEvent['modifiers']>
+  | null {
+  if (mandatory?.length === 1 && mandatory[0] === 'any') return 'mandatory'
+  if (optional?.length === 1 && optional[0] === 'any') return 'optional'
+  return null
 }

@@ -231,7 +231,41 @@ test('layer().modifier()', () => {
   expect(() =>
     layer('a', 'v')
       .modifiers('⌘')
+      .manipulators([map(1, '?⌘').to(2)])
+      .build(),
+  ).toThrow()
+})
+
+// https://github.com/evan-liu/karabiner.ts/issues/89
+test('layer().modifier(??)', () => {
+  expect(
+    layer('a', 'v')
+      .modifiers('??')
+      .manipulators([map(1).to(2)])
+      .build()
+      .manipulators.map((v) => v.from?.modifiers),
+  ).toEqual([{ optional: ['any'] }, { optional: ['any'] }])
+
+  expect(
+    layer('a', 'v')
+      .modifiers('??')
       .manipulators([map(1, '??').to(2)])
+      .build()
+      .manipulators.map((v) => v.from?.modifiers),
+  ).toEqual([{ optional: ['any'] }, { optional: ['any'] }])
+
+  expect(
+    layer('a', 'v')
+      .modifiers('??')
+      .manipulators([map(1, 'any').to(2)])
+      .build()
+      .manipulators.map((v) => v.from?.modifiers),
+  ).toEqual([{ optional: ['any'] }, { mandatory: ['any'] }])
+
+  expect(() =>
+    layer('a', 'v')
+      .modifiers('??')
+      .manipulators([map(1, '⌘').to(2)])
       .build(),
   ).toThrow()
 })
