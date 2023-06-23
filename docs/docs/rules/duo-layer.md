@@ -54,6 +54,12 @@ duoLayer('f', 'd').manipulators([
 
 </details>
 
+:::tip
+One of the two keys can be released once the layer is activated. <br/> 
+With `duoLayer('f', ';')`, only one of `f` or `;` needs to be held to keep using 
+the keymaps on the layer.
+:::
+
 ## How duo layer works
 
 Duo layer is a combination of [layer](./layer) and [simlayer](./simlayer): 
