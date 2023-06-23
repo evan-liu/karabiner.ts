@@ -127,6 +127,12 @@ layer('a', 'a-mode')
 layer, so that the layer modifiers are not sent to manipulators to events. So 
 the manipulators on the layer cannot have other modifiers. 
 
+:::tip modifiers('??')
+`layer().modifiers('optionalAny')` (or `'??'`) passes modifiers to the layer. <br/>
+with `layer(';').modifiers('??').manipulators({ l: toKey('→') })` <br/>
+`⌘ ; + l` triggers `⌘ →`
+:::
+
 ## Config the layer key
 
 The layer key can also be mapped to something else by `layer().configKey()`
