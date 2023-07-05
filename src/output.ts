@@ -31,6 +31,7 @@ export const writeContext = {
     process.exit(code)
   },
 }
+
 export interface WriteTarget {
   name: string
   dryRun?: boolean
@@ -40,7 +41,7 @@ export interface WriteTarget {
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json
  *
- * @param writeTarget The profile name or a WriteTarget describing the profile and where to write the output. 
+ * @param writeTarget The profile name or a WriteTarget describing the profile and where to write the output.
  *                    Use '--dry-run' to print the config json into console.
  * @param rules       The complex_modifications rules
  * @param parameters  Extra complex_modifications parameters
@@ -52,30 +53,20 @@ export function writeToProfile(
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
 ) {
-
-  let name: string
-  let dryRun: boolean = false
-  let jsonPath: string;
   if (typeof writeTarget === 'string') {
-    name = writeTarget
-    dryRun = writeTarget === '--dry-run' 
-    jsonPath = writeContext.karabinerConfigFile()
-  } else {
-    name = writeTarget.name
-    dryRun = writeTarget.dryRun ?? false
-    jsonPath = writeTarget.karabinerJsonPath ?? writeContext.karabinerConfigFile() 
+    writeTarget = { name: writeTarget, dryRun: writeTarget === '--dry-run' }
   }
+  const { name, dryRun } = writeTarget
+  const jsonPath =
+    writeTarget.karabinerJsonPath ?? writeContext.karabinerConfigFile()
 
-
-
-  const config: KarabinerConfig =
-    dryRun
-      ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
-      : writeContext.readKarabinerConfig(jsonPath)
+  const config: KarabinerConfig = dryRun
+    ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
+    : writeContext.readKarabinerConfig(jsonPath)
 
   const profile = config?.profiles.find((v) => v.name === name)
   if (!profile)
-    exitWithError(`⚠️ Profile ${name} not found in ${writeContext.karabinerConfigFile()}.\n
+    exitWithError(`⚠️ Profile ${name} not found in ${jsonPath}.\n
 ℹ️ Please check the profile name in the Karabiner-Elements UI and 
     - Update the profile name at writeToProfile()
     - Create a new profile if needed
