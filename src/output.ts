@@ -18,12 +18,12 @@ export const writeContext = {
       'karabiner.json',
     )
   },
-  readKarabinerConfig() {
-    return require(this.karabinerConfigFile())
+  readKarabinerConfig(karabinerJsonPath?: string) {
+    return require(karabinerJsonPath ?? this.karabinerConfigFile())
   },
-  writeKarabinerConfig(json: any) {
+  writeKarabinerConfig(json: any, karabinerJsonPath?: string) {
     return require('node:fs/promises').writeFile(
-      this.karabinerConfigFile(),
+      karabinerJsonPath ?? this.karabinerConfigFile(),
       json,
     )
   },
@@ -31,11 +31,16 @@ export const writeContext = {
     process.exit(code)
   },
 }
+export interface WriteTarget {
+  name: string
+  dryRun?: boolean
+  karabinerJsonPath?: string
+}
 
 /**
  * Write complex_modifications rules to a profile inside ~/.config/karabiner/karabiner.json
  *
- * @param name        The profile name to write the complex_modifications to.
+ * @param writeTarget The profile name or a WriteTarget describing the profile and where to write the output. 
  *                    Use '--dry-run' to print the config json into console.
  * @param rules       The complex_modifications rules
  * @param parameters  Extra complex_modifications parameters
@@ -43,14 +48,30 @@ export const writeContext = {
  * @see https://karabiner-elements.pqrs.org/docs/json/root-data-structure/
  */
 export function writeToProfile(
-  name: '--dry-run' | string,
+  writeTarget: '--dry-run' | string | WriteTarget,
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
 ) {
+
+  let name: string
+  let dryRun: boolean = false
+  let jsonPath: string;
+  if (typeof writeTarget === 'string') {
+    name = writeTarget
+    dryRun = writeTarget === '--dry-run' 
+    jsonPath = writeContext.karabinerConfigFile()
+  } else {
+    name = writeTarget.name
+    dryRun = writeTarget.dryRun ?? false
+    jsonPath = writeTarget.karabinerJsonPath ?? writeContext.karabinerConfigFile() 
+  }
+
+
+
   const config: KarabinerConfig =
-    name === '--dry-run'
+    dryRun
       ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
-      : writeContext.readKarabinerConfig()
+      : writeContext.readKarabinerConfig(jsonPath)
 
   const profile = config?.profiles.find((v) => v.name === name)
   if (!profile)
@@ -68,12 +89,12 @@ export function writeToProfile(
 
   const json = JSON.stringify(config, null, 2)
 
-  if (name === '--dry-run') {
+  if (dryRun) {
     console.info(json)
     return
   }
 
-  writeContext.writeKarabinerConfig(json).catch(exitWithError)
+  writeContext.writeKarabinerConfig(json, jsonPath).catch(exitWithError)
 
   console.log(`✓ Profile ${name} updated.`)
 }
