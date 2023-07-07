@@ -8,8 +8,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 const config = {
   title: 'karabiner.ts',
 
-  url: 'https://evan-liu.github.io',
-  baseUrl: '/karabiner.ts/',
+  url: 'https://karabiner.ts.keymaps.app',
+  baseUrl: '/',
 
   organizationName: 'evan-liu',
   projectName: 'karabiner.ts',
