@@ -1,6 +1,8 @@
 // Karabiner
-export type * from './karabiner/key-code.ts'
-export type * from './karabiner/karabiner-config.ts'
+export * from './karabiner/key-code.ts'
+export * from './karabiner/consumer-key-code.ts'
+export * from './karabiner/pointing-button.ts'
+export * from './karabiner/karabiner-config.ts'
 
 // Types
 export type {
