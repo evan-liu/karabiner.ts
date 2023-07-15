@@ -28,6 +28,11 @@ export type FromKeyType =
   | { pointing_button: PointingButton | number }
   | { any: 'key_code' | 'consumer_key_code' | 'pointing_button' }
 
+export type FromModifiers = {
+  mandatory?: Modifier[] | ['any']
+  optional?: Modifier[] | ['any']
+}
+
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/ */
 export type FromEvent = (
   | FromKeyType
@@ -39,10 +44,7 @@ export type FromEvent = (
     }
 ) & {
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/ */
-  modifiers?: {
-    mandatory?: Modifier[] | ['any']
-    optional?: Modifier[] | ['any']
-  }
+  modifiers?: FromModifiers
 }
 export type FromKeyCodeEvent = Extract<
   FromEvent,
@@ -297,7 +299,7 @@ export type MouseMotionToScrollOptions = {
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/other-types/mouse-motion-to-scroll/ */
 export type MouseMotionToScrollManipulator = {
   type: 'mouse_motion_to_scroll'
-  from?: { modifiers: BasicManipulator['from']['modifiers'] }
+  from?: { modifiers?: FromModifiers }
   conditions?: BasicManipulator['conditions']
   options?: MouseMotionToScrollOptions
 }

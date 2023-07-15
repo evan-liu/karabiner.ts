@@ -6,7 +6,7 @@ Most manipulators have type `basic`. Another manipulator type in Karabiner-Eleme
 ```typescript
 type MouseMotionToScrollManipulator = {
   type: 'mouse_motion_to_scroll'
-  from?: { modifiers: BasicManipulator['from']['modifiers'] }
+  from?: { modifiers: FromModifiers }
   conditions?: BasicManipulator['conditions']
   options?: {
     momentum_scroll_enabled?: boolean

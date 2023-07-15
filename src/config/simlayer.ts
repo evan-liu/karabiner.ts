@@ -1,7 +1,7 @@
 import { BasicRuleBuilder } from './rule.ts'
 import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
 import {
-  FromEvent,
+  FromModifiers,
   Rule,
   SimultaneousOptions,
   ToVariable,
@@ -50,7 +50,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     key_up_order: 'strict_inverse',
     key_up_when: 'any',
   }
-  private layerModifiers: FromEvent['modifiers'] = { optional: ['any'] }
+  private layerModifiers?: FromModifiers = { optional: ['any'] }
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],

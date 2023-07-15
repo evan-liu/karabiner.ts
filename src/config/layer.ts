@@ -9,7 +9,7 @@ import {
 import {
   BasicManipulator,
   Condition,
-  FromEvent,
+  FromModifiers,
   Manipulator,
   Rule,
   ToVariable,
@@ -89,7 +89,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   private layerKeyManipulator?: BasicManipulatorBuilder
   private replaceLayerKeyToIfAlone = false
 
-  private layerModifiers?: FromEvent['modifiers']
+  private layerModifiers?: FromModifiers
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
@@ -218,7 +218,7 @@ export function layerToggleManipulator(
   varName: string,
   onValue: ToVariable['value'],
   offValue: ToVariable['value'],
-  modifiers?: FromEvent['modifiers'],
+  modifiers?: FromModifiers,
   conditions?: Condition[],
   context?: BuildContext,
   layerKeyManipulator?: BasicManipulatorBuilder,
@@ -296,9 +296,7 @@ export function layerToggleManipulator(
 function isModifiersAny({
   mandatory,
   optional,
-}: NonNullable<FromEvent['modifiers']>):
-  | keyof NonNullable<FromEvent['modifiers']>
-  | null {
+}: FromModifiers): keyof FromModifiers | null {
   if (mandatory?.length === 1 && mandatory[0] === 'any') return 'mandatory'
   if (optional?.length === 1 && optional[0] === 'any') return 'optional'
   return null

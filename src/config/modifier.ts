@@ -1,4 +1,4 @@
-import { FromEvent, Modifier } from '../karabiner/karabiner-config.ts'
+import { FromModifiers, Modifier } from '../karabiner/karabiner-config.ts'
 import { ModifierKeyAlias, modifierKeyAliases } from '../utils/key-alias.ts'
 import {
   MultiModifierAlias,
@@ -77,7 +77,7 @@ const rightModifierRegExp = /^(right|r|>|›)([⌘⌥⌃⇧]*)$/
 export function parseFromModifierParams(
   mandatoryParam?: FromModifierParam | '' | null,
   optionalParam?: FromModifierParam,
-): FromEvent['modifiers'] {
+): FromModifiers | undefined {
   if (!mandatoryParam && !optionalParam) return undefined
   return {
     mandatory: parseFromModifiers(mandatoryParam),
