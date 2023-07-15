@@ -14,7 +14,10 @@ export type {
   ModifierParam,
   FromModifierParam,
 } from './config/modifier.ts'
-export type { MultiModifierAlias } from './utils/multi-modifier.ts'
+export type {
+  MultiModifierAlias,
+  NamedMultiModifierAlias,
+} from './utils/multi-modifier.ts'
 export type {
   ModifierKeyAlias,
   ArrowKeyAlias,
@@ -28,6 +31,8 @@ export type { ManipulatorMap } from './config/manipulator.ts'
 export { withCondition } from './utils/with-condition.ts'
 export { withMapper } from './utils/with-mapper.ts'
 export { withModifier } from './utils/with-modifier.ts'
+
+export { namedMultiModifierAliases } from './utils/multi-modifier.ts'
 
 // From
 export * from './config/from.ts'
