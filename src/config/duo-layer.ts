@@ -10,10 +10,15 @@ import { BasicRuleBuilder } from './rule.ts'
 import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
 import { BuildContext } from '../utils/build-context.ts'
 import { mapSimultaneous } from './simultaneous.ts'
-import { toSetVar } from './to.ts'
+import {
+  toNotificationMessage,
+  toRemoveNotificationMessage,
+  toSetVar,
+} from './to.ts'
 
 export const defaultDuoLayerParameters = {
   'duo_layer.threshold_milliseconds': 200,
+  'duo_layer.notification': false as boolean | string,
 }
 
 export function duoLayer(
@@ -32,6 +37,8 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
   private readonly simultaneousOptions: SimultaneousOptions = {}
   private simultaneousThreshold?: number
 
+  private layerNotification?: boolean | string
+
   constructor(
     private readonly key1: LayerKeyParam,
     private readonly key2: LayerKeyParam,
@@ -39,11 +46,12 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     private readonly onValue: ToVariable['value'] = 1,
     private readonly offValue: ToVariable['value'] = 0,
   ) {
+    const desc = `DuoLayer ${varName || `${key1} ${key2}`}`
     if (!varName) {
       varName = `duo-layer-${key1}-${key2}`
     }
 
-    super(`Layer - ${varName}`)
+    super(desc)
     this.varName = varName
     this.layerCondition = ifVar(this.varName, this.onValue)
     this.condition(this.layerCondition)
@@ -60,6 +68,12 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     return this
   }
 
+  /** Set the notification when the layer is active. */
+  public notification(v: boolean | string) {
+    this.layerNotification = v
+    return this
+  }
+
   public build(context?: BuildContext): Rule {
     const rule = super.build(context)
 
@@ -68,25 +82,36 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
       defaultDuoLayerParameters
     const threshold =
       this.simultaneousThreshold || params['duo_layer.threshold_milliseconds']
+    const notification =
+      this.layerNotification ?? params['duo_layer.notification']
 
     const conditions = this.conditions
       .filter((v) => v !== this.layerCondition)
       .map(buildCondition)
 
     // Layer toggle
+    const toAfterKeyUp = [
+      ...(this.simultaneousOptions.to_after_key_up || []),
+      toSetVar(this.varName, this.offValue),
+    ]
+    const to = [toSetVar(this.varName, this.onValue)]
+    if (notification) {
+      const id = `duo-layer-${this.varName}`
+      const message =
+        notification === true ? this.ruleDescription : notification
+      to.push(toNotificationMessage(id, message))
+      toAfterKeyUp.push(toRemoveNotificationMessage(id))
+    }
     const manipulator = mapSimultaneous(
       [this.key1, this.key2],
       {
         ...this.simultaneousOptions,
-        to_after_key_up: [
-          ...(this.simultaneousOptions.to_after_key_up || []),
-          toSetVar(this.varName, this.offValue),
-        ],
+        to_after_key_up: toAfterKeyUp,
       },
       threshold,
     )
       .modifiers('??')
-      .to(toSetVar(this.varName, this.onValue))
+      .to(to)
     if (conditions.length) {
       manipulator.condition(...conditions)
     }
