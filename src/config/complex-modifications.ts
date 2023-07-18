@@ -30,6 +30,8 @@ export function complexModifications(
   const {
     'double_tap.delay_milliseconds': doubleTapDelay,
     'simlayer.threshold_milliseconds': simlayerThreshold,
+    'duo_layer.threshold_milliseconds': duoLayerThreshold,
+    'duo_layer.notification': duoLayerNotification,
     ...complexModificationsParameters
   } = parameters
 
@@ -39,6 +41,10 @@ export function complexModifications(
   })
   context.setParameters<typeof defaultSimlayerParameters>({
     'simlayer.threshold_milliseconds': simlayerThreshold,
+  })
+  context.setParameters<typeof defaultDuoLayerParameters>({
+    'duo_layer.threshold_milliseconds': duoLayerThreshold,
+    'duo_layer.notification': duoLayerNotification,
   })
 
   const builtRules = rules.map((v) => buildRule(v, context))

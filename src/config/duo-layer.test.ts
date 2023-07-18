@@ -3,16 +3,19 @@ import { defaultDuoLayerParameters, duoLayer } from './duo-layer'
 import { map } from './from'
 import {
   BasicManipulator,
+  FromEvent,
+  FromKeyType,
   FromSimultaneousEvent,
 } from '../karabiner/karabiner-config'
 import { toSetVar } from './to'
 import { ifVar } from './condition'
 import { complexModifications } from './complex-modifications'
+import { BuildContext } from '../utils/build-context.ts'
 
 test('duoLayer()', () => {
   const layer = duoLayer(1, 2).manipulators([map(3).to(4)])
   const rule = layer.build()
-  expect(rule.description).toBe('Layer - duo-layer-1-2')
+  expect(rule.description).toBe('DuoLayer 1 2')
   expect(layer.description('test').build().description).toBe('test')
 
   const manipulators = rule.manipulators as BasicManipulator[]
@@ -39,7 +42,7 @@ test('duoLayer()', () => {
 
 test('duoLayer() varName and values', () => {
   const rule = duoLayer(1, 2, 'var12', 2, -1).build()
-  expect(rule.description).toBe(`Layer - var12`)
+  expect(rule.description).toBe(`DuoLayer var12`)
   const manipulator = rule.manipulators[0] as BasicManipulator
   expect(manipulator.to).toEqual([
     { set_variable: { name: 'var12', value: 2 } },
@@ -99,4 +102,60 @@ test('duoLayer() with same keys', () => {
     (rules[2].manipulators[0].from as FromSimultaneousEvent)
       .simultaneous_options?.to_after_key_up,
   ).toEqual([toSetVar('duo-layer-1-2', 0)])
+})
+
+test('duoLayer() notification', () => {
+  const rule = duoLayer('a', 'b').notification(true).build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(1)
+  expect(manipulators[0].to?.[1]).toEqual({
+    set_notification_message: {
+      id: 'duo-layer-duo-layer-a-b',
+      text: 'DuoLayer a b',
+    },
+  })
+  const from = manipulators[0].from as Extract<
+    FromEvent,
+    { simultaneous: FromKeyType[] }
+  >
+  expect(from.simultaneous_options?.to_after_key_up?.[1]).toEqual({
+    set_notification_message: { id: 'duo-layer-duo-layer-a-b', text: '' },
+  })
+
+  const ruleB = duoLayer('a', 'b').notification('test-b').build()
+  const manipulatorB = ruleB.manipulators[0] as BasicManipulator
+  expect(manipulatorB.to?.[1]).toEqual({
+    set_notification_message: {
+      id: 'duo-layer-duo-layer-a-b',
+      text: 'test-b',
+    },
+  })
+})
+
+test('duoLayer() notification parameters', () => {
+  defaultDuoLayerParameters['duo_layer.notification'] = 'ab'
+
+  const rule = duoLayer('a', 'b').build()
+  const manipulator = rule.manipulators[0] as BasicManipulator
+  expect(manipulator.to?.[1]).toEqual({
+    set_notification_message: {
+      id: 'duo-layer-duo-layer-a-b',
+      text: 'ab',
+    },
+  })
+})
+
+test('duoLayer() parameters in BuildContext', () => {
+  const context = new BuildContext()
+  context.setParameters<typeof defaultDuoLayerParameters>({
+    'duo_layer.notification': 'bc',
+  })
+  const rule = duoLayer('a', 'b').build(context)
+  const manipulator = rule.manipulators[0] as BasicManipulator
+  expect(manipulator.to?.[1]).toEqual({
+    set_notification_message: {
+      id: 'duo-layer-duo-layer-a-b',
+      text: 'bc',
+    },
+  })
 })
