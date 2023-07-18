@@ -4,6 +4,11 @@ export * from './karabiner/consumer-key-code.ts'
 export * from './karabiner/pointing-button.ts'
 export * from './karabiner/karabiner-config.ts'
 
+// Key alias
+export * from './config/modifier.ts'
+export * from './utils/key-alias.ts'
+export * from './utils/multi-modifier.ts'
+
 // Types
 export type {
   LeftModifierFlag,
@@ -31,8 +36,6 @@ export type { ManipulatorMap } from './config/manipulator.ts'
 export { withCondition } from './utils/with-condition.ts'
 export { withMapper } from './utils/with-mapper.ts'
 export { withModifier } from './utils/with-modifier.ts'
-
-export { namedMultiModifierAliases } from './utils/multi-modifier.ts'
 
 // From
 export * from './config/from.ts'
