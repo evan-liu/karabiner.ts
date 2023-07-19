@@ -7,7 +7,11 @@ import {
   FromKeyType,
   FromSimultaneousEvent,
 } from '../karabiner/karabiner-config'
-import { toSetVar } from './to'
+import {
+  toNotificationMessage,
+  toRemoveNotificationMessage,
+  toSetVar,
+} from './to'
 import { ifVar } from './condition'
 import { complexModifications } from './complex-modifications'
 import { BuildContext } from '../utils/build-context.ts'
@@ -157,5 +161,24 @@ test('duoLayer() parameters in BuildContext', () => {
       id: 'duo-layer-duo-layer-a-b',
       text: 'bc',
     },
+  })
+})
+
+test('duoLayer().toIfActivated() toIfDeactivated()', () => {
+  const rule = duoLayer('a', 'b')
+    .toIfActivated(toNotificationMessage('testId', 'testMsg'))
+    .toIfDeactivated(toRemoveNotificationMessage('testId'))
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(1)
+  expect(manipulators[0].to?.[1]).toEqual({
+    set_notification_message: { id: 'testId', text: 'testMsg' },
+  })
+  const from = manipulators[0].from as Extract<
+    FromEvent,
+    { simultaneous: FromKeyType[] }
+  >
+  expect(from.simultaneous_options?.to_after_key_up?.[1]).toEqual({
+    set_notification_message: { id: 'testId', text: '' },
   })
 })

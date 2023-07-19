@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { toSetVar, toKey } from './to'
+import { toSetVar, toKey, toPlaySound } from './to'
 
 test('toKey()', () => {
   // ToKeyCode
@@ -33,5 +33,15 @@ test('setVar()', () => {
   expect(toSetVar('test')).toEqual({ set_variable: { name: 'test', value: 1 } })
   expect(toSetVar('test', true)).toEqual({
     set_variable: { name: 'test', value: true },
+  })
+})
+
+test('toPlaySound()', () => {
+  expect(toPlaySound('Blow')).toEqual({
+    shell_command: 'afplay /System/Library/Sounds/Blow.aiff',
+  })
+
+  expect(toPlaySound('/test/sound.mp3')).toEqual({
+    shell_command: 'afplay /test/sound.mp3',
   })
 })
