@@ -117,6 +117,35 @@ end tell
 set the clipboard to prev'`)
 }
 
+export const systemSounds = [
+  'Tink',
+  'Submarine',
+  'Sosumi',
+  'Morse',
+  'Ping',
+  'Pop',
+  'Purr',
+  'Glass',
+  'Hero',
+  'Frog',
+  'Funk',
+  'Blow',
+  'Bottle',
+  'Basso',
+] as const
+export type SystemSounds = (typeof systemSounds)[number]
+
+/** Play a system sound from /System/Library/Sounds/ */
+export function toPlaySound(systemSound: SystemSounds): ToEvent
+/** Play a sound file with afplay. */
+export function toPlaySound(soundFile: string): ToEvent
+export function toPlaySound(sound: SystemSounds | string) {
+  const file = systemSounds.includes(sound as SystemSounds)
+    ? `/System/Library/Sounds/${sound}.aiff`
+    : sound
+  return to$(`afplay ${file}`)
+}
+
 /** Create ToEvent with select_input_source */
 export function toInputSource(inputSource: ToInputSource): ToEvent {
   return { select_input_source: inputSource }
