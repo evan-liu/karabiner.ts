@@ -4,6 +4,7 @@ import {
   FromSimultaneousEvent,
   Rule,
   SimultaneousOptions,
+  ToEvent,
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
 import { BasicRuleBuilder } from './rule.ts'
@@ -38,6 +39,9 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
   private simultaneousThreshold?: number
 
   private layerNotification?: boolean | string
+
+  private ifActivated = [] as ToEvent[]
+  private ifDeactivated = [] as ToEvent[]
 
   constructor(
     private readonly key1: LayerKeyParam,
@@ -74,6 +78,18 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     return this
   }
 
+  /** The ToEvents to trigger when the layer is activated */
+  public toIfActivated(event: ToEvent) {
+    this.ifActivated.push(event)
+    return this
+  }
+
+  /** The ToEvents to trigger when the layer is deactivated */
+  public toIfDeactivated(event: ToEvent) {
+    this.ifDeactivated.push(event)
+    return this
+  }
+
   public build(context?: BuildContext): Rule {
     const rule = super.build(context)
 
@@ -90,11 +106,12 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
       .map(buildCondition)
 
     // Layer toggle
+    const to = [toSetVar(this.varName, this.onValue), ...this.ifActivated]
     const toAfterKeyUp = [
-      ...(this.simultaneousOptions.to_after_key_up || []),
       toSetVar(this.varName, this.offValue),
+      ...(this.simultaneousOptions.to_after_key_up || []),
+      ...this.ifDeactivated,
     ]
-    const to = [toSetVar(this.varName, this.onValue)]
     if (notification) {
       const id = `duo-layer-${this.varName}`
       const message =
