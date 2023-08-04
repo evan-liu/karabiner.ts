@@ -2,6 +2,7 @@ import {
   FromModifiers,
   Rule,
   SimultaneousOptions,
+  ToEvent,
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
 import { FromKeyCode } from '../karabiner/key-code.ts'
@@ -52,6 +53,9 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     key_up_when: 'any',
   }
   private layerModifiers?: FromModifiers = { optional: ['any'] }
+
+  private ifActivated = [] as ToEvent[]
+  private ifDeactivated = [] as ToEvent[]
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
@@ -118,6 +122,18 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     return this
   }
 
+  /** The ToEvents to trigger when the layer is activated */
+  public toIfActivated(event: ToEvent) {
+    this.ifActivated.push(event)
+    return this
+  }
+
+  /** The ToEvents to trigger when the layer is deactivated */
+  public toIfDeactivated(event: ToEvent) {
+    this.ifDeactivated.push(event)
+    return this
+  }
+
   public build(context?: BuildContext): Rule {
     const rule = super.build(context)
     const params =
@@ -162,7 +178,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
           parameters: {
             'basic.simultaneous_threshold_milliseconds': threshold,
           },
-          to: [setVarOn, ...(v.to || [])],
+          to: [setVarOn, ...(v.to || []), ...this.ifActivated],
           from: {
             simultaneous: [{ key_code: layerKey }, { key_code: fromKey }],
             simultaneous_options: {
@@ -170,6 +186,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
               to_after_key_up: [
                 ...(this.simultaneousOptions.to_after_key_up || []),
                 setVarOff,
+                ...this.ifDeactivated,
               ],
             },
             modifiers: this.layerModifiers,

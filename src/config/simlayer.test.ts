@@ -2,6 +2,8 @@ import { expect, test } from 'vitest'
 
 import {
   BasicManipulator,
+  FromEvent,
+  FromKeyType,
   FromSimultaneousEvent,
 } from '../karabiner/karabiner-config'
 import {
@@ -13,7 +15,12 @@ import {
 import { ifVar } from './condition'
 import { map } from './from'
 import { simlayer } from './simlayer'
-import { toKey, toSetVar } from './to'
+import {
+  toKey,
+  toNotificationMessage,
+  toRemoveNotificationMessage,
+  toSetVar,
+} from './to'
 
 test('simlayer()', () => {
   const layer = simlayer('a', 'b-mode', 1, true, false).manipulators([
@@ -185,4 +192,24 @@ test('simlayer() invalid key', () => {
   expect(() =>
     simlayer(1, '').enableLayer(stickyModifierKeyCodes[0] as any),
   ).toThrow('layer key')
+})
+
+test('simlayer().toIfActivated() toIfDeactivated()', () => {
+  const rule = simlayer('a', 'b')
+    .manipulators([map(1).to(2)])
+    .toIfActivated(toNotificationMessage('testId', 'testMsg'))
+    .toIfDeactivated(toRemoveNotificationMessage('testId'))
+    .build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(2)
+  expect(manipulators[1].to?.[2]).toEqual({
+    set_notification_message: { id: 'testId', text: 'testMsg' },
+  })
+  const from = manipulators[1].from as Extract<
+    FromEvent,
+    { simultaneous: FromKeyType[] }
+  >
+  expect(from.simultaneous_options?.to_after_key_up?.[1]).toEqual({
+    set_notification_message: { id: 'testId', text: '' },
+  })
 })
