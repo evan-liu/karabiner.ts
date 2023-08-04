@@ -2,6 +2,9 @@
 module.exports = {
   singleQuote: true,
   semi: false,
-  trailingComma: 'all',
   bracketSameLine: true,
+
+  plugins: ['@ianvs/prettier-plugin-sort-imports'],
+  importOrderTypeScriptVersion: '5.0.0',
+  importOrder: ['<THIRD_PARTY_MODULES>', '', '^../', '', '^./'],
 }
