@@ -1,4 +1,10 @@
 import {
+  isSideMultiModifierAlias,
+  parseSideMultiModifierAlias,
+  SideModifierAlias,
+} from '../config/modifier.ts'
+import { Modifier } from '../karabiner/karabiner-config.ts'
+import {
   ArrowKeyCode,
   arrowKeyCodes,
   ControlOrSymbolKeyCode,
@@ -17,12 +23,6 @@ import {
   stickyModifierKeyCodes,
   toOnlyKeyCodes,
 } from '../karabiner/key-code.ts'
-import { Modifier } from '../karabiner/karabiner-config.ts'
-import {
-  isSideMultiModifierAlias,
-  parseSideMultiModifierAlias,
-  SideModifierAlias,
-} from '../config/modifier.ts'
 
 export const modifierKeyAliases = {
   '⌘': 'command',

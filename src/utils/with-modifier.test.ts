@@ -1,9 +1,11 @@
 import { describe, expect, test } from 'vitest'
-import { withModifier } from './with-modifier'
+
 import { map } from '../config/from'
-import { BasicManipulator } from '../karabiner/karabiner-config'
 import { rule } from '../config/rule'
 import { toKey } from '../config/to'
+import { BasicManipulator } from '../karabiner/karabiner-config'
+
+import { withModifier } from './with-modifier'
 
 describe('withModifier()', () => {
   test('Add the shared modifiers to `from` but not `to`', () => {

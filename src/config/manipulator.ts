@@ -1,3 +1,4 @@
+import { ToConsumerKeyCode } from '../karabiner/consumer-key-code.ts'
 import {
   BasicManipulator,
   BasicParameters,
@@ -11,7 +12,15 @@ import {
   ToMouseKey,
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
+import { StickyModifierKeyCode } from '../karabiner/key-code.ts'
+import { PointingButton } from '../karabiner/pointing-button.ts'
+import { BuildContext } from '../utils/build-context.ts'
+import { toArray } from '../utils/to-array.ts'
+
+import { buildCondition, ConditionBuilder } from './condition.ts'
+import { FromKeyParam, map } from './from.ts'
 import { ModifierParam } from './modifier.ts'
+import { toTypeSequence } from './to-type-sequence.ts'
 import {
   to$,
   toApp,
@@ -34,14 +43,6 @@ import {
   toStickyModifier,
   toSuperHyper,
 } from './to.ts'
-import { buildCondition, ConditionBuilder } from './condition.ts'
-import { ToConsumerKeyCode } from '../karabiner/consumer-key-code.ts'
-import { PointingButton } from '../karabiner/pointing-button.ts'
-import { StickyModifierKeyCode } from '../karabiner/key-code.ts'
-import { toArray } from '../utils/to-array.ts'
-import { BuildContext } from '../utils/build-context.ts'
-import { toTypeSequence } from './to-type-sequence.ts'
-import { FromKeyParam, map } from './from.ts'
 
 export interface ManipulatorBuilder {
   build(context?: BuildContext): Manipulator[]

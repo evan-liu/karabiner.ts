@@ -1,6 +1,8 @@
 import { expect, test } from 'vitest'
-import { mapSimultaneous } from './simultaneous'
+
 import { toOnlyKeyCodes } from '../karabiner/key-code'
+
+import { mapSimultaneous } from './simultaneous'
 
 test('mapSimultaneous()', () => {
   const { from, parameters } = mapSimultaneous(

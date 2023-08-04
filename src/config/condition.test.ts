@@ -1,16 +1,18 @@
 import { expect, test } from 'vitest'
+
+import { Condition } from '../karabiner/karabiner-config'
+
 import {
   ConditionBuilder,
   ifApp,
   ifDevice,
   ifDeviceExists,
+  ifEventChanged,
+  ifInputSource,
+  ifKeyboardType,
   ifVar,
   isConditionBuilder,
-  ifKeyboardType,
-  ifInputSource,
-  ifEventChanged,
 } from './condition'
-import { Condition } from '../karabiner/karabiner-config'
 
 test('ifVar()', () => {
   expect(ifVar('test-mode', 2).build()).toEqual({

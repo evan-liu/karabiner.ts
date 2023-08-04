@@ -1,9 +1,9 @@
-import { KarabinerConfig, Rule } from './karabiner/karabiner-config.ts'
-import { RuleBuilder } from './config/rule.ts'
 import {
   complexModifications,
   ModificationParameters,
 } from './config/complex-modifications.ts'
+import { RuleBuilder } from './config/rule.ts'
+import { KarabinerConfig, Rule } from './karabiner/karabiner-config.ts'
 
 export const writeContext = {
   karabinerConfigDir() {

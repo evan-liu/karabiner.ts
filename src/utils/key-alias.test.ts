@@ -1,6 +1,8 @@
 import { expect, test } from 'vitest'
-import { getKeyWithAlias } from './key-alias'
+
 import { toOnlyKeyCodes } from '../karabiner/key-code'
+
+import { getKeyWithAlias } from './key-alias'
 
 test('getKeyWithAlias()', () => {
   // KeyCode

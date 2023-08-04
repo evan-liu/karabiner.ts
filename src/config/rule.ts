@@ -1,11 +1,12 @@
 import { Condition, Manipulator, Rule } from '../karabiner/karabiner-config.ts'
+import { BuildContext } from '../utils/build-context.ts'
+
+import { buildCondition, ConditionBuilder } from './condition.ts'
 import {
   buildManipulators,
   ManipulatorBuilder,
   ManipulatorMap,
 } from './manipulator.ts'
-import { buildCondition, ConditionBuilder } from './condition.ts'
-import { BuildContext } from '../utils/build-context.ts'
 
 export function rule(
   description: string,

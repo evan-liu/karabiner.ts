@@ -1,10 +1,11 @@
-import { Manipulator, Modifier } from '../karabiner/karabiner-config.ts'
-import { FromModifierParam } from '../config/modifier.ts'
 import {
   buildManipulators,
   ManipulatorBuilder,
   ManipulatorMap,
 } from '../config/manipulator.ts'
+import { FromModifierParam } from '../config/modifier.ts'
+import { Manipulator, Modifier } from '../karabiner/karabiner-config.ts'
+
 import { BuildContext } from './build-context.ts'
 import { parseFromModifierOverload } from './from-modifier-overload.ts'
 import { FromOptionalModifierParam } from './optional-modifiers.ts'

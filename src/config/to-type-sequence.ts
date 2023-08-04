@@ -1,12 +1,13 @@
 import { ToEvent } from '../karabiner/karabiner-config.ts'
-import { toKey, ToKeyParam } from './to.ts'
+import { LetterKeyCode } from '../karabiner/key-code.ts'
 import {
   arrowKeyAliases,
   controlOrSymbolKeyAliases,
   KeyAlias,
   NumberKeyValue,
 } from '../utils/key-alias.ts'
-import { LetterKeyCode } from '../karabiner/key-code.ts'
+
+import { toKey, ToKeyParam } from './to.ts'
 
 const defaultMap: Record<string, ToEvent> = {}
 for (let i = 0; i <= 9; i++) {

@@ -1,12 +1,4 @@
 import {
-  FromKeyCode,
-  FromOnlyKeyCode,
-  fromOnlyKeyCodes,
-  StickyModifierKeyCode,
-  stickyModifierKeyCodes,
-  toOnlyKeyCodes,
-} from '../karabiner/key-code.ts'
-import {
   BasicManipulator,
   Condition,
   FromModifiers,
@@ -14,24 +6,33 @@ import {
   Rule,
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
-import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias.ts'
-import { FromKeyParam, map } from './from.ts'
-import { toSetVar } from './to.ts'
-import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
-import { BasicRuleBuilder } from './rule.ts'
-import { toArray } from '../utils/to-array.ts'
+import {
+  FromKeyCode,
+  FromOnlyKeyCode,
+  fromOnlyKeyCodes,
+  StickyModifierKeyCode,
+  stickyModifierKeyCodes,
+  toOnlyKeyCodes,
+} from '../karabiner/key-code.ts'
 import { BuildContext } from '../utils/build-context.ts'
+import {
+  FromModifierOverloadParam,
+  parseFromModifierOverload,
+} from '../utils/from-modifier-overload.ts'
+import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias.ts'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
+import { toArray } from '../utils/to-array.ts'
+
+import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
+import { FromKeyParam, map } from './from.ts'
 import { BasicManipulatorBuilder } from './manipulator.ts'
 import {
   FromModifierParam,
   ModifierParam,
   SideModifierAlias,
 } from './modifier.ts'
-import {
-  FromModifierOverloadParam,
-  parseFromModifierOverload,
-} from '../utils/from-modifier-overload.ts'
-import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
+import { BasicRuleBuilder } from './rule.ts'
+import { toSetVar } from './to.ts'
 
 export type LayerKeyCode = Exclude<
   FromKeyCode,
@@ -237,10 +238,11 @@ export function layerToggleManipulator(
       'to_if_held_down',
       'to_after_key_up',
     ] satisfies Array<keyof BasicManipulator>
-    keys.forEach((key) =>
-      fromItem[key]?.forEach(
-        (v) => (toItem[key] = [...(toItem[key] || []), v]),
-      ),
+    keys.forEach(
+      (key) =>
+        fromItem[key]?.forEach(
+          (v) => (toItem[key] = [...(toItem[key] || []), v]),
+        ),
     )
     if (fromItem.to_delayed_action) {
       toItem.to_delayed_action = toItem.to_delayed_action || {
@@ -248,8 +250,8 @@ export function layerToggleManipulator(
         to_if_canceled: [],
       }
       for (const key of ['to_if_invoked', 'to_if_canceled'] as const) {
-        fromItem.to_delayed_action[key].forEach((v) =>
-          toItem.to_delayed_action?.[key].push(v),
+        fromItem.to_delayed_action[key].forEach(
+          (v) => toItem.to_delayed_action?.[key].push(v),
         )
       }
     }

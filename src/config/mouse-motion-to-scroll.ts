@@ -1,18 +1,19 @@
-import { ManipulatorBuilder } from './manipulator.ts'
 import {
   Condition,
   Manipulator,
   MouseMotionToScrollManipulator,
   MouseMotionToScrollOptions,
 } from '../karabiner/karabiner-config.ts'
-import { FromModifierParam } from './modifier.ts'
-import { buildCondition, ConditionBuilder } from './condition.ts'
 import { BuildContext } from '../utils/build-context.ts'
 import {
   FromModifierOverloadParam,
   parseFromModifierOverload,
 } from '../utils/from-modifier-overload.ts'
 import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
+
+import { buildCondition, ConditionBuilder } from './condition.ts'
+import { ManipulatorBuilder } from './manipulator.ts'
+import { FromModifierParam } from './modifier.ts'
 
 export function mouseMotionToScroll() {
   return new MouseMotionToScrollManipulatorBuilder()

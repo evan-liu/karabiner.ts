@@ -2,6 +2,7 @@ import {
   FromModifierParam,
   SideMultiModifierAlias,
 } from '../config/modifier.ts'
+
 import { ModifierKeyAlias } from './key-alias.ts'
 import {
   MultiModifierAlias,

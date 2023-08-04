@@ -1,11 +1,13 @@
 import { describe, expect, test } from 'vitest'
-import { complexModifications } from './complex-modifications'
-import { rule } from './rule'
-import { mapDoubleTap } from './double-tap'
+
 import { BasicManipulator } from '../karabiner/karabiner-config'
-import { map } from './from'
-import { simlayer } from './simlayer'
 import { fromOnlyKeyCodes, toOnlyKeyCodes } from '../karabiner/key-code'
+
+import { complexModifications } from './complex-modifications'
+import { mapDoubleTap } from './double-tap'
+import { map } from './from'
+import { rule } from './rule'
+import { simlayer } from './simlayer'
 
 describe('complexModifications()', () => {
   test('Parameters', () => {

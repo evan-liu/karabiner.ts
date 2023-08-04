@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest'
+
 import { map } from './from'
-import { toTypeSequence } from './to-type-sequence'
 import { toKey } from './to'
+import { toTypeSequence } from './to-type-sequence'
 
 test('toTypeSequence()', () => {
   expect(map(1).toTypeSequence('1!aA>←').build()).toEqual([

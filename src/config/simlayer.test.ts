@@ -1,17 +1,19 @@
 import { expect, test } from 'vitest'
-import { simlayer } from './simlayer'
-import { map } from './from'
+
 import {
   BasicManipulator,
   FromSimultaneousEvent,
 } from '../karabiner/karabiner-config'
-import { toKey, toSetVar } from './to'
-import { ifVar } from './condition'
 import {
   fromOnlyKeyCodes,
   stickyModifierKeyCodes,
   toOnlyKeyCodes,
 } from '../karabiner/key-code'
+
+import { ifVar } from './condition'
+import { map } from './from'
+import { simlayer } from './simlayer'
+import { toKey, toSetVar } from './to'
 
 test('simlayer()', () => {
   const layer = simlayer('a', 'b-mode', 1, true, false).manipulators([

@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
-import { mouseMotionToScroll } from './mouse-motion-to-scroll'
+
 import { ifVar } from './condition'
+import { mouseMotionToScroll } from './mouse-motion-to-scroll'
 
 test('mouseMotionToScroll()', () => {
   expect(

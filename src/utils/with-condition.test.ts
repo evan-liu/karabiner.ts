@@ -1,10 +1,12 @@
 import { expect, test } from 'vitest'
-import { withCondition } from './with-condition'
+
 import { ifVar } from '../config/condition'
 import { map } from '../config/from'
-import { BasicManipulator } from '../karabiner/karabiner-config'
 import { rule } from '../config/rule'
 import { toKey } from '../config/to'
+import { BasicManipulator } from '../karabiner/karabiner-config'
+
+import { withCondition } from './with-condition'
 
 test('withCondition()', () => {
   const ifA = ifVar('a').build()

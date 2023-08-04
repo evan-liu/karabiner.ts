@@ -1,17 +1,19 @@
 import { expect, test } from 'vitest'
-import { hyperLayer, layer } from './layer'
-import { map } from './from'
+
 import { BasicManipulator } from '../karabiner/karabiner-config'
-import { ifVar } from './condition'
-import { complexModifications } from './complex-modifications'
-import { simlayer } from './simlayer'
-import { toKey } from './to'
 import {
   fromOnlyKeyCodes,
   stickyModifierKeyCodes,
   toOnlyKeyCodes,
 } from '../karabiner/key-code'
+
+import { complexModifications } from './complex-modifications'
+import { ifVar } from './condition'
+import { map } from './from'
+import { hyperLayer, layer } from './layer'
 import { mouseMotionToScroll } from './mouse-motion-to-scroll'
+import { simlayer } from './simlayer'
+import { toKey } from './to'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)

@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+
 import { mapDoubleTap } from './double-tap'
 import { toKey } from './to'
 

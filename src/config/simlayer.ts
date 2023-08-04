@@ -1,28 +1,29 @@
-import { BasicRuleBuilder } from './rule.ts'
-import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
 import {
   FromModifiers,
   Rule,
   SimultaneousOptions,
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
-import { toArray } from '../utils/to-array.ts'
-import { getKeyWithAlias } from '../utils/key-alias.ts'
-import { toSetVar } from './to.ts'
 import { FromKeyCode } from '../karabiner/key-code.ts'
+import { BuildContext } from '../utils/build-context.ts'
+import {
+  FromModifierOverloadParam,
+  parseFromModifierOverload,
+} from '../utils/from-modifier-overload.ts'
+import { getKeyWithAlias } from '../utils/key-alias.ts'
+import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
+import { toArray } from '../utils/to-array.ts'
+
+import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
 import {
   excludeFromLayerKeys,
   LayerKeyCode,
   LayerKeyParam,
   layerToggleManipulator,
 } from './layer.ts'
-import { BuildContext } from '../utils/build-context.ts'
-import {
-  FromModifierOverloadParam,
-  parseFromModifierOverload,
-} from '../utils/from-modifier-overload.ts'
 import { FromModifierParam } from './modifier.ts'
-import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
+import { BasicRuleBuilder } from './rule.ts'
+import { toSetVar } from './to.ts'
 
 export const defaultSimlayerParameters = {
   'simlayer.threshold_milliseconds': 200,

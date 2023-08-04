@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest'
+
 import { map, mapConsumerKey, mapPointingButton } from './from'
 
 test('map()', () => {

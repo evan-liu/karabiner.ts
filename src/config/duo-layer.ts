@@ -1,4 +1,3 @@
-import { LayerKeyParam } from './layer.ts'
 import {
   BasicManipulator,
   FromSimultaneousEvent,
@@ -7,9 +6,11 @@ import {
   ToEvent,
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
-import { BasicRuleBuilder } from './rule.ts'
-import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
 import { BuildContext } from '../utils/build-context.ts'
+
+import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
+import { LayerKeyParam } from './layer.ts'
+import { BasicRuleBuilder } from './rule.ts'
 import { mapSimultaneous } from './simultaneous.ts'
 import {
   toNotificationMessage,

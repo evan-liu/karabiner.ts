@@ -20,10 +20,10 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 
 - [📝 Docs](https://evan-liu.github.io/karabiner.ts/)
   - [🛝 Playground](https://evan-liu.github.io/karabiner.ts/playground)
-- [Examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts) 
+- [Examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts)
   - [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts)
 
-## Usage with Node.js 
+## Usage with Node.js
 
 [![npm](https://img.shields.io/npm/v/karabiner.ts.svg)](https://www.npmjs.com/package/karabiner.ts)
 
@@ -41,7 +41,7 @@ Then:
 2. Set the profile name. Create a new Karabiner-Elements profile if needed.
 3. Run `npm run build`.
 
-To update to the latest version, run `npm run update` (or `npm update karabiner.ts`). 
+To update to the latest version, run `npm run update` (or `npm update karabiner.ts`).
 
 ### Option 2
 
@@ -56,7 +56,7 @@ Then write and build the config same as Option 1.
 
 (or install with `yarn`, `pnpm`, etc) then call `writeToProfile()` from any Node.js script in your preferred way.
 
-## Usage with Deno 
+## Usage with Deno
 
 [![deno module](https://shield.deno.dev/x/karabinerts)](https://deno.land/x/karabinerts)
 

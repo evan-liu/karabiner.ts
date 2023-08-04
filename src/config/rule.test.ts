@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest'
-import { BasicRuleBuilder, isRuleBuilder, rule } from './rule'
+
 import { ifVar } from './condition'
 import { map } from './from'
+import { BasicRuleBuilder, isRuleBuilder, rule } from './rule'
 import { toKey } from './to'
 
 test('rule()', () => {

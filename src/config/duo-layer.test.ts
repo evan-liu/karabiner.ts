@@ -1,20 +1,22 @@
 import { expect, test } from 'vitest'
-import { defaultDuoLayerParameters, duoLayer } from './duo-layer'
-import { map } from './from'
+
 import {
   BasicManipulator,
   FromEvent,
   FromKeyType,
   FromSimultaneousEvent,
 } from '../karabiner/karabiner-config'
+import { BuildContext } from '../utils/build-context.ts'
+
+import { complexModifications } from './complex-modifications'
+import { ifVar } from './condition'
+import { defaultDuoLayerParameters, duoLayer } from './duo-layer'
+import { map } from './from'
 import {
   toNotificationMessage,
   toRemoveNotificationMessage,
   toSetVar,
 } from './to'
-import { ifVar } from './condition'
-import { complexModifications } from './complex-modifications'
-import { BuildContext } from '../utils/build-context.ts'
 
 test('duoLayer()', () => {
   const layer = duoLayer(1, 2).manipulators([map(3).to(4)])

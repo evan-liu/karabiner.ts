@@ -1,6 +1,8 @@
 import { expect, test } from 'vitest'
-import { withMapper } from './with-mapper'
+
 import { map } from '../config/from'
+
+import { withMapper } from './with-mapper'
 
 test('withMapper([])', () => {
   expect(withMapper(['⇪'])((v, i) => map(v).to$(`echo ${i}`)).build()).toEqual([

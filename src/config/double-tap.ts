@@ -1,4 +1,3 @@
-import { BasicManipulatorBuilder } from './manipulator.ts'
 import {
   BasicManipulator,
   FromKeyCodeEvent,
@@ -6,24 +5,26 @@ import {
   ToEvent,
 } from '../karabiner/karabiner-config.ts'
 import {
-  getKeyWithAlias,
-  KeyAlias,
-  NumberKeyValue,
-} from '../utils/key-alias.ts'
-import {
   FromAndToKeyCode,
   fromOnlyKeyCodes,
   toOnlyKeyCodes,
 } from '../karabiner/key-code.ts'
-import { ifVar } from './condition.ts'
-import { toSetVar } from './to.ts'
 import { BuildContext } from '../utils/build-context.ts'
-import { FromModifierParam } from './modifier.ts'
 import {
   FromModifierOverloadParam,
   parseFromModifierOverload,
 } from '../utils/from-modifier-overload.ts'
+import {
+  getKeyWithAlias,
+  KeyAlias,
+  NumberKeyValue,
+} from '../utils/key-alias.ts'
 import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
+
+import { ifVar } from './condition.ts'
+import { BasicManipulatorBuilder } from './manipulator.ts'
+import { FromModifierParam } from './modifier.ts'
+import { toSetVar } from './to.ts'
 
 export const defaultDoubleTapParameters = {
   'double_tap.delay_milliseconds': 200,
