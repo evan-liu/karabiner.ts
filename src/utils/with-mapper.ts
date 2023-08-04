@@ -2,7 +2,7 @@ import { buildManipulators, ManipulatorBuilder } from '../config/manipulator.ts'
 import { Manipulator } from '../karabiner/karabiner-config.ts'
 
 /**
- *  A high-order function to map an array of keys.
+ *  A higher-order function to map an array of keys.
  *
  *  @example
  *    withMapper([1, 2, 3])(
@@ -16,10 +16,10 @@ export function withMapper<const T>(
 ) => ManipulatorBuilder
 
 /**
- *  A high-order function to map a group of key-value pairs.
+ *  A higher-order function to map a group of key-value pairs.
  *
  *  @example
- *    withMapper({1: 'a', 2: '⌥b})(
+ *    withMapper({1: 'a', 2: 'b'})(
  *      (k, v) => map(k).to(v)
  *    )
  */

@@ -7,7 +7,7 @@ import {
 import { Condition, Manipulator } from '../karabiner/karabiner-config.ts'
 
 /**
- * A high-order function to add condition to a group of manipulators
+ * A higher-order function to add condition to a group of manipulators
  * Note: The `Manipulator[]` return type is deprecated and will be removed in v2.
  *       Please use the ManipulatorBuilder return type.
  */

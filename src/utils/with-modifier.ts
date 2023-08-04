@@ -11,7 +11,7 @@ import { parseFromModifierOverload } from './from-modifier-overload.ts'
 import { FromOptionalModifierParam } from './optional-modifiers.ts'
 
 /**
- * A high-order function to add modifiers to a group of manipulators
+ * A higher-order function to add modifiers to a group of manipulators
  *
  * @example
  *   withModifier('⌘⌥')([
@@ -28,7 +28,7 @@ export function withModifier(
     | Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
 ) => ManipulatorBuilder
 /**
- * A high-order function to add optional modifiers to a group of manipulators
+ * A higher-order function to add optional modifiers to a group of manipulators
  *
  * @example
  *   withModifier('optionalAny')([
