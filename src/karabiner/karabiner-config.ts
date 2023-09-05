@@ -37,11 +37,11 @@ export type FromModifiers = {
 export type FromEvent = (
   | FromKeyType
   | {
-    /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous/ */
-    simultaneous: FromKeyType[]
-    /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous-options/ */
-    simultaneous_options?: SimultaneousOptions
-  }
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous/ */
+      simultaneous: FromKeyType[]
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous-options/ */
+      simultaneous_options?: SimultaneousOptions
+    }
 ) & {
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/ */
   modifiers?: FromModifiers
@@ -191,47 +191,47 @@ export type InputSource = {
 
 export type Condition =
   | {
-    /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/frontmost-application/ */
-    type: 'frontmost_application_if' | 'frontmost_application_unless'
-    description?: string,
-    bundle_identifiers?: string[],
-    file_paths?: string[]
-  }
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/frontmost-application/ */
+      type: 'frontmost_application_if' | 'frontmost_application_unless'
+      description?: string
+      bundle_identifiers?: string[]
+      file_paths?: string[]
+    }
   | {
-    /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/device/ */
-    type:
-    | 'device_if'
-    | 'device_unless'
-    | 'device_exists_if'
-    | 'device_exists_unless'
-    identifiers: DeviceIdentifier[]
-    description?: string
-  }
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/device/ */
+      type:
+        | 'device_if'
+        | 'device_unless'
+        | 'device_exists_if'
+        | 'device_exists_unless'
+      identifiers: DeviceIdentifier[]
+      description?: string
+    }
   | {
-    /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/keyboard-type/ */
-    type: 'keyboard_type_if' | 'keyboard_type_unless'
-    keyboard_types: KeyboardType[]
-    description?: string
-  }
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/keyboard-type/ */
+      type: 'keyboard_type_if' | 'keyboard_type_unless'
+      keyboard_types: KeyboardType[]
+      description?: string
+    }
   | {
-    /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/input-source/ */
-    type: 'input_source_if' | 'input_source_unless'
-    input_sources: InputSource[]
-    description?: string
-  }
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/input-source/ */
+      type: 'input_source_if' | 'input_source_unless'
+      input_sources: InputSource[]
+      description?: string
+    }
   | {
-    /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/variable/ */
-    type: 'variable_if' | 'variable_unless'
-    name: string
-    value: number | boolean | string
-    description?: string
-  }
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/variable/ */
+      type: 'variable_if' | 'variable_unless'
+      name: string
+      value: number | boolean | string
+      description?: string
+    }
   | {
-    /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/event-changed/ */
-    type: 'event_changed_if' | 'event_changed_unless'
-    value: boolean
-    description?: string
-  }
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/event-changed/ */
+      type: 'event_changed_if' | 'event_changed_unless'
+      value: boolean
+      description?: string
+    }
 
 export type FrontmostApplicationCondition = Extract<
   Condition,
@@ -241,10 +241,10 @@ export type KeyboardTypeCondition = Extract<
   Condition,
   {
     type:
-    | 'device_if'
-    | 'device_unless'
-    | 'device_exists_if'
-    | 'device_exists_unless'
+      | 'device_if'
+      | 'device_unless'
+      | 'device_exists_if'
+      | 'device_exists_unless'
   }
 >
 export type InputSourceCondition = Extract<

@@ -38,18 +38,20 @@ test('ifApp()', () => {
     bundle_identifiers: ['a', 'b'],
   })
 
-  expect(ifApp({bundle_identifiers: ["a", /b/]}).build()).toEqual({
+  expect(ifApp({ bundle_identifiers: ['a', /b/] }).build()).toEqual({
     type: 'frontmost_application_if',
-    bundle_identifiers: ["a", "b"],
+    bundle_identifiers: ['a', 'b'],
   })
   expect(ifApp({ file_paths: ['a', /b/] }).build()).toEqual({
     type: 'frontmost_application_if',
     file_paths: ['a', 'b'],
   })
-  expect(ifApp({bundle_identifiers: ["a", /b/], file_paths: ['c', /d/]}).build()).toEqual({
+  expect(
+    ifApp({ bundle_identifiers: ['a', /b/], file_paths: ['c', /d/] }).build(),
+  ).toEqual({
     type: 'frontmost_application_if',
-    bundle_identifiers: ["a", "b"],
-    file_paths: ["c", "d"]
+    bundle_identifiers: ['a', 'b'],
+    file_paths: ['c', 'd'],
   })
 })
 
