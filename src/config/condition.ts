@@ -20,7 +20,8 @@ export function ifApp(
   description?: string,
 ): ConditionBuilder
 export function ifApp(app: {
-  file_paths: Array<string | RegExp>
+  file_paths?: Array<string | RegExp>,
+  bundle_identifiers?: Array<string | RegExp>,
   description?: string
 }): ConditionBuilder
 export function ifApp(
@@ -28,7 +29,7 @@ export function ifApp(
     | string
     | RegExp
     | Array<string | RegExp>
-    | { file_paths: Array<string | RegExp> },
+    | { file_paths?: Array<string | RegExp>, bundle_identifiers?: Array<string | RegExp> },
   description?: string,
 ): ConditionBuilder {
   let bundle_identifiers: string[]
@@ -40,7 +41,9 @@ export function ifApp(
     return new ConditionBuilder({
       type: 'frontmost_application_if',
       description,
-      file_paths: app.file_paths.map(formatRegExp),
+      file_paths: app.file_paths?.map(formatRegExp),
+      bundle_identifiers: app.bundle_identifiers?.map(formatRegExp),
+
     })
   }
   return new ConditionBuilder({
@@ -109,7 +112,7 @@ const unlessTypes = flipUnlessTypes({
 })
 
 export class ConditionBuilder {
-  constructor(private readonly condition: Condition) {}
+  constructor(private readonly condition: Condition) { }
 
   /** Switch type {condition}_if to {condition}_unless, and vice versa */
   unless(): ConditionBuilder {
