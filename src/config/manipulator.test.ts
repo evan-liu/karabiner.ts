@@ -3,7 +3,12 @@ import { describe, expect, test } from 'vitest'
 import { FromEvent, ToEvent } from '../karabiner/karabiner-config'
 
 import { ifEventChanged } from './condition'
-import { BasicManipulatorBuilder, isManipulatorBuilder } from './manipulator'
+import {
+  BasicManipulatorBuilder,
+  buildManipulators,
+  isManipulatorBuilder,
+} from './manipulator'
+import { toKey } from './to.ts'
 
 describe('ManipulatorBuilder', () => {
   const from: FromEvent = { key_code: 'a' }
@@ -288,4 +293,19 @@ test('isManipulatorBuilder()', () => {
   const from: FromEvent = { key_code: 'a' }
   expect(isManipulatorBuilder({ type: 'basic', from })).toBe(false)
   expect(isManipulatorBuilder(new BasicManipulatorBuilder(from))).toBe(true)
+})
+
+test('buildManipulators(ManipulatorMap)', () => {
+  const manipulators = buildManipulators({
+    1: toKey(2),
+    3: [toKey(4), toKey(5)],
+  })
+  expect(manipulators).toEqual([
+    { type: 'basic', from: { key_code: '1' }, to: [{ key_code: '2' }] },
+    {
+      type: 'basic',
+      from: { key_code: '3' },
+      to: [{ key_code: '4' }, { key_code: '5' }],
+    },
+  ])
 })

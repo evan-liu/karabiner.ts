@@ -50,7 +50,9 @@ export interface ManipulatorBuilder {
 
 // TODO Make the type FromKeyParam.
 //  Current TypeScript version gives errors for some keys, like numbers.
-export type ManipulatorMap = Partial<Record<string | number, ToEvent>>
+export type ManipulatorMap = Partial<
+  Record<string | number, ToEvent | ToEvent[]>
+>
 
 export class BasicManipulatorBuilder implements ManipulatorBuilder {
   protected readonly manipulator: BasicManipulator
@@ -332,7 +334,9 @@ export function buildManipulators(
   if (isManipulatorBuilder(src)) return src.build(context)
   if ('type' in src) return [src as Manipulator]
 
-  const entries = Object.entries(src) as Array<[FromKeyParam, ToEvent]>
+  const entries = Object.entries(src) as Array<
+    [FromKeyParam, ToEvent | ToEvent[]]
+  >
   return entries.reduce(
     (r, [k, v]) => [...r, ...map(k).to(v).build(context)],
     [] as Manipulator[],
