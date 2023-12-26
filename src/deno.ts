@@ -16,6 +16,9 @@ Object.assign(writeContext, {
   writeKarabinerConfig(json: any, karabinerJsonPath?: string) {
     return Deno.writeTextFile(karabinerJsonPath ?? this.karabinerConfigFile(), json)
   },
+  readJson(filePath: string) {
+    return JSON.parse(Deno.readTextFileSync(filePath))
+  },
   exit(code = 0): never {
     Deno.exit(code)
   },

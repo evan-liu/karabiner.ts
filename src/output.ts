@@ -27,6 +27,9 @@ export const writeContext = {
       json,
     )
   },
+  readJson(filePath: string) {
+    return require(filePath)
+  },
   exit(code = 0): never {
     process.exit(code)
   },

@@ -67,6 +67,10 @@ export { defaultDoubleTapParameters } from './config/double-tap.ts'
 export { defaultSimlayerParameters } from './config/simlayer.ts'
 export { defaultDuoLayerParameters } from './config/duo-layer.ts'
 
+// Imports
+export { importJson } from './imports/import-json.ts'
+export { importProfile } from './imports/import-profile.ts'
+
 // Output
 export { complexModifications } from './config/complex-modifications.ts'
 export { writeToProfile } from './output.ts'
