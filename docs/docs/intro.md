@@ -60,7 +60,3 @@ writeToProfile('Default', [ // 1 profile to config complex_modifications
     ]),
 ])
 ```
-
-Try it out at the online playground:
-
-<iframe src="https://stackblitz.com/edit/karabiner-ts?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20" width="100%" height="1000"></iframe>

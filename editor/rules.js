@@ -15,6 +15,6 @@ withCondition, withMapper
 export const rules = () => [
   rule('Playground').manipulators([
     map('⇪').toHyper().toIfAlone('⎋'),
-    { esc: toKey('caps_lock') },
+    { escape: toKey('caps_lock') },
   ]),
 ]
