@@ -57,6 +57,6 @@ rule('Demo', ifVar('test')).manipulators([
 
 </details>
 
-:::caution
+:::warning
 manipulators() cannot be empty in a rule. 
 :::

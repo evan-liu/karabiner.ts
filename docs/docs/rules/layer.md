@@ -172,7 +172,7 @@ layer('a', 'a-mode')
 ```
 </details>
 
-:::caution
+:::warning
 The second parameter `replaceToIfAlone`, of `configKey(, true)`, makes sure only 
 the new `toIfAlone()` is used. The layer key will otherwise still be triggered, 
 sending `[a, b⌘]` instead of only `b⌘`.
