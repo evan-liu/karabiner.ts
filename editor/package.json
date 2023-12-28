@@ -1,0 +1,20 @@
+{
+  "name": "karabiner.ts.editor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "karabiner.ts": "latest"
+  },
+  "devDependencies": {
+    "vite": "^5.0.8"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "bracketSameLine": true
+  }
+}
