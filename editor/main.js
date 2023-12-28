@@ -26,8 +26,8 @@ document.querySelector('#app').innerHTML = `\
 <div>
   <button id="copy" data-clipboard-target="#output">Copy</button>
   
-  <a href="https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/" target="_blank">
-    ? Manipulator Definition 
+  <a href="https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules" target="_blank">
+    ? Import to Karabiner-Elements
   </a>
   
   <pre id="output" ${error ? ' class="error"' : ''}>${error || code}</pre>
