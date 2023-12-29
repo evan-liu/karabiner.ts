@@ -4,7 +4,6 @@
 const sidebars = {
   docs: [
     'intro',
-    'playground',
     {
       type: 'category',
       label: 'Rules',

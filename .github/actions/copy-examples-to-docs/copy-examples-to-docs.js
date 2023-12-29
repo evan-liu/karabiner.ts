@@ -70,6 +70,9 @@ title: ${rules[0].description}
 ${jsCode}
 \`\`\`
 
+Copy and edit the above code in [the online editor](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor),
+or copy the below JSON and [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules). 
+
 \`\`\`json
 ${jsonCode}
 \`\`\`

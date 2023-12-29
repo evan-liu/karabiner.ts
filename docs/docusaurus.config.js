@@ -53,6 +53,11 @@ const config = {
             label: 'karabiner.ts',
             position: 'left',
           },
+          {
+            href: 'https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor',
+            label: 'online editor',
+            position: 'left',
+          },
         ],
       },
       footer: {},

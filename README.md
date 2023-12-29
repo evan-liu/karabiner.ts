@@ -19,9 +19,7 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 ## Learn More
 
 - [📝 Docs](https://evan-liu.github.io/karabiner.ts/)
-  - [🛝 Playground](https://evan-liu.github.io/karabiner.ts/playground)
-- [Examples](https://github.com/evan-liu/karabiner.ts.examples/blob/main/src/index.ts)
-  - [evan-liu/karabiner-config](https://github.com/evan-liu/karabiner-config/blob/main/src/index.ts)
+- [🛝 Playground](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor)
 
 ## Usage with Node.js
 
