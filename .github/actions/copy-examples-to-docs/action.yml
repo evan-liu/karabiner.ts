@@ -1,0 +1,5 @@
+name: 'Copy examples to docs'
+description: Copy examples to docs
+runs:
+  using: 'node20'
+  main: 'copy-examples-to-docs.js'
