@@ -19,9 +19,13 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 ## Learn More
 
 - [📝 Docs](https://evan-liu.github.io/karabiner.ts/)
-- [🛝 Playground](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor)
 
-## Usage with Node.js
+## Using the Online Editor
+
+- Write config in the [online editor](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor).
+- Copy the generated JSON then [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules).
+
+## Using Node.js
 
 [![npm](https://img.shields.io/npm/v/karabiner.ts.svg)](https://www.npmjs.com/package/karabiner.ts)
 
@@ -54,7 +58,7 @@ Then write and build the config same as Option 1.
 
 (or install with `yarn`, `pnpm`, etc) then call `writeToProfile()` from any Node.js script in your preferred way.
 
-## Usage with Deno
+## Using Deno
 
 [![deno module](https://shield.deno.dev/x/karabinerts)](https://deno.land/x/karabinerts)
 
@@ -64,7 +68,7 @@ In a Deno script file (replace `{version}`):
 import { rule, writeToProfile } from 'https://deno.land/x/karabinerts@{version}/deno.ts'
 
 writeToProfile('Default', [
-  rule(...
+  // rule(...
 ])
 ```
 
