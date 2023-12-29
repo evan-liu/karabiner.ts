@@ -22,8 +22,10 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 
 ## Using the Online Editor
 
-- Write config in the [online editor](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor).
-- Copy the generated JSON then [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules).
+1. Write config in the [online editor](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor).
+2. Copy the generated JSON then [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules).
+
+[Fork the editor](https://stackblitz.com/fork/github/evan-liu/karabiner.ts/tree/main/editor?file=rules.js) to save the config for later editing. 
 
 ## Using Node.js
 
