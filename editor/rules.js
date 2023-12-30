@@ -10,11 +10,18 @@ toKey, toConsumerKey, toPointingButton, toHyper, toSuperHyper, toMeh, to$, toApp
 ifApp, ifDevice, ifVar, ifDeviceExists, ifInputSource, ifKeyboardType, ifEventChanged,
 // utils
 withCondition, withMapper, withModifier
-} from 'karabiner.ts';
+} from 'karabiner.ts'
 
+// ↓ ↓ ↓ Add support code if needed.  ↑ ↑ ↑ Do not modify `import ...` ↑
+
+// ↑ ↑ ↑ Add support code if needed.  ↓ ↓ ↓ Do not modify `export const rules` ↓
 export const rules = () => [
+  // ↓ ↓ ↓ Add rules and/or layers.   ↑ ↑ ↑ Do not modify `export const rules` ↑
+
   rule('Playground').manipulators([
     map('⇪').toHyper().toIfAlone('⎋'),
     { escape: toKey('caps_lock') },
   ]),
+
+  // ↑ ↑ ↑ Add rules and/or layers.   ↓ ↓ ↓ Do not modify `]` below ↓
 ]
