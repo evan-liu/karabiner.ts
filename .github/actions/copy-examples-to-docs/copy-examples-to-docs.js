@@ -1,11 +1,5 @@
-import {
-  copyFile,
-  lstat,
-  mkdir,
-  readdir,
-  readFile,
-  writeFile,
-} from 'node:fs/promises'
+import { lstatSync } from 'node:fs'
+import { copyFile, mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 const rootDir = process.cwd()
@@ -20,32 +14,80 @@ copyDir(examplesDir).catch((err) => {
 
 async function copyDir(dirFullPath, dirLevels = []) {
   const items = await readdir(dirFullPath)
-  await Promise.all(
-    items.map(async (item) => {
-      const itemFullPath = join(dirFullPath, item)
-      const stats = await lstat(itemFullPath)
-      if (stats.isDirectory()) {
-        const dirInDocs = join(examplesInDocs, ...dirLevels, item)
-        await mkdir(dirInDocs, { recursive: true })
-        await copyDir(itemFullPath, dirLevels.concat(item))
-      } else if (item.endsWith('.js')) {
-        await copyJsToMd(itemFullPath, dirLevels, item)
-      } else if (item === '_category_.json') {
-        await copyCategoryJson(itemFullPath, dirLevels, item)
-      }
+
+  const toCopy = { code: {}, files: [], dirs: [] }
+  items.forEach((item) => {
+    const itemFullPath = join(dirFullPath, item)
+    if (lstatSync(itemFullPath).isDirectory()) {
+      return toCopy.dirs.push(item)
+    }
+
+    const codeMatched = item.match(/^(.*)\.(md|js)$/)
+    if (!codeMatched) {
+      return toCopy.files.push(item)
+    }
+    const [, name, format] = codeMatched
+    ;(toCopy.code[name] ||= []).push(format)
+  })
+
+  await Promise.all([
+    ...toCopy.dirs.map(async (item) => {
+      const dirInDocs = join(examplesInDocs, ...dirLevels, item)
+      await mkdir(dirInDocs, { recursive: true })
+      await copyDir(join(dirFullPath, item), dirLevels.concat(item))
     }),
-  )
+    ...toCopy.files.map((item) =>
+      copyFile(
+        join(dirFullPath, item),
+        join(examplesInDocs, ...dirLevels, item),
+      ),
+    ),
+    ...Object.entries(toCopy.code).map(([name, formats]) =>
+      copyCode(name, formats, dirFullPath, dirLevels),
+    ),
+  ])
 }
 
-async function copyJsToMd(fullPath, dirLevels, name) {
+async function copyCode(name, formats, dirFullPath, dirLevels) {
+  const { jsCode, jsonCode, rules } = formats.includes('js')
+    ? await readJsCode(name, dirFullPath, dirLevels)
+    : {}
+
+  let mdCode = formats.includes('md')
+    ? await readFile(join(dirFullPath, `${name}.md`), 'utf8')
+    : `---\ntitle: ${rules[0].description}\n---`
+
+  if (jsCode) {
+    mdCode += `
+
+Copy and edit the code below in [the online editor](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor):
+
+\`\`\`typescript
+${jsCode}
+\`\`\`
+
+Or copy the JSON below and [add it to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules) without changes:
+
+\`\`\`json
+${jsonCode}
+\`\`\`
+`
+    const mdFile = join(examplesInDocs, ...dirLevels, `${name}.md`)
+    await writeFile(mdFile, mdCode)
+  }
+}
+
+async function readJsCode(name, dirFullPath, dirLevels) {
+  const fileName = `${name}.js`
+  const fullPath = join(dirFullPath, fileName)
   const srcCode = await readFile(fullPath, 'utf-8')
   const matched = srcCode.match(/^(import[\s\S]*?)from '.*?'\s*([\s\S]*)$/m)
   if (!matched)
-    throw new Error(`Cannot parse ${dirLevels.concat(name).join('/')}`)
+    throw new Error(`Cannot parse ${dirLevels.concat(fileName).join('/')}`)
 
   const [, imports, jsCode] = matched
 
-  const fileInDist = join(distDir, name)
+  const fileInDist = join(distDir, fileName)
   await writeFile(fileInDist, `${imports}from './index.js'\n${jsCode}`)
 
   const { complexModifications } = await import(join(distDir, 'index.js'))
@@ -61,27 +103,5 @@ async function copyJsToMd(fullPath, dirLevels, name) {
     { description: '', manipulators: [] },
   )
   const jsonCode = JSON.stringify(config, null, 2)
-  const mdCode = `\
----
-title: ${rules[0].description}
----
-
-\`\`\`typescript
-${jsCode}
-\`\`\`
-
-Copy and edit the above code in [the online editor](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor),
-or copy the below JSON and [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules). 
-
-\`\`\`json
-${jsonCode}
-\`\`\`
-`
-
-  const mdFile = join(examplesInDocs, ...dirLevels, name.replace('.js', '.md'))
-  await writeFile(mdFile, mdCode)
-}
-
-async function copyCategoryJson(fullPath, dirLevels, name) {
-  await copyFile(fullPath, join(examplesInDocs, ...dirLevels, name))
+  return { jsCode, jsonCode, rules }
 }
