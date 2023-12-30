@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/docs-publish.yml'
       - 'docs/**'
+      - 'examples/**'
 
 jobs:
   build-and-publish:
