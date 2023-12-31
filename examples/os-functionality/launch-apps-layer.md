@@ -10,6 +10,6 @@ the 'launch-app' layer:
 
 Use any key for the layer, also consider using: 
 
-- `layer('l', 'launch-app')`
+- `simlayer('l', 'launch-app')`
 - `hyperLayer('l', 'launch-app')`
 - `duoLayer('l', ';', 'launch-app')`
