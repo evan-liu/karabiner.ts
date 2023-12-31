@@ -12,7 +12,7 @@ ifApp, ifDevice, ifVar, ifDeviceExists, ifInputSource, ifKeyboardType, ifEventCh
 withCondition, withMapper, withModifier
 } from 'karabiner.ts'
 
-// ↓ ↓ ↓ Add support code if needed.  ↑ ↑ ↑ Do not modify `import ...` ↑
+// ↓ ↓ ↓ Add support code if needed.  ↑ ↑ ↑ Do not delete `import ...` ↑
 
 // ↑ ↑ ↑ Add support code if needed.  ↓ ↓ ↓ Do not modify `export const rules` ↓
 export const rules = () => [
@@ -23,5 +23,5 @@ export const rules = () => [
     { escape: toKey('caps_lock') },
   ]),
 
-  // ↑ ↑ ↑ Add rules and/or layers.   ↓ ↓ ↓ Do not modify `]` below ↓
+  // ↑ ↑ ↑ Add rules and/or layers.   ↓ ↓ ↓ Do not delete `]` below ↓
 ]
