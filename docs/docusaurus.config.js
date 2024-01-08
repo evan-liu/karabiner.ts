@@ -66,6 +66,11 @@ const config = {
         darkTheme: darkCodeTheme,
         additionalLanguages: ['json'],
       },
+      algolia: {
+        appId: '8FCBVUX23W',
+        apiKey: '577f1af3c7191bb53e86200751990c4e',
+        indexName: 'karabiner-ts',
+      },
     }),
 }
 
