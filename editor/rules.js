@@ -9,7 +9,7 @@ toKey, toConsumerKey, toPointingButton, toHyper, toSuperHyper, toMeh, to$, toApp
 // conditions
 ifApp, ifDevice, ifVar, ifDeviceExists, ifInputSource, ifKeyboardType, ifEventChanged,
 // utils
-withCondition, withMapper, withModifier
+withCondition, withMapper, withModifier, modifierKeyAliases, multiModifierAliases
 } from 'karabiner.ts'
 
 // ↓ ↓ ↓ Add support code if needed.  ↑ ↑ ↑ Do not delete `import ...` ↑
