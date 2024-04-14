@@ -9,7 +9,7 @@ const darkCodeTheme = themes.dracula
 const config = {
   title: 'karabiner.ts',
 
-  url: 'https://karabiner.ts.keymaps.app',
+  url: 'https://evan-liu.github.io/karabiner.ts',
   baseUrl: '/',
 
   organizationName: 'evan-liu',
