@@ -4,7 +4,7 @@
   <ShortName>karabiner.ts</ShortName>
   <Description>Search karabiner.ts</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" method="get" template="https://karabiner.ts.keymaps.app/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://karabiner.ts.keymaps.app/opensearch.xml" />
-  <moz:SearchForm>https://karabiner.ts.keymaps.app/</moz:SearchForm>
+  <Url type="text/html" method="get" template="https://evan-liu.github.io/karabiner.ts/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://evan-liu.github.io/karabiner.ts/opensearch.xml" />
+  <moz:SearchForm>https://evan-liu.github.io/karabiner.ts/</moz:SearchForm>
 </OpenSearchDescription>
