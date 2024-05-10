@@ -26,7 +26,7 @@ export default defineConfig({
   plugins: [dts({ rollupTypes: true })],
   test: {
     coverage: {
-      provider: 'c8',
+      provider: 'v8',
       reporter: ['lcov'],
     },
   },
