@@ -32,7 +32,7 @@ import {
   SideModifierAlias,
 } from './modifier.ts'
 import { BasicRuleBuilder } from './rule.ts'
-import { toSetVar } from './to.ts'
+import { toRemoveNotificationMessage, toSetVar } from './to.ts'
 
 export type LayerKeyCode = Exclude<
   FromKeyCode,
@@ -92,6 +92,8 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
 
   private layerModifiers?: FromModifiers
 
+  private layerNotification?: boolean | string
+
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
     varName?: string,
@@ -149,6 +151,12 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     return this
   }
 
+  /** Set the notification when the layer is active. */
+  public notification(v: boolean | string) {
+    this.layerNotification = v
+    return this
+  }
+
   public build(context?: BuildContext): Rule {
     const rule = super.build(context)
 
@@ -178,6 +186,9 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
           context,
           this.layerKeyManipulator,
           this.replaceLayerKeyToIfAlone,
+          this.layerNotification === true
+            ? this.ruleDescription
+            : this.layerNotification || undefined,
         ),
         ...rule.manipulators,
       ]
@@ -224,6 +235,7 @@ export function layerToggleManipulator(
   context?: BuildContext,
   layerKeyManipulator?: BasicManipulatorBuilder,
   replaceLayerKeyToIfAlone?: boolean,
+  notification?: string,
 ) {
   function mergeManipulator<T extends BasicManipulator | BasicManipulator[]>(
     to: T,
@@ -271,6 +283,12 @@ export function layerToggleManipulator(
     .toIfAlone({ key_code })
     .condition(ifVar(varName, onValue).unless())
   if (conditions?.length) manipulator.condition(...conditions)
+  if (notification) {
+    const id = `layer-${varName}`
+    manipulator
+      .toNotificationMessage(id, notification)
+      .toAfterKeyUp(toRemoveNotificationMessage(id))
+  }
   if (!context) return mergeManipulator(manipulator.build())
 
   const key = [

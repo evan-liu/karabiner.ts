@@ -275,3 +275,27 @@ test('layer().modifier(??)', () => {
       .build(),
   ).toThrow()
 })
+
+test('layer() notification', () => {
+  const rule = layer('a').notification(true).build()
+  const manipulators = rule.manipulators as BasicManipulator[]
+  expect(manipulators.length).toBe(1)
+  expect(manipulators[0].to?.[1]).toEqual({
+    set_notification_message: {
+      id: 'layer-layer-a',
+      text: 'Layer - layer-a',
+    },
+  })
+  expect(manipulators[0].to_after_key_up?.[1]).toEqual({
+    set_notification_message: { id: 'layer-layer-a', text: '' },
+  })
+
+  const ruleB = layer('a').notification('test-b').build()
+  const manipulatorB = ruleB.manipulators[0] as BasicManipulator
+  expect(manipulatorB.to?.[1]).toEqual({
+    set_notification_message: {
+      id: 'layer-layer-a',
+      text: 'test-b',
+    },
+  })
+})
