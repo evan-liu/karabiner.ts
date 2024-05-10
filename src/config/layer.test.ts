@@ -30,7 +30,8 @@ test('layer()', () => {
     to: [{ set_variable: { name: 'b-mode', value: 2 } }],
     to_after_key_up: [{ set_variable: { name: 'b-mode', value: -1 } }],
     to_if_alone: [{ key_code: 'a' }],
-  })
+    conditions: [{ type: 'variable_unless', name: 'b-mode', value: 2 }],
+  } as BasicManipulator)
   // Add variable condition to manipulators
   expect(manipulators[1].conditions).toEqual([
     { type: 'variable_if', name: 'b-mode', value: 2 },
@@ -78,6 +79,7 @@ test('layer() conditions', () => {
     .build()
   const manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[0].conditions).toEqual([
+    { type: 'variable_unless', name: 'b', value: 1 },
     { type: 'variable_if', name: 'c', value: 1 },
   ])
 })
@@ -138,6 +140,7 @@ test('layer().configKey()', () => {
       to_if_invoked: [{ key_code: 'x' }],
       to_if_canceled: [{ key_code: 'y' }],
     },
+    conditions: [{ type: 'variable_unless', name: 'v1', value: 1 }],
   })
 })
 
@@ -153,6 +156,7 @@ test('layer().configKey() replaceToIfAlone', () => {
     to: [{ set_variable: { name: 'v1', value: 1 } }],
     to_after_key_up: [{ set_variable: { name: 'v1', value: 0 } }],
     to_if_alone: [{ key_code: 'b', modifiers: ['command'] }],
+    conditions: [{ type: 'variable_unless', name: 'v1', value: 1 }],
   })
 })
 

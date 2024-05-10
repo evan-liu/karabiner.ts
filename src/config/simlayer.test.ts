@@ -130,7 +130,10 @@ test('simlayer().enableLayer()', () => {
     to: [{ set_variable: { name: 'b', value: 1 } }],
     to_after_key_up: [{ set_variable: { name: 'b', value: 0 } }],
     to_if_alone: [{ key_code: 'c' }],
-    conditions: [{ type: 'variable_if', name: 'd', value: 1 }],
+    conditions: [
+      { type: 'variable_unless', name: 'b', value: 1 },
+      { type: 'variable_if', name: 'd', value: 1 },
+    ],
   })
 })
 

@@ -269,6 +269,7 @@ export function layerToggleManipulator(
     .toVar(varName, onValue)
     .toAfterKeyUp(toSetVar(varName, offValue))
     .toIfAlone({ key_code })
+    .condition(ifVar(varName, onValue).unless())
   if (conditions?.length) manipulator.condition(...conditions)
   if (!context) return mergeManipulator(manipulator.build())
 
