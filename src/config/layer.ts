@@ -20,6 +20,7 @@ import {
   parseFromModifierOverload,
 } from '../utils/from-modifier-overload.ts'
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias.ts'
+import { leaderModeEscape, LeaderModeOptions } from '../utils/leader-mode.ts'
 import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
 import { toArray } from '../utils/to-array.ts'
 
@@ -94,6 +95,8 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
 
   private layerNotification?: boolean | string
 
+  private leaderModeOptions?: LeaderModeOptions
+
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
     varName?: string,
@@ -152,18 +155,45 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   }
 
   /** Set the notification when the layer is active. */
-  public notification(v: boolean | string) {
+  public notification(v: boolean | string = true) {
     this.layerNotification = v
+    return this
+  }
+
+  /** Set leader mode. Default escape keys: ['escape', 'caps_lock']. */
+  public leaderMode(v: boolean | LeaderModeOptions = true) {
+    if (v === true) {
+      this.leaderModeOptions = { escape: ['escape', 'caps_lock'] }
+    } else if (!v) {
+      this.leaderModeOptions = undefined
+    } else {
+      this.leaderModeOptions = v
+    }
     return this
   }
 
   public build(context?: BuildContext): Rule {
     const rule = super.build(context)
 
-    const conditions = this.conditions
-      .filter((v) => v !== this.layerCondition)
-      .map(buildCondition)
+    // Leader mode
+    if (this.leaderModeOptions) {
+      const toOff = [toSetVar(this.varName, this.offValue)]
+      if (this.layerNotification) {
+        toOff.push(toRemoveNotificationMessage(notificationId(this.varName)))
+      }
+      rule.manipulators.forEach(
+        (v) => v.type === 'basic' && (v.to = (v.to || []).concat(toOff)),
+      )
+      rule.manipulators.push(
+        ...leaderModeEscape(
+          this.leaderModeOptions.escape,
+          ifVar(this.varName, this.onValue),
+          toOff,
+        ),
+      )
+    }
 
+    // Modifier optional any
     if (
       this.layerModifiers?.mandatory?.length ||
       this.layerModifiers?.optional?.length
@@ -174,6 +204,10 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
       )
     }
 
+    // Layer toggle keys
+    const conditions = this.conditions
+      .filter((v) => v !== this.layerCondition)
+      .map(buildCondition)
     for (const key_code of this.keys) {
       rule.manipulators = [
         ...layerToggleManipulator(
@@ -189,6 +223,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
           this.layerNotification === true
             ? this.ruleDescription
             : this.layerNotification || undefined,
+          this.leaderModeOptions,
         ),
         ...rule.manipulators,
       ]
@@ -236,6 +271,7 @@ export function layerToggleManipulator(
   layerKeyManipulator?: BasicManipulatorBuilder,
   replaceLayerKeyToIfAlone?: boolean,
   notification?: string,
+  leaderMode?: LeaderModeOptions,
 ) {
   function mergeManipulator<T extends BasicManipulator | BasicManipulator[]>(
     to: T,
@@ -279,15 +315,14 @@ export function layerToggleManipulator(
 
   const manipulator = map({ key_code, modifiers })
     .toVar(varName, onValue)
-    .toAfterKeyUp(toSetVar(varName, offValue))
     .toIfAlone({ key_code })
     .condition(ifVar(varName, onValue).unless())
+  if (!leaderMode) manipulator.toAfterKeyUp(toSetVar(varName, offValue))
   if (conditions?.length) manipulator.condition(...conditions)
   if (notification) {
-    const id = `layer-${varName}`
-    manipulator
-      .toNotificationMessage(id, notification)
-      .toAfterKeyUp(toRemoveNotificationMessage(id))
+    const id = notificationId(varName)
+    manipulator.toNotificationMessage(id, notification)
+    if (!leaderMode) manipulator.toAfterKeyUp(toRemoveNotificationMessage(id))
   }
   if (!context) return mergeManipulator(manipulator.build())
 
@@ -321,4 +356,8 @@ function isModifiersAny({
   if (mandatory?.length === 1 && mandatory[0] === 'any') return 'mandatory'
   if (optional?.length === 1 && optional[0] === 'any') return 'optional'
   return null
+}
+
+function notificationId(varName: string) {
+  return `layer-${varName}`
 }
