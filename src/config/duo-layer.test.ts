@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
 import {
   BasicManipulator,
@@ -13,6 +13,7 @@ import { ifVar } from './condition'
 import { defaultDuoLayerParameters, duoLayer } from './duo-layer'
 import { map } from './from'
 import {
+  toKey,
   toNotificationMessage,
   toRemoveNotificationMessage,
   toSetVar,
@@ -41,6 +42,7 @@ test('duoLayer()', () => {
       'basic.simultaneous_threshold_milliseconds':
         defaultDuoLayerParameters['duo_layer.threshold_milliseconds'],
     },
+    conditions: [{ type: 'variable_unless', name: 'duo-layer-1-2', value: 1 }],
   })
   // Add variable condition to manipulators
   expect(manipulators[1].conditions).toEqual([ifVar('duo-layer-1-2').build()])
@@ -82,6 +84,7 @@ test('duoLayer().condition()', () => {
   const rule = duoLayer(1, 2).condition(ifVar('c')).build()
   const manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[0].conditions).toEqual([
+    { type: 'variable_unless', name: 'duo-layer-1-2', value: 1 },
     { type: 'variable_if', name: 'c', value: 1 },
   ])
 })
@@ -182,5 +185,115 @@ test('duoLayer().toIfActivated() toIfDeactivated()', () => {
   >
   expect(from.simultaneous_options?.to_after_key_up?.[1]).toEqual({
     set_notification_message: { id: 'testId', text: '' },
+  })
+})
+
+describe('duoLayer().leaderMode()', () => {
+  test('leader() with defaults', () => {
+    const rule = duoLayer('a', 'b')
+      .leaderMode()
+      .manipulators({ 1: toKey(2), 3: toKey(4) })
+      .build()
+
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(5)
+
+    // layer toggle
+    const from = manipulators[0].from as FromSimultaneousEvent
+    expect(from.simultaneous_options?.to_after_key_up).toEqual([])
+
+    const ifOn = ifVar('duo-layer-a-b', 1).build()
+    const toOff = toSetVar('duo-layer-a-b', 0)
+
+    // layer keys
+    expect(manipulators[1].to?.[1]).toEqual(toOff)
+    expect(manipulators[2].to?.[1]).toEqual(toOff)
+    // escape keys
+    expect(manipulators[3].from).toEqual({ key_code: 'escape' })
+    expect(manipulators[3].to?.[0]).toEqual(toOff)
+    expect(manipulators[3].conditions).toEqual([ifOn])
+    expect(manipulators[4].from).toEqual({ key_code: 'caps_lock' })
+    expect(manipulators[4].to?.[0]).toEqual(toOff)
+    expect(manipulators[4].conditions).toEqual([ifOn])
+  })
+
+  test('leader() set escape keys', () => {
+    const rule = duoLayer('a', 'b').leaderMode({ escape: 'spacebar' }).build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators[1].from).toEqual({ key_code: 'spacebar' })
+    expect(manipulators[1].to?.[0]).toEqual(toSetVar('duo-layer-a-b', 0))
+    expect(manipulators[1].conditions).toEqual([
+      ifVar('duo-layer-a-b', 1).build(),
+    ])
+
+    const rule2 = duoLayer('c', 'd')
+      .leaderMode({ escape: ['spacebar', { pointing_button: 2 }] })
+      .build()
+    const manipulators2 = rule2.manipulators as BasicManipulator[]
+    expect(manipulators2[1].from).toEqual({ key_code: 'spacebar' })
+    expect(manipulators2[1].to?.[0]).toEqual(toSetVar('duo-layer-c-d', 0))
+    expect(manipulators2[1].conditions).toEqual([
+      ifVar('duo-layer-c-d', 1).build(),
+    ])
+    expect(manipulators2[2].from).toEqual({ pointing_button: 2 })
+    expect(manipulators2[2].to?.[0]).toEqual(toSetVar('duo-layer-c-d', 0))
+    expect(manipulators2[2].conditions).toEqual([
+      ifVar('duo-layer-c-d', 1).build(),
+    ])
+  })
+
+  test('leader() with notification()', () => {
+    const rule = duoLayer('a', 'b', 'v')
+      .leaderMode()
+      .notification()
+      .manipulators({ 1: toKey(2) })
+      .build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(4)
+
+    // layer toggle
+    const from = manipulators[0].from as FromSimultaneousEvent
+    expect(from.simultaneous_options?.to_after_key_up).toEqual([])
+    expect(manipulators[0].to?.[1]).toEqual(
+      toNotificationMessage('duo-layer-v', 'DuoLayer v'),
+    )
+
+    const remove = toRemoveNotificationMessage('duo-layer-v')
+    // layer key
+    expect(manipulators[1].to?.[2]).toEqual(remove)
+    // escape keys
+    expect(manipulators[2].to?.[1]).toEqual(remove)
+    expect(manipulators[3].to?.[1]).toEqual(remove)
+
+    const rule2 = duoLayer('c', 'd').notification('Test CD').build()
+    const manipulators2 = rule2.manipulators as BasicManipulator[]
+    expect(manipulators2[0].to?.[1]).toEqual(
+      toNotificationMessage('duo-layer-duo-layer-c-d', 'Test CD'),
+    )
+  })
+
+  test('leader() with sticky', () => {
+    const rule = duoLayer('a', 'b')
+      .leaderMode({ sticky: true })
+      .notification()
+      .manipulators({ 1: toKey(2) })
+      .build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(4)
+
+    const ifOn = ifVar('duo-layer-a-b', 1).build()
+    const toOff = toSetVar('duo-layer-a-b', 0)
+    const remove = toRemoveNotificationMessage('duo-layer-duo-layer-a-b')
+
+    // layer key
+    expect(manipulators[1].to?.length).toEqual(1)
+    expect(manipulators[1].conditions).toEqual([ifOn])
+    // escape keys
+    expect(manipulators[2].conditions).toEqual([ifOn])
+    expect(manipulators[2].to?.[0]).toEqual(toOff)
+    expect(manipulators[2].to?.[1]).toEqual(remove)
+    expect(manipulators[3].conditions).toEqual([ifOn])
+    expect(manipulators[3].to?.[0]).toEqual(toOff)
+    expect(manipulators[3].to?.[1]).toEqual(remove)
   })
 })
