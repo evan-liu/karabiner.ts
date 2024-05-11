@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
 import { BasicManipulator } from '../karabiner/karabiner-config'
 import {
@@ -10,10 +10,15 @@ import {
 import { complexModifications } from './complex-modifications'
 import { ifVar } from './condition'
 import { map } from './from'
-import { hyperLayer, layer } from './layer'
+import { hyperLayer, layer, LayerRuleBuilder } from './layer'
 import { mouseMotionToScroll } from './mouse-motion-to-scroll'
 import { simlayer } from './simlayer'
-import { toKey } from './to'
+import {
+  toKey,
+  toNotificationMessage,
+  toRemoveNotificationMessage,
+  toSetVar,
+} from './to'
 
 test('layer()', () => {
   const rule = layer('a', 'b-mode', 2, -1)
@@ -242,6 +247,18 @@ test('layer().modifier()', () => {
   ).toThrow()
 })
 
+test('layer().modifier() to_if_alone', () => {
+  expect(toIfAlone(layer('a'))).toEqual([{ key_code: 'a' }])
+  expect(toIfAlone(layer('a').modifiers('??'))).toEqual([{ key_code: 'a' }])
+  expect(toIfAlone(layer('a').modifiers('⌘'))).toBeUndefined()
+  expect(toIfAlone(layer('a').modifiers('Hyper'))).toBeUndefined()
+
+  function toIfAlone(builder: LayerRuleBuilder) {
+    const rule = builder.manipulators({ 1: toKey(2) }).build()
+    return (rule.manipulators[0] as BasicManipulator).to_if_alone
+  }
+})
+
 // https://github.com/evan-liu/karabiner.ts/issues/89
 test('layer().modifier(??)', () => {
   expect(
@@ -277,7 +294,7 @@ test('layer().modifier(??)', () => {
 })
 
 test('layer() notification', () => {
-  const rule = layer('a').notification(true).build()
+  const rule = layer('a').notification().build()
   const manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(1)
   expect(manipulators[0].to?.[1]).toEqual({
@@ -297,5 +314,106 @@ test('layer() notification', () => {
       id: 'layer-layer-a',
       text: 'test-b',
     },
+  })
+})
+
+describe('layer() leader mode', () => {
+  test('leader() with defaults', () => {
+    const rule = layer('a')
+      .leaderMode()
+      .manipulators({ 1: toKey(2), 3: toKey(4) })
+      .build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(5)
+
+    // layer toggle
+    expect(manipulators[0].to_after_key_up).toBeUndefined()
+    expect(manipulators[0].to_if_alone).toBeUndefined()
+
+    const ifOn = ifVar('layer-a', 1).build()
+    const toOff = toSetVar('layer-a', 0)
+    // layer keys
+    expect(manipulators[1].to?.[1]).toEqual(toOff)
+    expect(manipulators[2].to?.[1]).toEqual(toOff)
+    // escape keys
+    expect(manipulators[3].from).toEqual({ key_code: 'escape' })
+    expect(manipulators[3].to?.[0]).toEqual(toOff)
+    expect(manipulators[3].conditions).toEqual([ifOn])
+    expect(manipulators[4].from).toEqual({ key_code: 'caps_lock' })
+    expect(manipulators[4].to?.[0]).toEqual(toOff)
+    expect(manipulators[4].conditions).toEqual([ifOn])
+  })
+
+  test('leader() set escape keys', () => {
+    const rule = layer('a').leaderMode({ escape: 'spacebar' }).build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators[1].from).toEqual({ key_code: 'spacebar' })
+    expect(manipulators[1].to?.[0]).toEqual(toSetVar('layer-a', 0))
+    expect(manipulators[1].conditions).toEqual([ifVar('layer-a', 1).build()])
+
+    const rule2 = layer('b')
+      .leaderMode({ escape: ['spacebar', { pointing_button: 2 }] })
+      .build()
+    const manipulators2 = rule2.manipulators as BasicManipulator[]
+    expect(manipulators2[1].from).toEqual({ key_code: 'spacebar' })
+    expect(manipulators2[1].to?.[0]).toEqual(toSetVar('layer-b', 0))
+    expect(manipulators2[1].conditions).toEqual([ifVar('layer-b', 1).build()])
+    expect(manipulators2[2].from).toEqual({ pointing_button: 2 })
+    expect(manipulators2[2].to?.[0]).toEqual(toSetVar('layer-b', 0))
+    expect(manipulators2[2].conditions).toEqual([ifVar('layer-b', 1).build()])
+  })
+
+  test('leader() with notification()', () => {
+    const rule = layer('a', 'v')
+      .leaderMode()
+      .notification()
+      .manipulators({ 1: toKey(2) })
+      .build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(4)
+
+    // layer toggle
+    expect(manipulators[0].to_after_key_up).toBeUndefined()
+    expect(manipulators[0].to?.[1]).toEqual(
+      toNotificationMessage('layer-v', 'Layer - v'),
+    )
+
+    const remove = toRemoveNotificationMessage('layer-v')
+    // layer key
+    expect(manipulators[1].to?.[2]).toEqual(remove)
+    // escape keys
+    expect(manipulators[2].to?.[1]).toEqual(remove)
+    expect(manipulators[3].to?.[1]).toEqual(remove)
+
+    const rule2 = layer('b').notification('Test B').build()
+    const manipulators2 = rule2.manipulators as BasicManipulator[]
+    expect(manipulators2[0].to?.[1]).toEqual(
+      toNotificationMessage('layer-layer-b', 'Test B'),
+    )
+  })
+
+  test('leader() with sticky', () => {
+    const rule = layer('a')
+      .leaderMode({ sticky: true })
+      .notification()
+      .manipulators({ 1: toKey(2) })
+      .build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(4)
+
+    const ifOn = ifVar('layer-a', 1).build()
+    const toOff = toSetVar('layer-a', 0)
+    const remove = toRemoveNotificationMessage('layer-layer-a')
+
+    // layer key
+    expect(manipulators[1].to?.length).toEqual(1)
+    expect(manipulators[1].conditions).toEqual([ifOn])
+    // escape keys
+    expect(manipulators[2].conditions).toEqual([ifOn])
+    expect(manipulators[2].to?.[0]).toEqual(toOff)
+    expect(manipulators[2].to?.[1]).toEqual(remove)
+    expect(manipulators[3].conditions).toEqual([ifOn])
+    expect(manipulators[3].to?.[0]).toEqual(toOff)
+    expect(manipulators[3].to?.[1]).toEqual(remove)
   })
 })
