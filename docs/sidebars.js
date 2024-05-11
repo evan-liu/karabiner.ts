@@ -13,6 +13,7 @@ const sidebars = {
         'rules/simlayer',
         'rules/hyper-layer',
         'rules/duo-layer',
+        'rules/leader-mode',
       ],
     },
     {
