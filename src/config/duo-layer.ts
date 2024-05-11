@@ -7,6 +7,11 @@ import {
   ToVariable,
 } from '../karabiner/karabiner-config.ts'
 import { BuildContext } from '../utils/build-context.ts'
+import {
+  defaultLeaderModeOptions,
+  leaderModeEscape,
+  LeaderModeOptions,
+} from '../utils/leader-mode.ts'
 
 import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
 import { LayerKeyParam } from './layer.ts'
@@ -44,6 +49,8 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
   private ifActivated = [] as ToEvent[]
   private ifDeactivated = [] as ToEvent[]
 
+  private leaderModeOptions?: LeaderModeOptions
+
   constructor(
     private readonly key1: LayerKeyParam,
     private readonly key2: LayerKeyParam,
@@ -74,7 +81,7 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
   }
 
   /** Set the notification when the layer is active. */
-  public notification(v: boolean | string) {
+  public notification(v: boolean | string = true) {
     this.layerNotification = v
     return this
   }
@@ -88,6 +95,18 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
   /** The ToEvents to trigger when the layer is deactivated */
   public toIfDeactivated(event: ToEvent) {
     this.ifDeactivated.push(event)
+    return this
+  }
+
+  /** Set leader mode. Default escape keys: ['escape', 'caps_lock']. */
+  public leaderMode(v: boolean | LeaderModeOptions = true) {
+    if (v === true) {
+      this.leaderModeOptions = defaultLeaderModeOptions
+    } else if (!v) {
+      this.leaderModeOptions = undefined
+    } else {
+      this.leaderModeOptions = { ...defaultLeaderModeOptions, ...v }
+    }
     return this
   }
 
@@ -106,19 +125,40 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
       .filter((v) => v !== this.layerCondition)
       .map(buildCondition)
 
-    // Layer toggle
-    const to = [toSetVar(this.varName, this.onValue), ...this.ifActivated]
-    const toAfterKeyUp = [
+    const activate = [toSetVar(this.varName, this.onValue), ...this.ifActivated]
+    const deactivate = [
       toSetVar(this.varName, this.offValue),
-      ...(this.simultaneousOptions.to_after_key_up || []),
       ...this.ifDeactivated,
     ]
+
     if (notification) {
       const id = `duo-layer-${this.varName}`
       const message =
         notification === true ? this.ruleDescription : notification
-      to.push(toNotificationMessage(id, message))
-      toAfterKeyUp.push(toRemoveNotificationMessage(id))
+      activate.push(toNotificationMessage(id, message))
+      deactivate.push(toRemoveNotificationMessage(id))
+    }
+
+    // Leader mode
+    if (this.leaderModeOptions) {
+      if (!this.leaderModeOptions.sticky) {
+        rule.manipulators.forEach(
+          (v) => v.type === 'basic' && (v.to = (v.to || []).concat(deactivate)),
+        )
+      }
+      rule.manipulators.push(
+        ...leaderModeEscape(
+          this.leaderModeOptions.escape,
+          ifVar(this.varName, this.onValue),
+          deactivate,
+        ),
+      )
+    }
+
+    // Layer toggle
+    const toAfterKeyUp = this.simultaneousOptions.to_after_key_up || []
+    if (!this.leaderModeOptions) {
+      toAfterKeyUp.push(...deactivate)
     }
     const manipulator = mapSimultaneous(
       [this.key1, this.key2],
@@ -129,7 +169,8 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
       threshold,
     )
       .modifiers('??')
-      .to(to)
+      .to(activate)
+      .condition(ifVar(this.varName, this.onValue).unless())
     if (conditions.length) {
       manipulator.condition(...conditions)
     }

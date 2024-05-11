@@ -4,7 +4,7 @@ title: layer().leaderMode()
 
 # Leader Mode
 
-`layer()` (or `hyperLayer()` / `modifierLayer()`) has a "leader mode", which works 
+`layer()` (or `hyperLayer()` / `modifierLayer()` / `duoLayer()`) has a "leader mode", which works 
 similar to Vim leader keys: The layer stays activated even after the layer key is 
 released, until one of the action or escape keys is pressed.
 
