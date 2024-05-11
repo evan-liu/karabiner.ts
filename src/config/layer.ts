@@ -20,7 +20,11 @@ import {
   parseFromModifierOverload,
 } from '../utils/from-modifier-overload.ts'
 import { getKeyWithAlias, ModifierKeyAlias } from '../utils/key-alias.ts'
-import { leaderModeEscape, LeaderModeOptions } from '../utils/leader-mode.ts'
+import {
+  defaultLeaderModeOptions,
+  leaderModeEscape,
+  LeaderModeOptions,
+} from '../utils/leader-mode.ts'
 import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
 import { toArray } from '../utils/to-array.ts'
 
@@ -163,11 +167,11 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   /** Set leader mode. Default escape keys: ['escape', 'caps_lock']. */
   public leaderMode(v: boolean | LeaderModeOptions = true) {
     if (v === true) {
-      this.leaderModeOptions = { escape: ['escape', 'caps_lock'] }
+      this.leaderModeOptions = defaultLeaderModeOptions
     } else if (!v) {
       this.leaderModeOptions = undefined
     } else {
-      this.leaderModeOptions = v
+      this.leaderModeOptions = { ...defaultLeaderModeOptions, ...v }
     }
     return this
   }
@@ -181,9 +185,11 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
       if (this.layerNotification) {
         toOff.push(toRemoveNotificationMessage(notificationId(this.varName)))
       }
-      rule.manipulators.forEach(
-        (v) => v.type === 'basic' && (v.to = (v.to || []).concat(toOff)),
-      )
+      if (!this.leaderModeOptions.sticky) {
+        rule.manipulators.forEach(
+          (v) => v.type === 'basic' && (v.to = (v.to || []).concat(toOff)),
+        )
+      }
       rule.manipulators.push(
         ...leaderModeEscape(
           this.leaderModeOptions.escape,

@@ -9,6 +9,12 @@ import {
 export type LeaderModeOptions = {
   /** Default ['escape', 'caps_lock']. */
   escape?: FromKeyParam | FromEvent | Array<FromKeyParam | FromEvent>
+  /** Keep layer on until one of the `escape` keys pressed. */
+  sticky?: boolean
+}
+
+export const defaultLeaderModeOptions: LeaderModeOptions = {
+  escape: ['escape', 'caps_lock'],
 }
 
 export function leaderModeEscape(

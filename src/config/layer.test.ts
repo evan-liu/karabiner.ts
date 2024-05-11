@@ -350,7 +350,7 @@ describe('layer() leader mode', () => {
     expect(manipulators2[2].conditions).toEqual([ifVar('layer-b', 1).build()])
   })
 
-  test('leader() with notification()', async () => {
+  test('leader() with notification()', () => {
     const rule = layer('a', 'v')
       .leaderMode()
       .notification()
@@ -377,5 +377,30 @@ describe('layer() leader mode', () => {
     expect(manipulators2[0].to?.[1]).toEqual(
       toNotificationMessage('layer-layer-b', 'Test B'),
     )
+  })
+
+  test('leader() with sticky', () => {
+    const rule = layer('a')
+      .leaderMode({ sticky: true })
+      .notification()
+      .manipulators({ 1: toKey(2) })
+      .build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(4)
+
+    const ifOn = ifVar('layer-a', 1).build()
+    const toOff = toSetVar('layer-a', 0)
+    const remove = toRemoveNotificationMessage('layer-layer-a')
+
+    // layer key
+    expect(manipulators[1].to?.length).toEqual(1)
+    expect(manipulators[1].conditions).toEqual([ifOn])
+    // escape keys
+    expect(manipulators[2].conditions).toEqual([ifOn])
+    expect(manipulators[2].to?.[0]).toEqual(toOff)
+    expect(manipulators[2].to?.[1]).toEqual(remove)
+    expect(manipulators[3].conditions).toEqual([ifOn])
+    expect(manipulators[3].to?.[0]).toEqual(toOff)
+    expect(manipulators[3].to?.[1]).toEqual(remove)
   })
 })
