@@ -1,5 +1,6 @@
 name: 📝 Publish Docs
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -19,7 +20,9 @@ jobs:
         with:
           cache: 'npm'
 
-      - run: npm ci
+      - run: rm package-lock.json
+      - run: npm i
+
       - run: npm run build
       - uses: ./.github/actions/copy-examples-to-docs
 
