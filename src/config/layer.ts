@@ -321,16 +321,24 @@ export function layerToggleManipulator(
 
   const manipulator = map({ key_code, modifiers })
     .toVar(varName, onValue)
-    .toIfAlone({ key_code })
     .condition(ifVar(varName, onValue).unless())
-  if (!leaderMode) manipulator.toAfterKeyUp(toSetVar(varName, offValue))
-  if (conditions?.length) manipulator.condition(...conditions)
+  if (!modifiers?.mandatory?.length && !leaderMode) {
+    manipulator.toIfAlone({ key_code })
+  }
+  if (!leaderMode) {
+    manipulator.toAfterKeyUp(toSetVar(varName, offValue))
+  }
+  if (conditions?.length) {
+    manipulator.condition(...conditions)
+  }
   if (notification) {
     const id = notificationId(varName)
     manipulator.toNotificationMessage(id, notification)
     if (!leaderMode) manipulator.toAfterKeyUp(toRemoveNotificationMessage(id))
   }
-  if (!context) return mergeManipulator(manipulator.build())
+  if (!context) {
+    return mergeManipulator(manipulator.build())
+  }
 
   const key = [
     `layer_${key_code}`,

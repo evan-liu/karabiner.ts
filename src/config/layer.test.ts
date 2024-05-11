@@ -10,7 +10,7 @@ import {
 import { complexModifications } from './complex-modifications'
 import { ifVar } from './condition'
 import { map } from './from'
-import { hyperLayer, layer } from './layer'
+import { hyperLayer, layer, LayerRuleBuilder } from './layer'
 import { mouseMotionToScroll } from './mouse-motion-to-scroll'
 import { simlayer } from './simlayer'
 import {
@@ -247,6 +247,18 @@ test('layer().modifier()', () => {
   ).toThrow()
 })
 
+test('layer().modifier() to_if_alone', () => {
+  expect(toIfAlone(layer('a'))).toEqual([{ key_code: 'a' }])
+  expect(toIfAlone(layer('a').modifiers('??'))).toEqual([{ key_code: 'a' }])
+  expect(toIfAlone(layer('a').modifiers('⌘'))).toBeUndefined()
+  expect(toIfAlone(layer('a').modifiers('Hyper'))).toBeUndefined()
+
+  function toIfAlone(builder: LayerRuleBuilder) {
+    const rule = builder.manipulators({ 1: toKey(2) }).build()
+    return (rule.manipulators[0] as BasicManipulator).to_if_alone
+  }
+})
+
 // https://github.com/evan-liu/karabiner.ts/issues/89
 test('layer().modifier(??)', () => {
   expect(
@@ -316,6 +328,7 @@ describe('layer() leader mode', () => {
 
     // layer toggle
     expect(manipulators[0].to_after_key_up).toBeUndefined()
+    expect(manipulators[0].to_if_alone).toBeUndefined()
 
     const ifOn = ifVar('layer-a', 1).build()
     const toOff = toSetVar('layer-a', 0)
