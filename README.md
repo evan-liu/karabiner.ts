@@ -28,6 +28,11 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
    to save the config for later editing)
 2. Copy the generated JSON then [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules).
 
+**Note**: Importing JSON to Karabiner-Elements is only needed when using the Online Editor.
+`karabiner.ts` writes to `~/.config/karabiner/karabiner.json` if using with Node.js or Deno.
+
+> Karabiner-Elements watches ~/.config/karabiner/karabiner.json and reloads it if updated.
+
 ## Using Node.js
 
 [![npm](https://img.shields.io/npm/v/karabiner.ts.svg)](https://www.npmjs.com/package/karabiner.ts)
