@@ -19,6 +19,7 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 ## Learn More
 
 - [📝 Docs](https://evan-liu.github.io/karabiner.ts/)
+- [💡 In-the-wild usage](https://github.com/evan-liu/karabiner.ts/network/dependents)
 
 ## Using the Online Editor
 
