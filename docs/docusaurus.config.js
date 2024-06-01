@@ -58,6 +58,13 @@ const config = {
             label: 'online editor',
             position: 'left',
           },
+          {
+            type: 'html',
+            value: `<a href="https://github.com/evan-liu/karabiner.ts" style="display: flex">
+              <img src="https://img.shields.io/github/stars/evan-liu/karabiner.ts" alt="GitHub Stars">
+            </a>`,
+            position: 'right',
+          },
         ],
       },
       footer: {},
