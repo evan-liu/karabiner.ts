@@ -77,17 +77,19 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
-  test('to$(), toApp(), toPaste()', () => {
+  test('to$(), toApp(), toNewApp(), toPaste()', () => {
     const to = new BasicManipulatorBuilder(from)
       .to$('cd')
       .toApp('Finder')
       .toApp('Xcode.app')
+      .toNewApp('Terminal')
       .toPaste('test')
       .build()[0].to as Array<{ shell_command: string }>
     expect(to[0]).toEqual({ shell_command: 'cd' })
     expect(to[1]).toEqual({ shell_command: 'open -a "Finder".app' })
     expect(to[2]).toEqual({ shell_command: 'open -a "Xcode".app' })
-    expect(to[3].shell_command).toMatch('"test"')
+    expect(to[3]).toEqual({ shell_command: 'open -n -a "Terminal".app' })
+    expect(to[4].shell_command).toMatch('"test"')
   })
 
   test('toApp() with space in name', () => {

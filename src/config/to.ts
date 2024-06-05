@@ -106,6 +106,12 @@ export function toApp(app: string): ToEvent {
   return to$(`open -a "${matched?.[1] || app}".app`)
 }
 
+/** Create ToEvent with shell_command `open -n -a {app}.app` */
+export function toNewApp(app: string): ToEvent {
+  const matched = app.match(/^"?(.*?)(.app)?"?$/)
+  return to$(`open -n -a "${matched?.[1] || app}".app`)
+}
+
 /** Create ToEvent with shell_command to paste {text} */
 export function toPaste(text: string): ToEvent {
   return to$(`osascript -e '

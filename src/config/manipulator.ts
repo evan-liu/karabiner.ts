@@ -24,6 +24,7 @@ import { toTypeSequence } from './to-type-sequence.ts'
 import {
   to$,
   toApp,
+  toNewApp,
   toCgEventDoubleClick,
   toConsumerKey,
   toHyper,
@@ -137,6 +138,12 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   /** Map to `$ open -a {app}.app` */
   toApp(app: string): this {
     this.addToEvent(toApp(app))
+    return this
+  }
+
+  /** Map to `$ open -n -a {app}.app` */
+  toNewApp(app: string): this {
+    this.addToEvent(toNewApp(app))
     return this
   }
 
