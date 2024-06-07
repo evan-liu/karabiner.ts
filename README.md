@@ -16,6 +16,11 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 - Strong-typed abstractions and key aliases with IDE support
 - Structured config files instead of one big file
 
+And more features (abstractions)
+([hyperLayer](https://evan-liu.github.io/karabiner.ts/rules/hyper-layer),
+[duoLayer](https://evan-liu.github.io/karabiner.ts/rules/duo-layer),
+[leaderMode](https://evan-liu.github.io/karabiner.ts/rules/leader-mode), ...).
+
 ## Learn More
 
 - [📝 Docs](https://evan-liu.github.io/karabiner.ts/)
