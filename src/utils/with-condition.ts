@@ -10,6 +10,11 @@ import { Condition, Manipulator } from '../karabiner/karabiner-config.ts'
  * A higher-order function to add condition to a group of manipulators
  * Note: The `Manipulator[]` return type is deprecated and will be removed in v2.
  *       Please use the ManipulatorBuilder return type.
+ *
+ * @example
+ * withCondition(ifVar('v1'), ifVar('v2'))([
+ *  //...
+ * ])
  */
 export function withCondition(
   ...conditions: Array<Condition | ConditionBuilder>
