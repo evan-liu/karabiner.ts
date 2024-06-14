@@ -9,7 +9,7 @@ const darkCodeTheme = themes.dracula
 const config = {
   title: 'karabiner.ts',
 
-  url: 'https://karabiner.ts.evan-liu.dev',
+  url: 'https://karabiner.ts.evanliu.dev',
   baseUrl: '/',
 
   organizationName: 'evan-liu',
@@ -45,6 +45,9 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        respectPrefersColorScheme: true,
+      },
       navbar: {
         title: '📝 Docs',
         items: [
