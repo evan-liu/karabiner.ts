@@ -23,7 +23,7 @@ And more features (abstractions)
 
 ## Learn More
 
-- [📝 Docs](https://evan-liu.github.io/karabiner.ts/)
+- [📝 Docs](https://karabiner.ts.evanliu.dev)
 - [🔧 My Config](https://github.com/evan-liu/karabiner-config/blob/main/karabiner-config.ts)
 - [💡 In-the-wild usage](https://github.com/evan-liu/karabiner.ts/network/dependents)
 
