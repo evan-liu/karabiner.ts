@@ -153,8 +153,12 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   }
 
   /** Map to setting a variable */
-  toVar(name: string, value: ToVariable['value'] = 1): this {
-    this.addToEvent(toSetVar(name, value))
+  toVar(
+    name: string,
+    value: ToVariable['value'] = 1,
+    key_up_value?: ToVariable['key_up_value'],
+  ): this {
+    this.addToEvent(toSetVar(name, value, key_up_value))
     return this
   }
 

@@ -156,8 +156,9 @@ export function toInputSource(inputSource: ToInputSource): ToEvent {
 export function toSetVar(
   name: string,
   value: ToVariable['value'] = 1,
+  key_up_value?: ToVariable['key_up_value'],
 ): ToEvent {
-  return { set_variable: { name, value } }
+  return { set_variable: { name, value, key_up_value } }
 }
 
 /** Create ToEvent with set_notification_message */
