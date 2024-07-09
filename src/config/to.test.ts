@@ -35,6 +35,9 @@ test('setVar()', () => {
   expect(toSetVar('test', true)).toEqual({
     set_variable: { name: 'test', value: true },
   })
+  expect(toSetVar('test', true, false)).toEqual({
+    set_variable: { name: 'test', value: true, key_up_value: false },
+  })
 })
 
 test('toPlaySound()', () => {
