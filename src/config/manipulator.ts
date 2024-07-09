@@ -42,6 +42,7 @@ import {
   toSleepSystem,
   toStickyModifier,
   toSuperHyper,
+  toUnsetVar,
 } from './to.ts'
 
 export interface ManipulatorBuilder {
@@ -157,8 +158,15 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     name: string,
     value: ToVariable['value'] = 1,
     key_up_value?: ToVariable['key_up_value'],
+    type?: ToVariable['type'],
   ): this {
-    this.addToEvent(toSetVar(name, value, key_up_value))
+    this.addToEvent(toSetVar(name, value, key_up_value, type))
+    return this
+  }
+
+  /** Map to unsetting a variable */
+  toUnsetVar(name: string) {
+    this.addToEvent(toUnsetVar(name))
     return this
   }
 

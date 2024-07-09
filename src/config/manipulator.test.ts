@@ -124,6 +124,20 @@ describe('ManipulatorBuilder', () => {
       { set_variable: { name: 'a', value: 1 } },
       { set_variable: { name: 'b', value: 2 } },
     ])
+    expect(
+      new BasicManipulatorBuilder(from).toVar('a', 1, 2).build()[0].to,
+    ).toEqual([{ set_variable: { name: 'a', value: 1, key_up_value: 2 } }])
+    expect(
+      new BasicManipulatorBuilder(from).toVar('a', 1, 2, 'unset').build()[0].to,
+    ).toEqual([
+      { set_variable: { name: 'a', value: 1, key_up_value: 2, type: 'unset' } },
+    ])
+  })
+
+  test('toUnsetVar()', () => {
+    expect(
+      new BasicManipulatorBuilder(from).toUnsetVar('a').build()[0].to,
+    ).toEqual([{ set_variable: { name: 'a', type: 'unset' } }])
   })
 
   test('toNotificationMessage()', () => {

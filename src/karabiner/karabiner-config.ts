@@ -77,8 +77,9 @@ export type ToInputSource = {
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/set-variable/ */
 export type ToVariable = {
   name: string
-  value: number | boolean | string
+  value?: number | boolean | string
   key_up_value?: number | boolean | string
+  type?: 'set' | 'unset'
 }
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/mouse-key/ */

@@ -157,8 +157,14 @@ export function toSetVar(
   name: string,
   value: ToVariable['value'] = 1,
   key_up_value?: ToVariable['key_up_value'],
+  type?: ToVariable['type'],
 ): ToEvent {
-  return { set_variable: { name, value, key_up_value } }
+  return { set_variable: { name, value, key_up_value, type } }
+}
+
+/** Create ToEvent with set_variable: { type: 'unset' } */
+export function toUnsetVar(name: string): ToEvent {
+  return { set_variable: { name, type: 'unset' } }
 }
 
 /** Create ToEvent with set_notification_message */
