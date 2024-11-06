@@ -32,10 +32,19 @@ test('layer()', () => {
   expect(manipulators[0]).toEqual({
     type: 'basic',
     from: { key_code: 'a' },
-    to: [{ set_variable: { name: 'b-mode', value: 2 } }],
-    to_after_key_up: [{ set_variable: { name: 'b-mode', value: -1 } }],
+    to: [
+      { set_variable: { name: 'b-mode', value: 2 } },
+      { set_variable: { name: '__layer', value: 1 } },
+    ],
+    to_after_key_up: [
+      { set_variable: { name: 'b-mode', value: -1 } },
+      { set_variable: { name: '__layer', value: 0 } },
+    ],
     to_if_alone: [{ key_code: 'a' }],
-    conditions: [{ type: 'variable_unless', name: 'b-mode', value: 2 }],
+    conditions: [
+      { type: 'variable_unless', name: 'b-mode', value: 2 },
+      { type: 'variable_unless', name: '__layer', value: 1 },
+    ],
   } as BasicManipulator)
   // Add variable condition to manipulators
   expect(manipulators[1].conditions).toEqual([
@@ -85,6 +94,7 @@ test('layer() conditions', () => {
   const manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[0].conditions).toEqual([
     { type: 'variable_unless', name: 'b', value: 1 },
+    { type: 'variable_unless', name: '__layer', value: 1 },
     { type: 'variable_if', name: 'c', value: 1 },
   ])
 })
@@ -115,10 +125,12 @@ test('multiple layer() by same key ', () => {
   const manipulator = rules[0].manipulators[0] as BasicManipulator
   expect(manipulator.to).toEqual([
     { set_variable: { name: 'v1', value: 1 } },
+    { set_variable: { name: '__layer', value: 1 } },
     { set_variable: { name: 'v2', value: 1 } },
   ])
   expect(manipulator.to_after_key_up).toEqual([
     { set_variable: { name: 'v1', value: 0 } },
+    { set_variable: { name: '__layer', value: 0 } },
     { set_variable: { name: 'v2', value: 0 } },
   ])
 
@@ -137,15 +149,25 @@ test('layer().configKey()', () => {
   expect(manipulators[0]).toEqual({
     type: 'basic',
     from: { key_code: 'a' },
-    to: [{ set_variable: { name: 'v1', value: 1 } }, { key_code: 'b' }],
-    to_after_key_up: [{ set_variable: { name: 'v1', value: 0 } }],
+    to: [
+      { set_variable: { name: 'v1', value: 1 } },
+      { set_variable: { name: '__layer', value: 1 } },
+      { key_code: 'b' },
+    ],
+    to_after_key_up: [
+      { set_variable: { name: 'v1', value: 0 } },
+      { set_variable: { name: '__layer', value: 0 } },
+    ],
     to_if_alone: [{ key_code: 'a' }],
     to_if_held_down: [{ key_code: 'c' }],
     to_delayed_action: {
       to_if_invoked: [{ key_code: 'x' }],
       to_if_canceled: [{ key_code: 'y' }],
     },
-    conditions: [{ type: 'variable_unless', name: 'v1', value: 1 }],
+    conditions: [
+      { type: 'variable_unless', name: 'v1', value: 1 },
+      { type: 'variable_unless', name: '__layer', value: 1 },
+    ],
   })
 })
 
@@ -158,10 +180,19 @@ test('layer().configKey() replaceToIfAlone', () => {
   expect(manipulators[0]).toEqual({
     type: 'basic',
     from: { key_code: 'caps_lock' },
-    to: [{ set_variable: { name: 'v1', value: 1 } }],
-    to_after_key_up: [{ set_variable: { name: 'v1', value: 0 } }],
+    to: [
+      { set_variable: { name: 'v1', value: 1 } },
+      { set_variable: { name: '__layer', value: 1 } },
+    ],
+    to_after_key_up: [
+      { set_variable: { name: 'v1', value: 0 } },
+      { set_variable: { name: '__layer', value: 0 } },
+    ],
     to_if_alone: [{ key_code: 'b', modifiers: ['command'] }],
-    conditions: [{ type: 'variable_unless', name: 'v1', value: 1 }],
+    conditions: [
+      { type: 'variable_unless', name: 'v1', value: 1 },
+      { type: 'variable_unless', name: '__layer', value: 1 },
+    ],
   })
 })
 
@@ -297,19 +328,19 @@ test('layer() notification', () => {
   const rule = layer('a').notification().build()
   const manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(1)
-  expect(manipulators[0].to?.[1]).toEqual({
+  expect(manipulators[0].to?.[2]).toEqual({
     set_notification_message: {
       id: 'layer-layer-a',
       text: 'Layer - layer-a',
     },
   })
-  expect(manipulators[0].to_after_key_up?.[1]).toEqual({
+  expect(manipulators[0].to_after_key_up?.[2]).toEqual({
     set_notification_message: { id: 'layer-layer-a', text: '' },
   })
 
   const ruleB = layer('a').notification('test-b').build()
   const manipulatorB = ruleB.manipulators[0] as BasicManipulator
-  expect(manipulatorB.to?.[1]).toEqual({
+  expect(manipulatorB.to?.[2]).toEqual({
     set_notification_message: {
       id: 'layer-layer-a',
       text: 'test-b',
@@ -374,7 +405,7 @@ describe('layer() leader mode', () => {
 
     // layer toggle
     expect(manipulators[0].to_after_key_up).toBeUndefined()
-    expect(manipulators[0].to?.[1]).toEqual(
+    expect(manipulators[0].to?.[2]).toEqual(
       toNotificationMessage('layer-v', 'Layer - v'),
     )
 
@@ -387,7 +418,7 @@ describe('layer() leader mode', () => {
 
     const rule2 = layer('b').notification('Test B').build()
     const manipulators2 = rule2.manipulators as BasicManipulator[]
-    expect(manipulators2[0].to?.[1]).toEqual(
+    expect(manipulators2[0].to?.[2]).toEqual(
       toNotificationMessage('layer-layer-b', 'Test B'),
     )
   })

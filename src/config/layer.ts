@@ -319,14 +319,18 @@ export function layerToggleManipulator(
     return to
   }
 
+  const layerVarName = '__layer' // Shared by all layers, one layer at a time
   const manipulator = map({ key_code, modifiers })
     .toVar(varName, onValue)
-    .condition(ifVar(varName, onValue).unless())
+    .toVar(layerVarName)
+    .condition(ifVar(varName, onValue).unless(), ifVar(layerVarName).unless())
   if (!modifiers?.mandatory?.length && !leaderMode) {
     manipulator.toIfAlone({ key_code })
   }
   if (!leaderMode) {
-    manipulator.toAfterKeyUp(toSetVar(varName, offValue))
+    manipulator
+      .toAfterKeyUp(toSetVar(varName, offValue))
+      .toAfterKeyUp(toSetVar(layerVarName, 0))
   }
   if (conditions?.length) {
     manipulator.condition(...conditions)
