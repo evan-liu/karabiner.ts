@@ -363,15 +363,16 @@ describe('layer() leader mode', () => {
 
     const ifOn = ifVar('layer-a', 1).build()
     const toOff = toSetVar('layer-a', 0)
+    const toLayerVarOff = toSetVar('__layer', 0)
     // layer keys
-    expect(manipulators[1].to?.[1]).toEqual(toOff)
-    expect(manipulators[2].to?.[1]).toEqual(toOff)
+    expect(manipulators[1].to?.slice(1)).toEqual([toOff, toLayerVarOff])
+    expect(manipulators[2].to?.slice(1)).toEqual([toOff, toLayerVarOff])
     // escape keys
     expect(manipulators[3].from).toEqual({ key_code: 'escape' })
-    expect(manipulators[3].to?.[0]).toEqual(toOff)
+    expect(manipulators[3].to).toEqual([toOff, toLayerVarOff])
     expect(manipulators[3].conditions).toEqual([ifOn])
     expect(manipulators[4].from).toEqual({ key_code: 'caps_lock' })
-    expect(manipulators[4].to?.[0]).toEqual(toOff)
+    expect(manipulators[4].to).toEqual([toOff, toLayerVarOff])
     expect(manipulators[4].conditions).toEqual([ifOn])
   })
 
@@ -411,10 +412,10 @@ describe('layer() leader mode', () => {
 
     const remove = toRemoveNotificationMessage('layer-v')
     // layer key
-    expect(manipulators[1].to?.[2]).toEqual(remove)
+    expect(manipulators[1].to?.[3]).toEqual(remove)
     // escape keys
-    expect(manipulators[2].to?.[1]).toEqual(remove)
-    expect(manipulators[3].to?.[1]).toEqual(remove)
+    expect(manipulators[2].to?.[2]).toEqual(remove)
+    expect(manipulators[3].to?.[2]).toEqual(remove)
 
     const rule2 = layer('b').notification('Test B').build()
     const manipulators2 = rule2.manipulators as BasicManipulator[]
@@ -434,6 +435,7 @@ describe('layer() leader mode', () => {
 
     const ifOn = ifVar('layer-a', 1).build()
     const toOff = toSetVar('layer-a', 0)
+    const toLayerVarOff = toSetVar('__layer', 0)
     const remove = toRemoveNotificationMessage('layer-layer-a')
 
     // layer key
@@ -441,10 +443,8 @@ describe('layer() leader mode', () => {
     expect(manipulators[1].conditions).toEqual([ifOn])
     // escape keys
     expect(manipulators[2].conditions).toEqual([ifOn])
-    expect(manipulators[2].to?.[0]).toEqual(toOff)
-    expect(manipulators[2].to?.[1]).toEqual(remove)
+    expect(manipulators[2].to).toEqual([toOff, toLayerVarOff, remove])
     expect(manipulators[3].conditions).toEqual([ifOn])
-    expect(manipulators[3].to?.[0]).toEqual(toOff)
-    expect(manipulators[3].to?.[1]).toEqual(remove)
+    expect(manipulators[3].to).toEqual([toOff, toLayerVarOff, remove])
   })
 })

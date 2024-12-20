@@ -88,6 +88,8 @@ export function hyperLayer(
   return modifierLayer('Hyper', key, varName, onValue, offValue)
 }
 
+const layerVarName = '__layer' // Shared by all layers, one layer at a time
+
 export class LayerRuleBuilder extends BasicRuleBuilder {
   private readonly keys: LayerKeyCode[]
   private readonly varName: string
@@ -181,7 +183,10 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
 
     // Leader mode
     if (this.leaderModeOptions) {
-      const toOff = [toSetVar(this.varName, this.offValue)]
+      const toOff = [
+        toSetVar(this.varName, this.offValue),
+        toSetVar(layerVarName, 0),
+      ]
       if (this.layerNotification) {
         toOff.push(toRemoveNotificationMessage(notificationId(this.varName)))
       }
@@ -319,7 +324,6 @@ export function layerToggleManipulator(
     return to
   }
 
-  const layerVarName = '__layer' // Shared by all layers, one layer at a time
   const manipulator = map({ key_code, modifiers })
     .toVar(varName, onValue)
     .toVar(layerVarName)
