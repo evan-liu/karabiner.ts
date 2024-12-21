@@ -11,6 +11,7 @@ describe('mapDoubleTap()', () => {
         from: { key_code: '1' },
         to: [{ key_code: '2' }],
         conditions: [{ name: 'double-tap-1', type: 'variable_if', value: 1 }],
+        description: '__support__manipulator',
       },
       {
         type: 'basic',
@@ -56,6 +57,7 @@ describe('mapDoubleTap()', () => {
         from: { key_code: '1' },
         to: [{ key_code: '2' }],
         conditions: [{ name: 'double-tap-1', type: 'variable_if', value: 1 }],
+        description: '__support__manipulator',
       },
       {
         type: 'basic',

@@ -7,6 +7,7 @@ import {
   ManipulatorBuilder,
   ManipulatorMap,
 } from './manipulator.ts'
+import { isSupportManipulator } from './support-manipulator.ts'
 
 export function rule(
   description: string,
@@ -69,7 +70,7 @@ export class BasicRuleBuilder implements RuleBuilder {
 
     const conditions = this.conditions.map(buildCondition)
     rule.manipulators = rule.manipulators.map((v) =>
-      v.type === 'basic'
+      v.type === 'basic' && !isSupportManipulator(v)
         ? { ...v, conditions: [...(v.conditions || []), ...conditions] }
         : { ...v },
     )

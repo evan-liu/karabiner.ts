@@ -17,6 +17,7 @@ import { buildCondition, ConditionBuilder, ifVar } from './condition.ts'
 import { LayerKeyParam } from './layer.ts'
 import { BasicRuleBuilder } from './rule.ts'
 import { mapSimultaneous } from './simultaneous.ts'
+import { isSupportManipulator } from './support-manipulator.ts'
 import {
   toNotificationMessage,
   toRemoveNotificationMessage,
@@ -143,7 +144,10 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     if (this.leaderModeOptions) {
       if (!this.leaderModeOptions.sticky) {
         rule.manipulators.forEach(
-          (v) => v.type === 'basic' && (v.to = (v.to || []).concat(deactivate)),
+          (v) =>
+            v.type === 'basic' &&
+            !isSupportManipulator(v) &&
+            (v.to = (v.to || []).concat(deactivate)),
         )
       }
       rule.manipulators.push(

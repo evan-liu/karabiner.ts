@@ -37,6 +37,7 @@ import {
   SideModifierAlias,
 } from './modifier.ts'
 import { BasicRuleBuilder } from './rule.ts'
+import { isSupportManipulator } from './support-manipulator.ts'
 import { toRemoveNotificationMessage, toSetVar } from './to.ts'
 
 export type LayerKeyCode = Exclude<
@@ -192,7 +193,10 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
       }
       if (!this.leaderModeOptions.sticky) {
         rule.manipulators.forEach(
-          (v) => v.type === 'basic' && (v.to = (v.to || []).concat(toOff)),
+          (v) =>
+            v.type === 'basic' &&
+            !isSupportManipulator(v) &&
+            (v.to = (v.to || []).concat(toOff)),
         )
       }
       rule.manipulators.push(

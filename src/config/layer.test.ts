@@ -9,6 +9,7 @@ import {
 
 import { complexModifications } from './complex-modifications'
 import { ifVar } from './condition'
+import { mapDoubleTap } from './double-tap.ts'
 import { map } from './from'
 import { hyperLayer, layer, LayerRuleBuilder } from './layer'
 import { mouseMotionToScroll } from './mouse-motion-to-scroll'
@@ -446,5 +447,41 @@ describe('layer() leader mode', () => {
     expect(manipulators[2].to).toEqual([toOff, toLayerVarOff, remove])
     expect(manipulators[3].conditions).toEqual([ifOn])
     expect(manipulators[3].to).toEqual([toOff, toLayerVarOff, remove])
+  })
+
+  test('leader() and mapDoubleTap()', () => {
+    const rule = layer('a')
+      .leaderMode({ sticky: true })
+      .notification()
+      .manipulators([mapDoubleTap(1).to(2).singleTap(toKey(3))])
+      .build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(5)
+
+    const ifOn = ifVar('layer-a', 1).build()
+    const toOff = toSetVar('layer-a', 0)
+    const toLayerVarOff = toSetVar('__layer', 0)
+    const remove = toRemoveNotificationMessage('layer-layer-a')
+
+    // the second tap
+    expect(manipulators[1].to).toEqual([{ key_code: '2' }])
+    expect(manipulators[1].conditions).toEqual([
+      { name: 'double-tap-1', type: 'variable_if', value: 1 },
+    ])
+
+    // the first tap
+    expect(manipulators[2].to).toEqual([
+      { set_variable: { name: 'double-tap-1', value: 1 } },
+    ])
+    expect(manipulators[2].conditions).toEqual([
+      { name: 'double-tap-1', type: 'variable_unless', value: 1 },
+      ifOn,
+    ])
+
+    // escape keys
+    expect(manipulators[3].conditions).toEqual([ifOn])
+    expect(manipulators[3].to).toEqual([toOff, toLayerVarOff, remove])
+    expect(manipulators[4].conditions).toEqual([ifOn])
+    expect(manipulators[4].to).toEqual([toOff, toLayerVarOff, remove])
   })
 })
