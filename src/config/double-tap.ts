@@ -24,6 +24,7 @@ import { FromOptionalModifierParam } from '../utils/optional-modifiers.ts'
 import { ifVar } from './condition.ts'
 import { BasicManipulatorBuilder } from './manipulator.ts'
 import { FromModifierParam } from './modifier.ts'
+import { supportManipulator } from './support-manipulator.ts'
 import { toSetVar } from './to.ts'
 
 export const defaultDoubleTapParameters = {
@@ -144,15 +145,15 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
     const onCondition = ifVar(varName).build()
     const offCondition = ifVar(varName).unless().build()
 
-    const baseManipulator: BasicManipulator = {
+    const baseManipulator = supportManipulator({
       ...this.manipulator,
-      conditions: [...(this.manipulator.conditions || []), onCondition],
-    }
+      conditions: [onCondition],
+    })
 
     const toggleManipulator: BasicManipulator = {
       ...this.manipulator,
       to: [toSetVar(varName, 1)],
-      conditions: [offCondition],
+      conditions: [...(this.manipulator.conditions || []), offCondition],
       to_delayed_action: {
         to_if_invoked: [
           ...(this.singleTapEvent ? [this.singleTapEvent] : []),
