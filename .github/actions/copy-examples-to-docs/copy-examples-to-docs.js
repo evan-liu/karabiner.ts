@@ -60,7 +60,7 @@ async function copyCode(name, formats, dirFullPath, dirLevels) {
   if (jsCode) {
     mdCode += `
 
-Copy and edit the code below in [the online editor](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor):
+Copy and edit the code below in [the online editor](https://karabiner.ts.evanliu.dev/editor):
 
 \`\`\`typescript
 ${jsCode}

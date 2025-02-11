@@ -1,4 +1,6 @@
 /docs/examples/
+/static/workers/
+/static/index.d.ts
 
 # Dependencies
 /node_modules

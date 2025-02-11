@@ -28,6 +28,8 @@ jobs:
 
       - run: npm ci
         working-directory: docs
+      - run: npm run build:editor-worker
+        working-directory: docs
       - run: npm run build
         working-directory: docs
 
