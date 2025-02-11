@@ -83,6 +83,10 @@ const config = {
         contextualSearch: false,
       },
     }),
+
+  future: {
+    experimental_faster: true,
+  },
 }
 
 module.exports = config
