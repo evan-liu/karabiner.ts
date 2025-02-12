@@ -1,4 +1,7 @@
 import * as esbuild from 'esbuild-wasm'
+import { format } from 'prettier'
+import prettierBabelPlugin from 'prettier/plugins/babel'
+import prettierEstreePlugin from 'prettier/plugins/estree'
 
 import * as lib from '../../../dist/index'
 
@@ -26,9 +29,17 @@ self.onmessage = async (event) => {
       }),
       { description: '', manipulators: [] },
     )
-    self.postMessage({ input, output: JSON.stringify(config, null, 2) })
+    format(JSON.stringify(config), {
+      parser: 'json',
+      plugins: [prettierBabelPlugin, prettierEstreePlugin],
+    }).then(
+      (output) => self.postMessage({ input, output }),
+      (error) => self.postMessage({ input, output: error?.message }),
+    )
   } catch (e) {
-    let error = (e as Error)?.message || 'Unknown Error'
-    self.postMessage({ input, output: JSON.stringify({ error }, null, 2) })
+    self.postMessage({
+      input,
+      output: (e as Error)?.message || 'Unknown Error',
+    })
   }
 }
