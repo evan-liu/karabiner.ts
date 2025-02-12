@@ -33,15 +33,12 @@ And more features (abstractions)
 
 ## Using the Online Editor
 
-1. Write config in the [online editor](https://stackblitz.com/github/evan-liu/karabiner.ts/tree/main/editor?embed=1&file=rules.js&hideExplorer=1&hideNavigation=1&terminalHeight=20&title=karabiner.ts%20editor).
-   (Optional: 
-   [fork the editor](https://stackblitz.com/fork/github/evan-liu/karabiner.ts/tree/main/editor?file=rules.js)
-   to save the config for later editing)
+1. Write config in the [online editor](https://karabiner.ts.evanliu.dev/editor).
 2. Copy the generated JSON then [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules).
 
 > [!NOTE]
 > Importing JSON to Karabiner-Elements is only needed when using the Online Editor.
-`karabiner.ts` writes to `~/.config/karabiner/karabiner.json` if using with Node.js or Deno.
+> `karabiner.ts` writes to `~/.config/karabiner/karabiner.json` if using with Node.js or Deno.
 >
 > > Karabiner-Elements watches ~/.config/karabiner/karabiner.json and reloads it if updated.
 
@@ -85,7 +82,7 @@ Then write and build the config same as Option 1.
 In a Deno script file (replace `{version}`):
 
 ```typescript
-import { rule, writeToProfile } from 'https://deno.land/x/karabinerts@{version}/deno.ts'
+import { writeToProfile } from 'https://deno.land/x/karabinerts@{version}/deno.ts'
 
 writeToProfile('Default', [
   // rule(...
