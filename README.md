@@ -34,7 +34,7 @@ And more features (abstractions)
 ## Using the Online Editor
 
 1. Write config in the [online editor](https://karabiner.ts.evanliu.dev/editor).
-2. Copy the generated JSON then [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules).
+2. Copy the generated JSON then [add to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/add-your-own-complex-modifications/).
 
 > [!NOTE]
 > Importing JSON to Karabiner-Elements is only needed when using the Online Editor.

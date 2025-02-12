@@ -250,7 +250,7 @@ function OnlineEditorPageHeader() {
         gap: '1rem',
       }}>
       <a
-        href="https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules"
+        href="https://karabiner-elements.pqrs.org/docs/manual/configuration/add-your-own-complex-modifications/"
         target="_blank">
         ? Import to Karabiner-Elements
       </a>

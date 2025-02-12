@@ -66,7 +66,7 @@ Copy and edit the code below in [the online editor](https://karabiner.ts.evanliu
 ${jsCode}
 \`\`\`
 
-Or copy the JSON below and [add it to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules) without changes:
+Or copy the JSON below and [add it to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/add-your-own-complex-modifications/) without changes:
 
 \`\`\`json
 ${jsonCode}
