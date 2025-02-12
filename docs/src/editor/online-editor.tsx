@@ -126,16 +126,21 @@ function useOnlineEditorInit(code = '') {
       output: null as null | monaco.editor.IStandaloneCodeEditor,
     }
     runner.run(code).then((x) => editors.output?.setValue(x))
+    let editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+      automaticLayout: true,
+      minimap: { enabled: false },
+      scrollBeyondLastLine: false,
+      tabSize: 2,
+    }
     return {
       runner,
       editors,
       inputRef: (div: HTMLDivElement | null) => {
         if (!div || editors.input) return
         editors.input = monaco.editor.create(div, {
-          value: code,
+          ...editorOptions,
           language: 'typescript',
-          scrollBeyondLastLine: false,
-          minimap: { enabled: false },
+          value: code,
         })
         editors.input.onDidChangeModelContent(() => {
           runner
@@ -146,11 +151,10 @@ function useOnlineEditorInit(code = '') {
       outputRef: (div: HTMLDivElement | null) => {
         if (!div || editors.output) return
         editors.output = monaco.editor.create(div, {
-          value: runner.output,
-          language: 'json',
-          scrollBeyondLastLine: false,
-          minimap: { enabled: false },
+          ...editorOptions,
           readOnly: true,
+          language: 'json',
+          value: runner.output,
         })
       },
     }
@@ -204,7 +208,7 @@ export function OnlineEditorPageContent() {
 
 // ↑ ↑ ↑ Add support code if needed.  ↓ ↓ ↓ Do not delete the \`rules\` variable ↓
 let rules = [
-  // ↓ ↓ ↓ Add rules and/or layers.   ↑ ↑ ↑ Do not delete the \`rules\` variable  ↑
+  // ↓ ↓ ↓ Add rules and/or layers.   ↑ ↑ ↑ Do not delete the \`rules\` variable ↑
 
   rule('Playground').manipulators([
     map('⇪').toHyper().toIfAlone('⎋'),
