@@ -6,11 +6,15 @@ const rootDir = process.cwd()
 const examplesDir = join(rootDir, 'examples')
 const distDir = join(rootDir, 'dist')
 const examplesInDocs = join(rootDir, 'docs/docs/examples')
+const examplesFile = join(rootDir, 'docs/static/examples.json')
+const examplesMap = {}
 
-copyDir(examplesDir).catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+copyDir(examplesDir)
+  .then(() => writeFile(examplesFile, JSON.stringify(examplesMap)))
+  .catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
 
 async function copyDir(dirFullPath, dirLevels = []) {
   const items = await readdir(dirFullPath)
@@ -58,15 +62,14 @@ async function copyCode(name, formats, dirFullPath, dirLevels) {
     : `---\ntitle: ${rules[0].description}\n---`
 
   if (jsCode) {
+    let key = dirLevels.concat(name).join('/')
     mdCode += `
-
-Copy and edit the code below in [the online editor](https://karabiner.ts.evanliu.dev/editor):
-
 \`\`\`typescript
-${jsCode}
+${jsCode.replace('export const rules = () =>', 'let rules =')}
 \`\`\`
 
-Or copy the JSON below and [add it to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/add-your-own-complex-modifications/) without changes:
+Open and edit the code in [the online editor](/editor?example=${key}),
+or copy the JSON below and [add it to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/add-your-own-complex-modifications/) without changes:
 
 \`\`\`json
 ${jsonCode}
@@ -86,6 +89,7 @@ async function readJsCode(name, dirFullPath, dirLevels) {
     throw new Error(`Cannot parse ${dirLevels.concat(fileName).join('/')}`)
 
   const [, imports, jsCode] = matched
+  addExample(name, dirLevels, jsCode)
 
   const fileInDist = join(distDir, fileName)
   await writeFile(fileInDist, `${imports}from './index.js'\n${jsCode}`)
@@ -104,4 +108,9 @@ async function readJsCode(name, dirFullPath, dirLevels) {
   )
   const jsonCode = JSON.stringify(config, null, 2)
   return { jsCode, jsonCode, rules }
+}
+
+function addExample(name, dirLevels, code) {
+  const key = dirLevels.concat(name).join('/')
+  examplesMap[key] = code.replace('export const rules = () =>', 'let rules =')
 }

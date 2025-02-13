@@ -1,6 +1,7 @@
 /docs/examples/
 /static/workers/
 /static/index.d.ts
+/static/examples.json
 
 # Dependencies
 /node_modules

@@ -1,4 +1,5 @@
 import { useColorMode } from '@docusaurus/theme-common'
+import { useEditorExamples } from '@site/src/editor/examples'
 import * as monaco from 'monaco-editor'
 import {
   createContext,
@@ -21,6 +22,21 @@ ifApp, ifDevice, ifVar, ifDeviceExists, ifInputSource, ifKeyboardType, ifEventCh
 // utils
 withCondition, withMapper, withModifier, modifierKeyAliases, multiModifierAliases
 } from 'karabiner.ts'`
+
+let playgroundCode = `\
+// ↓ ↓ ↓ Add support code if needed.  ↑ ↑ ↑ Do not delete \`import ...\` ↑
+
+// ↑ ↑ ↑ Add support code if needed.  ↓ ↓ ↓ Do not delete the \`rules\` variable ↓
+let rules = [
+  // ↓ ↓ ↓ Add rules and/or layers.   ↑ ↑ ↑ Do not delete the \`rules\` variable ↑
+
+  rule('Playground').manipulators([
+    map('⇪').toHyper().toIfAlone('⎋'),
+    { escape: toKey('caps_lock') },
+  ]),
+  
+  // ↑ ↑ ↑ Add rules and/or layers.   ↓ ↓ ↓ Do not delete \`]\` below ↓
+]\n`
 
 self.MonacoEnvironment = {
   getWorkerUrl: (_, label) => {
@@ -203,37 +219,71 @@ export function OnlineEditorOutput(props: ComponentProps<'div'>) {
 }
 
 export function OnlineEditorPageContent() {
-  let initCode = `\
-// ↓ ↓ ↓ Add support code if needed.  ↑ ↑ ↑ Do not delete \`import ...\` ↑
-
-// ↑ ↑ ↑ Add support code if needed.  ↓ ↓ ↓ Do not delete the \`rules\` variable ↓
-let rules = [
-  // ↓ ↓ ↓ Add rules and/or layers.   ↑ ↑ ↑ Do not delete the \`rules\` variable ↑
-
-  rule('Playground').manipulators([
-    map('⇪').toHyper().toIfAlone('⎋'),
-    { escape: toKey('caps_lock') },
-  ]),
-  
-  // ↑ ↑ ↑ Add rules and/or layers.   ↓ ↓ ↓ Do not delete \`]\` below ↓
-]\n`
+  let { initExampleKey, initExampleCode } = useEditorExamples()
+  let initCode = initExampleKey ? initExampleCode : playgroundCode
   return (
     <OnlineEditorProvider code={initCode}>
-      <OnlineEditorPageHeader />
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
+          gridTemplateRows: 'auto 1fr',
           flex: 1,
         }}>
-        <OnlineEditorInput />
-        <OnlineEditorOutput />
+        <OnlineEditorInputHeader />
+        <OnlineEditorOutputHeader />
+        <OnlineEditorInput style={{ maxWidth: '50vw' }} />
+        <OnlineEditorOutput style={{ maxWidth: '50vw' }} />
       </div>
     </OnlineEditorProvider>
   )
 }
 
-function OnlineEditorPageHeader() {
+function OnlineEditorInputHeader() {
+  let ctrl = useOnlineEditorCtrl()
+  let { initExampleCode, initExampleKey, examples } = useEditorExamples()
+  let [exampleKey, setExampleKey] = useState(initExampleKey || '')
+
+  let updateInputCode = (code: string) => {
+    ctrl.editors.input?.setValue(`${importsCode}\n\n${code}`)
+  }
+  useEffect(
+    () => void (initExampleCode && updateInputCode(initExampleCode)),
+    [initExampleCode],
+  )
+
+  function handleSelectChange(key: string) {
+    setExampleKey(key)
+    updateInputCode(key && examples?.[key] ? examples[key] : playgroundCode)
+
+    let url = new URL(window.location.href)
+    if (key) {
+      url.searchParams.set('example', key)
+    } else {
+      url.searchParams.delete('example')
+    }
+    window.history.replaceState({}, '', url)
+  }
+
+  return (
+    <div style={{ padding: '1rem' }}>
+      <select
+        value={exampleKey}
+        onChange={(x) => handleSelectChange(x.target.value)}
+        style={{ paddingTop: '0.25rem', paddingBottom: '0.25rem' }}>
+        <option value="">Playground</option>
+        {examples &&
+          Object.keys(examples).map((x) => (
+            <option key={x} value={x}>
+              Example: {x}
+            </option>
+          ))}
+      </select>
+    </div>
+  )
+}
+
+function OnlineEditorOutputHeader() {
   let ctrl = useOnlineEditorCtrl()
   function handleCopyJson() {
     let text = ctrl.editors.output?.getValue()
@@ -242,19 +292,13 @@ function OnlineEditorPageHeader() {
     }
   }
   return (
-    <div
-      style={{
-        padding: '1rem',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        gap: '1rem',
-      }}>
+    <div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
+      <button onClick={handleCopyJson}>Copy JSON</button>
       <a
         href="https://karabiner-elements.pqrs.org/docs/manual/configuration/add-your-own-complex-modifications/"
         target="_blank">
         ? Import to Karabiner-Elements
       </a>
-      <button onClick={handleCopyJson}>Copy JSON</button>
     </div>
   )
 }

@@ -48,9 +48,10 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'karabiner.ts Docs',
+        title: 'karabiner.ts',
         items: [
-          { to: 'editor', label: 'Online Editor', position: 'left' },
+          { label: 'Docs', type: 'doc', docId: 'intro' },
+          { label: 'Editor', to: 'editor' },
           {
             type: 'html',
             value: `<a href="https://github.com/evan-liu/karabiner.ts" style="display: flex">
@@ -60,7 +61,19 @@ const config = {
           },
         ],
       },
-      footer: {},
+      footer: {
+        links: [
+          {
+            label: 'karabiner.ts',
+            href: 'https://github.com/evan-liu/karabiner.ts',
+          },
+          { label: 'By Evan Liu', href: 'https://evanliu.dev' },
+          {
+            label: 'Docs built with Docusaurus',
+            href: 'https://docusaurus.io/',
+          },
+        ],
+      },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
