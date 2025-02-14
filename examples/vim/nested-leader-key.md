@@ -1,5 +1,5 @@
 ---
-title: Leader key
+title: Nested leader key
 ---
 
 To nest leader keys, use variables on [leaderMode()](/rules/leader-mode).
