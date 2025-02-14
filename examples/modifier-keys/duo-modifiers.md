@@ -15,6 +15,6 @@ Adjust `basic.simultaneous_threshold_milliseconds` to your typing speed and habi
 :::
 
 :::tip
-When get started, it can be very useful to show a notification when the
-mod(s) are activated, see [an example here](https://github.com/evan-liu/karabiner-config/blob/fab052dc5e738c91adfae46aabeb17b38f4959fe/utils.ts#L85).
+When get started, it can be very useful to show a notification when the mod(s)
+are activated.
 :::

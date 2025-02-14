@@ -1,6 +1,6 @@
 import { layer, toPaste } from '../../src'
 
-export const rules = () => [
+let rules = [
   layer('z', 'emoji').manipulators({
     j: toPaste('😂'), // joy
   }),

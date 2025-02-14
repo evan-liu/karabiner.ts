@@ -1,6 +1,6 @@
 import { layer, map, toPaste, withMapper } from '../../src'
 
-export const rules = () => [
+let rules = [
   layer('z', 'symbols').manipulators([
     withMapper(['←', '→', '↑', '↓', '␣', '⏎', '⌫', '⌦'])((k) =>
       map(k).toPaste(k),

@@ -11,16 +11,16 @@ import {
 } from 'react'
 
 let importsCode = `import {
-// rule and layers
-rule, layer, simlayer, hyperLayer, modifierLayer, duoLayer,
-// from / map()
-map, mapConsumerKey, mapPointingButton, mapSimultaneous, mapDoubleTap, mouseMotionToScroll,
-// to
-toKey, toConsumerKey, toPointingButton, toHyper, toSuperHyper, toMeh, to$, toApp, toPaste, toTypeSequence, toNone, toNotificationMessage, toRemoveNotificationMessage, toInputSource, toSetVar, toMouseKey, toMouseCursorPosition, toStickyModifier, toCgEventDoubleClick, toSleepSystem,
-// conditions
-ifApp, ifDevice, ifVar, ifDeviceExists, ifInputSource, ifKeyboardType, ifEventChanged,
-// utils
-withCondition, withMapper, withModifier, modifierKeyAliases, multiModifierAliases
+  // rule and layers
+  rule, layer, simlayer, hyperLayer, modifierLayer, duoLayer,
+  // from / map()
+  map, mapConsumerKey, mapPointingButton, mapSimultaneous, mapDoubleTap, mouseMotionToScroll,
+  // to
+  toKey, toConsumerKey, toPointingButton, toHyper, toSuperHyper, toMeh, to$, toApp, toPaste, toTypeSequence, toNone, toNotificationMessage, toRemoveNotificationMessage, toInputSource, toSetVar, toUnsetVar, toMouseKey, toMouseCursorPosition, toStickyModifier, toCgEventDoubleClick, toSleepSystem,
+  // conditions
+  ifApp, ifDevice, ifVar, ifDeviceExists, ifInputSource, ifKeyboardType, ifEventChanged,
+  // utils
+  withCondition, withMapper, withModifier, modifierKeyAliases, multiModifierAliases, LetterKeyCode, KeyAlias, ModifierKeyAlias, MultiModifierAlias
 } from 'karabiner.ts'`
 
 let playgroundCode = `\

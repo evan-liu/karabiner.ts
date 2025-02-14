@@ -4,7 +4,6 @@ import { join } from 'node:path'
 
 const rootDir = process.cwd()
 const examplesDir = join(rootDir, 'examples')
-const distDir = join(rootDir, 'dist')
 const examplesInDocs = join(rootDir, 'docs/docs/examples')
 const examplesFile = join(rootDir, 'docs/static/examples.json')
 const examplesMap = {}
@@ -26,7 +25,7 @@ async function copyDir(dirFullPath, dirLevels = []) {
       return toCopy.dirs.push(item)
     }
 
-    const codeMatched = item.match(/^(.*)\.(md|js)$/)
+    const codeMatched = item.match(/^(.*)\.(md|ts)$/)
     if (!codeMatched) {
       return toCopy.files.push(item)
     }
@@ -53,64 +52,35 @@ async function copyDir(dirFullPath, dirLevels = []) {
 }
 
 async function copyCode(name, formats, dirFullPath, dirLevels) {
-  const { jsCode, jsonCode, rules } = formats.includes('js')
-    ? await readJsCode(name, dirFullPath, dirLevels)
-    : {}
+  const code = formats.includes('ts')
+    ? await readCode(name, dirFullPath, dirLevels)
+    : null
 
-  let mdCode = formats.includes('md')
-    ? await readFile(join(dirFullPath, `${name}.md`), 'utf8')
-    : `---\ntitle: ${rules[0].description}\n---`
-
-  if (jsCode) {
+  if (!formats.includes('md')) return
+  let markdown = await readFile(join(dirFullPath, `${name}.md`), 'utf8')
+  if (code) {
     let key = dirLevels.concat(name).join('/')
-    mdCode += `
+    markdown += `
+Example code: ( [Open in the online editor →](/editor?example=${key}) )
+
 \`\`\`typescript
-${jsCode.replace('export const rules = () =>', 'let rules =')}
-\`\`\`
-
-Open and edit the code in [the online editor](/editor?example=${key}),
-or copy the JSON below and [add it to Karabiner-Elements](https://karabiner-elements.pqrs.org/docs/manual/configuration/add-your-own-complex-modifications/) without changes:
-
-\`\`\`json
-${jsonCode}
+${code}
 \`\`\`
 `
     const mdFile = join(examplesInDocs, ...dirLevels, `${name}.md`)
-    await writeFile(mdFile, mdCode)
+    await writeFile(mdFile, markdown)
   }
 }
 
-async function readJsCode(name, dirFullPath, dirLevels) {
-  const fileName = `${name}.js`
+async function readCode(name, dirFullPath, dirLevels) {
+  const fileName = `${name}.ts`
   const fullPath = join(dirFullPath, fileName)
   const srcCode = await readFile(fullPath, 'utf-8')
   const matched = srcCode.match(/^(import[\s\S]*?)from '.*?'\s*([\s\S]*)$/m)
   if (!matched)
     throw new Error(`Cannot parse ${dirLevels.concat(fileName).join('/')}`)
 
-  const [, imports, jsCode] = matched
-  addExample(name, dirLevels, jsCode)
-
-  const fileInDist = join(distDir, fileName)
-  await writeFile(fileInDist, `${imports}from './index.js'\n${jsCode}`)
-
-  const { complexModifications } = await import(join(distDir, 'index.js'))
-  const jsModule = await import(fileInDist)
-  const { rules } = complexModifications(jsModule.rules())
-  const config = rules.reduce(
-    (r, v) => ({
-      description: r.description
-        ? `${r.description}; ${v.description}`
-        : v.description,
-      manipulators: r.manipulators.concat(v.manipulators),
-    }),
-    { description: '', manipulators: [] },
-  )
-  const jsonCode = JSON.stringify(config, null, 2)
-  return { jsCode, jsonCode, rules }
-}
-
-function addExample(name, dirLevels, code) {
-  const key = dirLevels.concat(name).join('/')
-  examplesMap[key] = code.replace('export const rules = () =>', 'let rules =')
+  const code = matched[2]
+  examplesMap[dirLevels.concat(name).join('/')] = code
+  return code
 }

@@ -1,6 +1,6 @@
 import { rule, toApp, withModifier } from '../../src'
 
-export const rules = () => [
+let rules = [
   rule('Launch Apps').manipulators([
     withModifier('right_control')({
       c: toApp('Calendar'),
