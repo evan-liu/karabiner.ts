@@ -1,33 +1,48 @@
 import {
-  hyperLayer,
   ifVar,
   map,
+  rule,
+  toRemoveNotificationMessage,
   toUnsetVar,
   withCondition,
   withMapper,
 } from '../../src'
 
-let escapeLeader = ['__layer', 'leader', 'leader--'].map(toUnsetVar)
-let raycastEmoji = 'emoji-symbols/search-emoji-symbols'
+let raycastEmoji = 'raycast/emoji-symbols/search-emoji-symbols'
+let escape = [toUnsetVar('leader'), toRemoveNotificationMessage('leader')]
 
 let rules = [
-  hyperLayer('l', 'leader')
-    .leaderMode({ sticky: true, escape: [] })
-    .manipulators([
-      map('escape').to(escapeLeader),
+  rule('Leader Key').manipulators([
+    map('l', 'Hyper') // Or mapSimultaneous(['l', ';']) ...
+      .toVar('leader')
+      .toNotificationMessage('leader', 'Leader Key: Open, Raycast, ...'),
 
-      map('o').toVar('leader--', 'o'), // Open
-      withCondition(ifVar('leader--', 'o'))([
-        withMapper([
-          map('f').toApp('Finder'), // Open Finder
-        ])((x) => x.to(escapeLeader)),
-      ]),
+    withCondition(ifVar('leader', 0).unless())([
+      // Escape key(s)
+      map('escape').to(escape),
 
-      map('r').toVar('leader--', 'r'), // Raycast
-      withCondition(ifVar('leader--', 'r'))([
-        withMapper([
-          map('e').to$(`open raycast://extensions/raycast/${raycastEmoji}`),
-        ])((x) => x.to(escapeLeader)),
-      ]),
+      // Nested leader keys
+      withMapper(['o', 'r'])((x) =>
+        map(x)
+          .toVar('leader', x)
+          .toNotificationMessage('leader', `leader ${x}`),
+      ),
+
+      // o - Open
+      withCondition(ifVar('leader', 'o'))(
+        [
+          map('f').toApp('Finder'),
+          // f - Finder, ...
+        ].map((x) => x.to(escape)),
+      ),
+
+      // r - Raycast
+      withCondition(ifVar('leader', 'r'))(
+        [
+          map('e').to$(`open raycast://extensions/${raycastEmoji}`),
+          // e - Emoji, ...
+        ].map((x) => x.to(escape)),
+      ),
     ]),
+  ]),
 ]
