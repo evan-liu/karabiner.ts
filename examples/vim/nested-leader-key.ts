@@ -13,22 +13,29 @@ let escape = [toUnsetVar('leader'), toRemoveNotificationMessage('leader')]
 
 let rules = [
   rule('Leader Key').manipulators([
-    // Leader key
-    map('l', 'Hyper') // Or mapSimultaneous(['l', ';']) ...
-      .toVar('leader', 1)
-      .toNotificationMessage('leader', 'Leader Key: Open, Raycast, ...')
-      .condition(ifVar('leader', 0)),
+    // When no leader key or nested leader key is on
+    withCondition(ifVar('leader', 0))([
+      // Leader key
+      map('l', 'Hyper') // Or mapSimultaneous(['l', ';']) ...
+        .toVar('leader', 1)
+        .toNotificationMessage('leader', 'Leader Key: Open, Raycast, ...'),
+    ]),
 
-    // Escape key(s)
-    map('escape').to(escape).condition(ifVar('leader', 0).unless()),
+    // When leader key or nested leader key is on
+    withCondition(ifVar('leader', 0).unless())([
+      // Escape key(s)
+      map('escape').to(escape),
+    ]),
 
-    // Nested leader keys
-    withMapper(['o', 'r'])((x) =>
-      map(x)
-        .toVar('leader', x)
-        .toNotificationMessage('leader', `leader ${x}`)
-        .condition(ifVar('leader', 1)),
-    ),
+    // When leader key but no nested leader key is on
+    withCondition(ifVar('leader', 1))([
+      // Nested leader keys
+      withMapper(['o', 'r'])((x) =>
+        map(x)
+          .toVar('leader', x)
+          .toNotificationMessage('leader', `leader ${x}`),
+      ),
+    ]),
 
     // leader o - Open
     withCondition(ifVar('leader', 'o'))(
