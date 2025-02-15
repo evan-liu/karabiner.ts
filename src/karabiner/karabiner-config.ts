@@ -112,10 +112,17 @@ export type ToSleepSystem = { delay_milliseconds?: number }
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/set-notification-message/ */
 export type ToNotificationMessage = { id: string; text: string }
 
+/** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/software_function/open_application/ */
+export type ToOpenApplication =
+  | { bundle_identifier: string }
+  | { file_path: string }
+  | { frontmost_application_history_index: number }
+
 export type ToSoftwareFunction =
   | { cg_event_double_click: ToCgEventDoubleClick }
   | { set_mouse_cursor_position: ToMouseCursorPosition }
   | { iokit_power_management_sleep_system: ToSleepSystem }
+  | { open_application: ToOpenApplication }
 
 export type ToEventOptions = {
   modifiers?: Modifier[]
