@@ -54,7 +54,7 @@ const config = {
           { label: 'Editor', to: 'editor' },
           {
             type: 'html',
-            value: `<a href="https://github.com/evan-liu/karabiner.ts" style="display: flex">
+            value: `<a href="https://github.com/evan-liu/karabiner.ts" style="display: flex" target="_blank">
               <img src="https://img.shields.io/github/stars/evan-liu/karabiner.ts" alt="GitHub Stars">
             </a>`,
             position: 'right',
