@@ -12,6 +12,8 @@ Write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) confi
 > Use of TypeScript is optional. Config can also be written in JavaScript.
 > Only the basics of JavaScript are needed. Check out my interactive course at [codojo.dev](https://codojo.dev/javascript/basics/hello-world).
 
+<a href="https://www.buymeacoffee.com/evanliu.dev" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 ## Why karabiner.ts
 
 `karabiner.ts` is heavily inspired by [Goku](https://github.com/yqrashawn/GokuRakuJoudo). Compared to the edn format, it allows for:
