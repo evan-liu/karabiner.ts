@@ -54,6 +54,13 @@ const config = {
           { label: 'Editor', to: 'editor' },
           {
             type: 'html',
+            value: `<a href="https://www.buymeacoffee.com/evanliu.dev" target="_blank" style="display: flex">
+              <img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" style="height: 36px" alt="Buy Me A Coffee">
+            </a>`,
+            position: 'right',
+          },
+          {
+            type: 'html',
             value: `<a href="https://github.com/evan-liu/karabiner.ts" style="display: flex" target="_blank">
               <img src="https://img.shields.io/github/stars/evan-liu/karabiner.ts" alt="GitHub Stars">
             </a>`,
