@@ -1,4 +1,5 @@
 import { useColorMode } from '@docusaurus/theme-common'
+import { encodeCodeForUrl, readCodeFromUrl } from '@site/src/editor/editor-url'
 import { useEditorExamples } from '@site/src/editor/examples'
 import * as monaco from 'monaco-editor'
 import {
@@ -163,6 +164,7 @@ function useOnlineEditorInit(code = '') {
             .run(editors.input?.getValue() || '')
             .then((x) => editors.output?.setValue(x))
         })
+        editors.input.trigger('', 'editor.fold', {})
       },
       outputRef: (div: HTMLDivElement | null) => {
         if (!div || editors.output) return
@@ -220,7 +222,8 @@ export function OnlineEditorOutput(props: ComponentProps<'div'>) {
 
 export function OnlineEditorPageContent() {
   let { initExampleKey, initExampleCode } = useEditorExamples()
-  let initCode = initExampleKey ? initExampleCode : playgroundCode
+  let initCode =
+    readCodeFromUrl() || (initExampleKey ? initExampleCode : playgroundCode)
   return (
     <OnlineEditorProvider code={initCode}>
       <div
@@ -246,6 +249,7 @@ function OnlineEditorInputHeader() {
 
   let updateInputCode = (code: string) => {
     ctrl.editors.input?.setValue(`${importsCode}\n\n${code}`)
+    ctrl.editors.input?.trigger('', 'editor.fold', {})
   }
   useEffect(
     () => void (initExampleCode && updateInputCode(initExampleCode)),
@@ -266,7 +270,13 @@ function OnlineEditorInputHeader() {
   }
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div
+      style={{
+        display: 'flex',
+        gap: '1rem',
+        justifyContent: 'space-between',
+        padding: '1rem',
+      }}>
       <select
         value={exampleKey}
         onChange={(x) => handleSelectChange(x.target.value)}
@@ -279,26 +289,63 @@ function OnlineEditorInputHeader() {
             </option>
           ))}
       </select>
+
+      <OnlineEditorCodeUrl />
     </div>
   )
 }
 
 function OnlineEditorOutputHeader() {
   let ctrl = useOnlineEditorCtrl()
+
+  let [copied, setCopied] = useState(false)
   function handleCopyJson() {
     let text = ctrl.editors.output?.getValue()
     if (text) {
       void navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1000)
     }
   }
   return (
     <div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
-      <button onClick={handleCopyJson}>Copy JSON</button>
+      <button
+        onClick={handleCopyJson}
+        style={{ width: '6rem' }}
+        title="Copy JSON for Karabiner-Elements import">
+        {copied ? 'Copied' : 'Copy JSON'}
+      </button>
       <a
         href="https://karabiner-elements.pqrs.org/docs/manual/configuration/add-your-own-complex-modifications/"
         target="_blank">
         ? Import to Karabiner-Elements
       </a>
     </div>
+  )
+}
+
+function OnlineEditorCodeUrl() {
+  let ctrl = useOnlineEditorCtrl()
+  let [copied, setCopied] = useState(false)
+
+  function handleCopyUrl() {
+    let code = encodeCodeForUrl(ctrl.editors.input?.getValue())
+    if (code) {
+      let url = new URL(location.origin + location.pathname)
+      url.searchParams.set('c', code)
+
+      void navigator.clipboard.writeText(url.toString())
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1000)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleCopyUrl}
+      style={{ width: '6rem' }}
+      title="Copy URL to share or save this code">
+      {copied ? 'Copied!' : 'Copy URL'}
+    </button>
   )
 }
