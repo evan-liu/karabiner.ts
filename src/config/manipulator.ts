@@ -120,7 +120,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     return this
   }
 
-  /** To { consumer_key_code } */
+  /** To { generic_desktop } */
   toGenericDesktop(
     code: number,
     modifiers?: ModifierParam,
