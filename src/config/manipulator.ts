@@ -26,6 +26,7 @@ import {
   toApp,
   toCgEventDoubleClick,
   toConsumerKey,
+  toGenericDesktop,
   toHyper,
   toInputSource,
   toKey,
@@ -116,6 +117,16 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     options?: ToEventOptions,
   ): this {
     this.addToEvent(toConsumerKey(code, modifiers, options))
+    return this
+  }
+
+  /** To { consumer_key_code } */
+  toGenericDesktop(
+    code: number,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this {
+    this.addToEvent(toGenericDesktop(code, modifiers, options))
     return this
   }
 
