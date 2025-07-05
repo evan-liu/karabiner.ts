@@ -148,6 +148,7 @@ export type ToEvent = (
   | { mouse_key: ToMouseKey }
   | { sticky_modifier: ToStickyModifier }
   | { software_function: ToSoftwareFunction }
+  | { generic_desktop: number }
 ) &
   ToEventOptions
 

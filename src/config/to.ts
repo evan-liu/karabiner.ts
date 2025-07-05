@@ -82,6 +82,19 @@ export function toConsumerKey(
   }
 }
 
+/** Create ToEvent with generic_desktop code */
+export function toGenericDesktop(
+  code: number,
+  modifiers?: ModifierParam,
+  options?: ToEventOptions,
+): ToEvent {
+  return {
+    ...options,
+    generic_desktop: code,
+    modifiers: modifiers ? parseModifierParam(modifiers) : undefined,
+  }
+}
+
 /** Create ToEvent with pointing_button */
 export function toPointingButton(
   button: PointingButton,
