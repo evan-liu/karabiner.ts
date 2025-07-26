@@ -103,3 +103,18 @@ function exitWithError(err: any): never {
   }
   return writeContext.exit(1)
 }
+
+/** Write global settings of ~/.config/karabiner/karabiner.json */
+export function writeToGlobal(
+  global: KarabinerConfig['global'],
+  karabinerJsonPath?: string,
+) {
+  const jsonPath = karabinerJsonPath ?? writeContext.karabinerConfigFile()
+  const config: KarabinerConfig = writeContext.readKarabinerConfig(jsonPath)
+  config.global = { ...config.global, ...global }
+  const json = JSON.stringify(config, null, 2)
+
+  writeContext.writeKarabinerConfig(json, jsonPath).catch(exitWithError)
+
+  console.log(`✓ global updated.`)
+}
