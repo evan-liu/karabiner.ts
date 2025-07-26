@@ -134,6 +134,8 @@ export type ToEventOptions = {
   halt?: boolean
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/hold-down-milliseconds/ */
   hold_down_milliseconds?: number
+  /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/to-conditions/ */
+  conditions?: Condition[]
 }
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/ */
