@@ -317,9 +317,18 @@ test('layer().modifier(??)', () => {
       .manipulators.map((v) => v.from?.modifiers),
   ).toEqual([{ optional: ['any'] }, { mandatory: ['any'] }])
 
-  expect(() =>
+  // Allow mixing optional layer modifiers and mandatory manipulator modifiers.
+  expect(
     layer('a', 'v')
       .modifiers('??')
+      .manipulators([map(1, 'r⌘').to(2)])
+      .build()
+      .manipulators.map((v) => v.from?.modifiers),
+  ).toEqual([{ optional: ['any'] }, { mandatory: ['right_command'], optional: ['any'] }])
+
+  expect(() =>
+    layer('a', 'v')
+      .modifiers('r⇧')
       .manipulators([map(1, '⌘').to(2)])
       .build(),
   ).toThrow()

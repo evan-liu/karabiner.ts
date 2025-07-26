@@ -213,9 +213,12 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
       this.layerModifiers?.mandatory?.length ||
       this.layerModifiers?.optional?.length
     ) {
+      const hasMandatoryLayerModifier = (this.layerModifiers?.mandatory?.length ?? 0) >= 1
       const isOptionalAny = isModifiersAny(this.layerModifiers) === 'optional'
       rule.manipulators.forEach((v) =>
-        this.addModifierAnyToManipulator(v, isOptionalAny),
+        this.addModifierAnyToManipulator(v,
+          hasMandatoryLayerModifier,
+          isOptionalAny),
       )
     }
 
@@ -250,24 +253,27 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   // If the layer has modifiers, set manipulator modifiers to { mandatory: ['any'] }
   private addModifierAnyToManipulator(
     manipulator: Manipulator,
+    hasMandatoryLayerModifier: boolean,
     isOptionalAny: boolean,
   ) {
     if (manipulator.type !== 'basic') return
-    if (manipulator.from.modifiers) {
-      const { mandatory, optional } = manipulator.from.modifiers
-      if (optional?.length || mandatory?.length) {
-        const isAny = isModifiersAny(manipulator.from.modifiers)
-        if (isAny === 'mandatory') {
-          manipulator.from.modifiers = { mandatory: ['any'] }
-        } else if (isAny === 'optional') {
-          manipulator.from.modifiers = { optional: ['any'] }
-        } else {
-          throw new Error(
-            'Layers with modifiers cannot have modifiers on manipulators',
-          )
-        }
-        return
+
+    if (manipulator.from.modifiers && (
+      manipulator.from.modifiers?.optional?.length ||
+      manipulator.from.modifiers?.mandatory?.length)) {
+      const isAny = isModifiersAny(manipulator.from.modifiers)
+      if (isAny === 'mandatory') {
+        manipulator.from.modifiers = { mandatory: ['any'] }
+      } else if (!hasMandatoryLayerModifier) {
+        manipulator.from.modifiers.optional = ['any']
+      } else if (isAny === 'optional') {
+        manipulator.from.modifiers = { optional: ['any'] }
+      } else {
+        throw new Error(
+          'Layers with modifiers cannot have modifiers on manipulators',
+        )
       }
+      return
     }
     manipulator.from.modifiers = isOptionalAny
       ? { optional: ['any'] }
