@@ -324,7 +324,7 @@ test('layer().modifier(??)', () => {
       .manipulators([map(1, 'r⌘').to(2)])
       .build()
       .manipulators.map((v) => v.from?.modifiers),
-  ).toEqual([{ optional: ['any'] }, { mandatory: ['right_command'], optional: ['any'] }])
+  ).toEqual([{ optional: ['any'] }, { mandatory: ['right_command'] }])
 
   expect(() =>
     layer('a', 'v')
