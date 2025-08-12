@@ -38,7 +38,16 @@ import {
 } from './modifier.ts'
 import { BasicRuleBuilder } from './rule.ts'
 import { isSupportManipulator } from './support-manipulator.ts'
-import { toRemoveNotificationMessage, toSetVar } from './to.ts'
+import {
+  toNotificationMessage,
+  toRemoveNotificationMessage,
+  toSetVar,
+} from './to.ts'
+
+export const defaultLayerParameters = {
+  'layer.delay_by_default': false,
+  'layer.delay_milliseconds': 200,
+}
 
 export type LayerKeyCode = Exclude<
   FromKeyCode,
@@ -90,6 +99,7 @@ export function hyperLayer(
 }
 
 const layerVarName = '__layer' // Shared by all layers, one layer at a time
+const delayValue = '__delay' // Supporting var value for delay() mode
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
   private readonly keys: LayerKeyCode[]
@@ -103,6 +113,8 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   private layerNotification?: boolean | string
 
   private leaderModeOptions?: LeaderModeOptions
+
+  private delayed: boolean | number | undefined = undefined
 
   constructor(
     key: LayerKeyParam | LayerKeyParam[],
@@ -179,6 +191,12 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     return this
   }
 
+  /** Set delay mode (and delay_milliseconds). */
+  public delay(v: boolean | number = true) {
+    this.delayed = v
+    return this
+  }
+
   public build(context?: BuildContext): Rule {
     const rule = super.build(context)
 
@@ -239,6 +257,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
             ? this.ruleDescription
             : this.layerNotification || undefined,
           this.leaderModeOptions,
+          this.delayed,
         ),
         ...rule.manipulators,
       ]
@@ -290,6 +309,7 @@ export function layerToggleManipulator(
   replaceLayerKeyToIfAlone?: boolean,
   notification?: string,
   leaderMode?: LeaderModeOptions,
+  delayed?: boolean | number,
 ) {
   function mergeManipulator<T extends BasicManipulator | BasicManipulator[]>(
     to: T,
@@ -331,10 +351,14 @@ export function layerToggleManipulator(
     return to
   }
 
+  const delay = layerDelay(delayed, context)
   const manipulator = map({ key_code, modifiers })
-    .toVar(varName, onValue)
+    .toVar(varName, delay > 0 ? delayValue : onValue)
     .toVar(layerVarName)
-    .condition(ifVar(varName, onValue).unless(), ifVar(layerVarName).unless())
+    .condition(
+      delay > 0 ? ifVar(varName, offValue) : ifVar(varName, onValue).unless(),
+      ifVar(layerVarName).unless(),
+    )
   if (!modifiers?.mandatory?.length && !leaderMode) {
     manipulator.toIfAlone({ key_code })
   }
@@ -343,12 +367,42 @@ export function layerToggleManipulator(
       .toAfterKeyUp(toSetVar(varName, offValue))
       .toAfterKeyUp(toSetVar(layerVarName, 0))
   }
+  let ifDelaying = ifVar(varName, delayValue).build()
+  if (delay > 0) {
+    manipulator
+      .toIfAlone(toSetVar(varName, offValue))
+      .toIfHeldDown(toSetVar(varName, onValue))
+      .toDelayedAction(
+        [],
+        [
+          { key_code, conditions: [ifDelaying] },
+          {
+            set_variable: { name: varName, value: offValue },
+            conditions: [ifDelaying],
+          },
+        ],
+      )
+      .parameters({
+        'basic.to_if_held_down_threshold_milliseconds': delay,
+        'basic.to_delayed_action_delay_milliseconds': delay,
+        'basic.to_if_alone_timeout_milliseconds': delay,
+      })
+  }
+
   if (conditions?.length) {
     manipulator.condition(...conditions)
   }
   if (notification) {
     const id = notificationId(varName)
-    manipulator.toNotificationMessage(id, notification)
+    if (delay > 0) {
+      manipulator.toIfHeldDown(toNotificationMessage(id, notification))
+      manipulator.toDelayedAction([], {
+        ...toRemoveNotificationMessage(id),
+        conditions: [ifDelaying],
+      })
+    } else {
+      manipulator.toNotificationMessage(id, notification)
+    }
     if (!leaderMode) manipulator.toAfterKeyUp(toRemoveNotificationMessage(id))
   }
   if (!context) {
@@ -389,4 +443,18 @@ function isModifiersAny({
 
 function notificationId(varName: string) {
   return `layer-${varName}`
+}
+
+function layerDelay(
+  delayed?: boolean | number,
+  context?: BuildContext,
+): number {
+  if (typeof delayed === 'number') return delayed
+  if (delayed === false) return 0
+
+  const params =
+    context?.getParameters(defaultLayerParameters) ?? defaultLayerParameters
+  if (delayed === true || params['layer.delay_by_default'])
+    return params['layer.delay_milliseconds']
+  return 0
 }
