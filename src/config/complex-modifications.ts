@@ -7,6 +7,7 @@ import { BuildContext } from '../utils/build-context.ts'
 
 import { defaultDoubleTapParameters } from './double-tap.ts'
 import { defaultDuoLayerParameters } from './duo-layer.ts'
+import { defaultLayerParameters } from './layer.ts'
 import { buildRule, RuleBuilder } from './rule.ts'
 import { defaultSimlayerParameters } from './simlayer.ts'
 
@@ -21,6 +22,7 @@ export const defaultComplexModificationsParameters: ComplexModificationsParamete
 
 export type ModificationParameters = ComplexModificationsParameters &
   Partial<typeof defaultDoubleTapParameters> &
+  Partial<typeof defaultLayerParameters> &
   Partial<typeof defaultSimlayerParameters> &
   Partial<typeof defaultDuoLayerParameters>
 
@@ -30,6 +32,8 @@ export function complexModifications(
 ): ComplexModifications {
   const {
     'double_tap.delay_milliseconds': doubleTapDelay,
+    'layer.delay_by_default': layerDelayByDefault,
+    'layer.delay_milliseconds': layerDelayDuration,
     'simlayer.threshold_milliseconds': simlayerThreshold,
     'duo_layer.threshold_milliseconds': duoLayerThreshold,
     'duo_layer.notification': duoLayerNotification,
@@ -39,6 +43,10 @@ export function complexModifications(
   const context = new BuildContext()
   context.setParameters<typeof defaultDoubleTapParameters>({
     'double_tap.delay_milliseconds': doubleTapDelay,
+  })
+  context.setParameters<typeof defaultLayerParameters>({
+    'layer.delay_by_default': layerDelayByDefault,
+    'layer.delay_milliseconds': layerDelayDuration,
   })
   context.setParameters<typeof defaultSimlayerParameters>({
     'simlayer.threshold_milliseconds': simlayerThreshold,

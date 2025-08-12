@@ -494,3 +494,107 @@ describe('layer() leader mode', () => {
     expect(manipulators[4].to).toEqual([toOff, toLayerVarOff, remove])
   })
 })
+
+describe('layer().delay()', () => {
+  test('delay() with defaults', () => {
+    const rule = layer('a')
+      .delay()
+      .manipulators({ 1: toKey(2) })
+      .build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(2)
+    expect(manipulators[0]).toEqual({
+      type: 'basic',
+      from: { key_code: 'a' },
+
+      conditions: [
+        { type: 'variable_if', name: 'layer-a', value: 0 },
+        { type: 'variable_unless', name: '__layer', value: 1 },
+      ],
+
+      to: [
+        { set_variable: { name: 'layer-a', value: '__delay' } },
+        { set_variable: { name: '__layer', value: 1 } },
+      ],
+
+      to_if_alone: [
+        { key_code: 'a' },
+        { set_variable: { name: 'layer-a', value: 0 } },
+      ],
+
+      to_after_key_up: [
+        { set_variable: { name: 'layer-a', value: 0 } },
+        { set_variable: { name: '__layer', value: 0 } },
+      ],
+
+      to_if_held_down: [
+        { set_variable: { name: 'layer-a', value: 1 } }, //
+      ],
+
+      to_delayed_action: {
+        to_if_invoked: [],
+        to_if_canceled: [
+          {
+            key_code: 'a',
+            conditions: [
+              { type: 'variable_if', name: 'layer-a', value: '__delay' },
+            ],
+          },
+          {
+            set_variable: { name: 'layer-a', value: 0 },
+            conditions: [
+              { type: 'variable_if', name: 'layer-a', value: '__delay' },
+            ],
+          },
+        ],
+      },
+
+      parameters: {
+        'basic.to_if_held_down_threshold_milliseconds': 200,
+        'basic.to_delayed_action_delay_milliseconds': 200,
+        'basic.to_if_alone_timeout_milliseconds': 200,
+      },
+    } as BasicManipulator)
+    expect(manipulators[1].conditions).toEqual([
+      { type: 'variable_if', name: 'layer-a', value: 1 },
+    ])
+  })
+
+  test('delay() with delay param', () => {
+    const rule = layer('a').delay(100).build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators[0].parameters).toEqual({
+      'basic.to_if_held_down_threshold_milliseconds': 100,
+      'basic.to_delayed_action_delay_milliseconds': 100,
+      'basic.to_if_alone_timeout_milliseconds': 100,
+    })
+  })
+
+  test('delay() with notification', () => {
+    const rule = layer('a').delay().notification().build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(1)
+    expect(manipulators[0].to_if_held_down?.[1]).toEqual({
+      set_notification_message: {
+        id: 'layer-layer-a',
+        text: 'Layer - layer-a',
+      },
+    })
+    expect(manipulators[0].to_after_key_up?.[2]).toEqual({
+      set_notification_message: { id: 'layer-layer-a', text: '' },
+    })
+    expect(manipulators[0].to_delayed_action?.to_if_canceled?.[2]).toEqual({
+      set_notification_message: { id: 'layer-layer-a', text: '' },
+      conditions: [{ type: 'variable_if', name: 'layer-a', value: '__delay' }],
+    })
+
+    const ruleB = layer('a').delay().notification('test-b').build()
+    const manipulatorB = ruleB.manipulators[0] as BasicManipulator
+    expect(manipulatorB.to_if_held_down?.[1]).toEqual({
+      set_notification_message: {
+        id: 'layer-layer-a',
+        text: 'test-b',
+      },
+    })
+  })
+})
