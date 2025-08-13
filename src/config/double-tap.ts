@@ -7,6 +7,7 @@ import {
 import {
   FromAndToKeyCode,
   fromOnlyKeyCodes,
+  stickyModifierKeyCodes,
   toOnlyKeyCodes,
 } from '../karabiner/key-code.ts'
 import { BuildContext } from '../utils/build-context.ts'
@@ -122,7 +123,7 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
 
     const keyCode = (this.from as FromKeyCodeEvent).key_code as FromAndToKeyCode
 
-    if (this.singleTapEvent === undefined) {
+    if (typeof this.singleTapEvent === 'undefined') {
       this.singleTapEvent = { key_code: keyCode }
       const modifiers = this.manipulator.from.modifiers?.mandatory as Array<
         Modifier | 'any'
@@ -133,6 +134,10 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
         ) as Modifier[]
       }
     }
+    const isSingleTapModifier =
+      this.singleTapEvent && 'key_code' in this.singleTapEvent
+        ? stickyModifierKeyCodes.includes(this.singleTapEvent.key_code as any)
+        : false
 
     const varNameParts = ['double-tap', keyCode]
     if (this.from.modifiers) {
@@ -152,17 +157,25 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
 
     const toggleManipulator: BasicManipulator = {
       ...this.manipulator,
-      to: [toSetVar(varName, 1)],
+      to: [
+        toSetVar(varName, 1),
+        ...(this.singleTapEvent && isSingleTapModifier
+          ? [this.singleTapEvent]
+          : []),
+      ],
       conditions: [...(this.manipulator.conditions || []), offCondition],
       to_delayed_action: {
         to_if_invoked: [
-          ...(this.singleTapEvent ? [this.singleTapEvent] : []),
+          ...(this.singleTapEvent && !isSingleTapModifier
+            ? [this.singleTapEvent]
+            : []),
           toSetVar(varName, 0),
         ],
         to_if_canceled: [toSetVar(varName, 0)],
       },
     }
     toggleManipulator.parameters = {
+      ...this.manipulator.parameters,
       'basic.to_delayed_action_delay_milliseconds': delay,
     }
 
