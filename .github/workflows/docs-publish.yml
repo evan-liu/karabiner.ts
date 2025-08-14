@@ -8,6 +8,7 @@ on:
       - '.github/workflows/docs-publish.yml'
       - 'docs/**'
       - 'examples/**'
+      - 'package.json' # To bundle new versions with editor
 
 jobs:
   build-and-publish:
