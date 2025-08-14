@@ -159,24 +159,35 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
       ...this.manipulator,
       to: [
         toSetVar(varName, 1),
-        ...(this.singleTapEvent && isSingleTapModifier
-          ? [this.singleTapEvent]
+        ...(isSingleTapModifier
+          ? [
+              {
+                ...this.singleTapEvent!,
+                lazy:
+                  this.singleTapEvent!.lazy ||
+                  typeof this.singleTapEvent!.lazy === 'undefined',
+              },
+            ]
           : []),
       ],
       conditions: [...(this.manipulator.conditions || []), offCondition],
       to_delayed_action: {
         to_if_invoked: [
-          ...(this.singleTapEvent && !isSingleTapModifier
-            ? [this.singleTapEvent]
-            : []),
+          ...(this.singleTapEvent ? [this.singleTapEvent] : []),
           toSetVar(varName, 0),
         ],
         to_if_canceled: [toSetVar(varName, 0)],
       },
     }
+
+    if (isSingleTapModifier && !toggleManipulator.to_if_held_down?.length) {
+      toggleManipulator.to_if_held_down = [this.singleTapEvent!]
+    }
+
     toggleManipulator.parameters = {
-      ...this.manipulator.parameters,
+      'basic.to_if_held_down_threshold_milliseconds': delay,
       'basic.to_delayed_action_delay_milliseconds': delay,
+      ...this.manipulator.parameters,
     }
 
     return [baseManipulator, toggleManipulator]

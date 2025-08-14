@@ -34,7 +34,10 @@ describe('mapDoubleTap()', () => {
             { set_variable: { name: 'double-tap-1', value: 0 } },
           ],
         },
-        parameters: { 'basic.to_delayed_action_delay_milliseconds': 200 },
+        parameters: {
+          'basic.to_delayed_action_delay_milliseconds': 200,
+          'basic.to_if_held_down_threshold_milliseconds': 200,
+        },
       },
     ])
   })
@@ -42,6 +45,7 @@ describe('mapDoubleTap()', () => {
   test('parameters', () => {
     expect(mapDoubleTap(1, 11).to(2).build()[1].parameters).toEqual({
       'basic.to_delayed_action_delay_milliseconds': 11,
+      'basic.to_if_held_down_threshold_milliseconds': 11,
     })
   })
 
@@ -77,7 +81,10 @@ describe('mapDoubleTap()', () => {
             { set_variable: { name: 'double-tap-1', value: 0 } },
           ],
         },
-        parameters: { 'basic.to_delayed_action_delay_milliseconds': 11 },
+        parameters: {
+          'basic.to_delayed_action_delay_milliseconds': 11,
+          'basic.to_if_held_down_threshold_milliseconds': 11,
+        },
       },
     ])
   })
@@ -146,8 +153,9 @@ describe('mapDoubleTap()', () => {
         from: { key_code: 'left_shift' },
         to: [
           { set_variable: { name: 'double-tap-left_shift', value: 1 } },
-          { key_code: 'left_shift' },
+          { key_code: 'left_shift', lazy: true },
         ],
+        to_if_held_down: [{ key_code: 'left_shift' }],
         conditions: [
           {
             description: undefined,
@@ -158,13 +166,17 @@ describe('mapDoubleTap()', () => {
         ],
         to_delayed_action: {
           to_if_invoked: [
+            { key_code: 'left_shift' },
             { set_variable: { name: 'double-tap-left_shift', value: 0 } },
           ],
           to_if_canceled: [
             { set_variable: { name: 'double-tap-left_shift', value: 0 } },
           ],
         },
-        parameters: { 'basic.to_delayed_action_delay_milliseconds': 200 },
+        parameters: {
+          'basic.to_delayed_action_delay_milliseconds': 200,
+          'basic.to_if_held_down_threshold_milliseconds': 200,
+        },
       },
     ])
 
@@ -201,7 +213,10 @@ describe('mapDoubleTap()', () => {
             { set_variable: { name: 'double-tap-left_shift', value: 0 } },
           ],
         },
-        parameters: { 'basic.to_delayed_action_delay_milliseconds': 200 },
+        parameters: {
+          'basic.to_delayed_action_delay_milliseconds': 200,
+          'basic.to_if_held_down_threshold_milliseconds': 200,
+        },
       },
     ])
 
@@ -235,7 +250,10 @@ describe('mapDoubleTap()', () => {
             { set_variable: { name: 'double-tap-left_shift', value: 0 } },
           ],
         },
-        parameters: { 'basic.to_delayed_action_delay_milliseconds': 200 },
+        parameters: {
+          'basic.to_delayed_action_delay_milliseconds': 200,
+          'basic.to_if_held_down_threshold_milliseconds': 200,
+        },
       },
     ])
   })
