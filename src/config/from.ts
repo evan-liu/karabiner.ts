@@ -43,7 +43,7 @@ export function map(
   if (typeof keyOrEvent === 'object')
     return new BasicManipulatorBuilder(keyOrEvent)
 
-  const keyCode = getKeyWithAlias<FromKeyCode>(
+  let keyCode = getKeyWithAlias<FromKeyCode>(
     keyOrEvent,
     toOnlyKeyCodes,
     'for from.key_code',

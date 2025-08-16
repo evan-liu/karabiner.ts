@@ -15,7 +15,7 @@ test('map()', () => {
     modifiers: { optional: ['command'] },
   })
 
-  for (const optionalAny of ['optionalAny', '?any', '??'] as const) {
+  for (let optionalAny of ['optionalAny', '?any', '??'] as const) {
     expect(map(1, optionalAny).to(2).build()[0].from).toEqual({
       key_code: '1',
       modifiers: { optional: ['any'] },

@@ -24,15 +24,15 @@ import {
   toOnlyKeyCodes,
 } from '../karabiner/key-code.ts'
 
-export const modifierKeyAliases = {
+export let modifierKeyAliases = {
   '⌘': 'command',
   '⌥': 'option',
   '⌃': 'control',
   '⇧': 'shift',
   '⇪': 'caps_lock',
-} /* c8 ignore next */ satisfies Record<string, Modifier>
+} as const /* c8 ignore next */ satisfies Record<string, Modifier>
 
-export const arrowKeyAliases = {
+export let arrowKeyAliases = {
   '↑': 'up_arrow',
   '↓': 'down_arrow',
   '←': 'left_arrow',
@@ -41,9 +41,9 @@ export const arrowKeyAliases = {
   '⇟': 'page_down',
   '↖︎': 'home',
   '↘︎': 'end',
-} /* c8 ignore next */ satisfies Record<string, ArrowKeyCode>
+} as const /* c8 ignore next */ satisfies Record<string, ArrowKeyCode>
 
-export const controlOrSymbolKeyAliases = {
+export let controlOrSymbolKeyAliases = {
   '⏎': 'return_or_enter',
   '⎋': 'escape',
   '⌫': 'delete_or_backspace',
@@ -61,7 +61,7 @@ export const controlOrSymbolKeyAliases = {
   ',': 'comma',
   '.': 'period',
   '/': 'slash',
-} /* c8 ignore next */ satisfies Record<string, ControlOrSymbolKeyCode>
+} as const /* c8 ignore next */ satisfies Record<string, ControlOrSymbolKeyCode>
 
 export type ModifierKeyAlias = keyof typeof modifierKeyAliases
 
@@ -70,13 +70,13 @@ export type ControlOrSymbolKeyAlias = keyof typeof controlOrSymbolKeyAliases
 export type KeyAlias = ArrowKeyAlias | ControlOrSymbolKeyAlias | '⇪'
 export type NumberKeyValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
-const keyAliases: Record<string, string> = {
+let keyAliases: Record<string, string> = {
   ...arrowKeyAliases,
   ...controlOrSymbolKeyAliases,
   '⇪': modifierKeyAliases['⇪'],
 } /* c8 ignore next */ satisfies Record<KeyAlias, KeyCode>
 
-const allKeyCodes = [
+let allKeyCodes = [
   ...stickyModifierKeyCodes,
   ...modifierKeyCodes,
   ...controlOrSymbolKeyCodes,
@@ -91,7 +91,7 @@ const allKeyCodes = [
   ...otherKeyCodes,
   ...fromOnlyKeyCodes,
   ...toOnlyKeyCodes,
-]
+] as const
 
 export function getKeyWithAlias<T extends KeyCode = KeyCode>(
   key: KeyCode | KeyAlias | NumberKeyValue | SideModifierAlias,
@@ -101,7 +101,7 @@ export function getKeyWithAlias<T extends KeyCode = KeyCode>(
   if (typeof key === 'number') return `${key}` as T
 
   if (key.length > 1 && isSideMultiModifierAlias(key)) {
-    const modifiers = parseSideMultiModifierAlias(key)
+    let modifiers = parseSideMultiModifierAlias(key)
     if (modifiers?.length === 1) {
       return modifiers[0] as T
     } else {
@@ -113,7 +113,7 @@ export function getKeyWithAlias<T extends KeyCode = KeyCode>(
     return keyAliases[key] as T
   }
 
-  const code = key as T
+  let code = key as T
   if (!allKeyCodes.includes(code)) {
     throw new Error(`${code} is not valid key_code`)
   }

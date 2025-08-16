@@ -9,7 +9,7 @@ import {
   NamedMultiModifierAlias,
 } from './multi-modifier.ts'
 
-const optionalAnyAliases = ['optionalAny', '?any', '??'] as const
+let optionalAnyAliases = ['optionalAny', '?any', '??'] as const
 export type OptionalAnyAlias = (typeof optionalAnyAliases)[number]
 
 export type OptionalModifierAlias = `?${

@@ -11,11 +11,11 @@ import {
 import { toKey } from './to.ts'
 
 describe('ManipulatorBuilder', () => {
-  const from: FromEvent = { key_code: 'a' }
-  const toEvent: ToEvent = { key_code: 'b', modifiers: ['command'], lazy: true }
+  let from: FromEvent = { key_code: 'a' }
+  let toEvent: ToEvent = { key_code: 'b', modifiers: ['command'], lazy: true }
 
   test('type and from', () => {
-    const builder = new BasicManipulatorBuilder(from)
+    let builder = new BasicManipulatorBuilder(from)
     expect(builder.from).toEqual(from)
     expect(builder.build()[0]).toEqual({ type: 'basic', from })
   })
@@ -78,7 +78,7 @@ describe('ManipulatorBuilder', () => {
   })
 
   test('to$(), toApp(), toPaste()', () => {
-    const to = new BasicManipulatorBuilder(from)
+    let to = new BasicManipulatorBuilder(from)
       .to$('cd')
       .toApp('Finder')
       .toApp('Xcode.app')
@@ -171,14 +171,14 @@ describe('ManipulatorBuilder', () => {
   })
 
   test('toStickyModifier()', () => {
-    const manipulator = new BasicManipulatorBuilder(from)
+    let manipulator = new BasicManipulatorBuilder(from)
       .toStickyModifier('fn')
       .build()[0]
     expect(manipulator.to).toEqual([{ sticky_modifier: { fn: 'toggle' } }])
   })
 
   test('toCgEventDoubleClick()', () => {
-    const manipulator = new BasicManipulatorBuilder(from)
+    let manipulator = new BasicManipulatorBuilder(from)
       .toCgEventDoubleClick(1)
       .build()[0]
     expect(manipulator.to).toEqual([
@@ -264,7 +264,7 @@ describe('ManipulatorBuilder', () => {
   })
 
   test('description()', () => {
-    const manipulatorBuilder = new BasicManipulatorBuilder(from)
+    let manipulatorBuilder = new BasicManipulatorBuilder(from)
     expect(manipulatorBuilder.build()[0].description).toBeUndefined()
     manipulatorBuilder.description('a')
     expect(manipulatorBuilder.build()[0].description).toBe('a')
@@ -304,13 +304,13 @@ describe('ManipulatorBuilder', () => {
 })
 
 test('isManipulatorBuilder()', () => {
-  const from: FromEvent = { key_code: 'a' }
+  let from: FromEvent = { key_code: 'a' }
   expect(isManipulatorBuilder({ type: 'basic', from })).toBe(false)
   expect(isManipulatorBuilder(new BasicManipulatorBuilder(from))).toBe(true)
 })
 
 test('buildManipulators(ManipulatorMap)', () => {
-  const manipulators = buildManipulators({
+  let manipulators = buildManipulators({
     1: toKey(2),
     3: [toKey(4), toKey(5)],
   })

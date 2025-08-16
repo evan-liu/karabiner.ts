@@ -20,12 +20,12 @@ import {
 } from './to'
 
 test('duoLayer()', () => {
-  const layer = duoLayer(1, 2).manipulators([map(3).to(4)])
-  const rule = layer.build()
+  let layer = duoLayer(1, 2).manipulators([map(3).to(4)])
+  let rule = layer.build()
   expect(rule.description).toBe('DuoLayer 1 2')
   expect(layer.description('test').build().description).toBe('test')
 
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   // One layer manipulator to set variable
   expect(manipulators.length).toBe(2)
   expect(manipulators[0]).toEqual({
@@ -49,9 +49,9 @@ test('duoLayer()', () => {
 })
 
 test('duoLayer() varName and values', () => {
-  const rule = duoLayer(1, 2, 'var12', 2, -1).build()
+  let rule = duoLayer(1, 2, 'var12', 2, -1).build()
   expect(rule.description).toBe(`DuoLayer var12`)
-  const manipulator = rule.manipulators[0] as BasicManipulator
+  let manipulator = rule.manipulators[0] as BasicManipulator
   expect(manipulator.to).toEqual([
     { set_variable: { name: 'var12', value: 2 } },
   ])
@@ -62,18 +62,16 @@ test('duoLayer() varName and values', () => {
 })
 
 test('duoLayer().threshold()', () => {
-  const rule = duoLayer(1, 2).threshold(100).build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let rule = duoLayer(1, 2).threshold(100).build()
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[0].parameters).toEqual({
     'basic.simultaneous_threshold_milliseconds': 100,
   })
 })
 
 test('duoLayer().options()', () => {
-  const rule = duoLayer(1, 2)
-    .options({ key_up_order: 'strict_inverse' })
-    .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let rule = duoLayer(1, 2).options({ key_up_order: 'strict_inverse' }).build()
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(
     (manipulators[0].from as FromSimultaneousEvent).simultaneous_options
       ?.key_up_order,
@@ -81,8 +79,8 @@ test('duoLayer().options()', () => {
 })
 
 test('duoLayer().condition()', () => {
-  const rule = duoLayer(1, 2).condition(ifVar('c')).build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let rule = duoLayer(1, 2).condition(ifVar('c')).build()
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[0].conditions).toEqual([
     { type: 'variable_unless', name: 'duo-layer-1-2', value: 1 },
     { type: 'variable_if', name: 'c', value: 1 },
@@ -90,7 +88,7 @@ test('duoLayer().condition()', () => {
 })
 
 test('duoLayer() with same keys', () => {
-  const { rules } = complexModifications([
+  let { rules } = complexModifications([
     duoLayer(1, 2).manipulators([map(3).to(4)]),
     duoLayer(1, 2).manipulators([map(3).to(4)]),
     duoLayer(1, 2)
@@ -114,8 +112,8 @@ test('duoLayer() with same keys', () => {
 })
 
 test('duoLayer() notification', () => {
-  const rule = duoLayer('a', 'b').notification(true).build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let rule = duoLayer('a', 'b').notification(true).build()
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(1)
   expect(manipulators[0].to?.[1]).toEqual({
     set_notification_message: {
@@ -123,7 +121,7 @@ test('duoLayer() notification', () => {
       text: 'DuoLayer a b',
     },
   })
-  const from = manipulators[0].from as Extract<
+  let from = manipulators[0].from as Extract<
     FromEvent,
     { simultaneous: FromKeyType[] }
   >
@@ -131,8 +129,8 @@ test('duoLayer() notification', () => {
     set_notification_message: { id: 'duo-layer-duo-layer-a-b', text: '' },
   })
 
-  const ruleB = duoLayer('a', 'b').notification('test-b').build()
-  const manipulatorB = ruleB.manipulators[0] as BasicManipulator
+  let ruleB = duoLayer('a', 'b').notification('test-b').build()
+  let manipulatorB = ruleB.manipulators[0] as BasicManipulator
   expect(manipulatorB.to?.[1]).toEqual({
     set_notification_message: {
       id: 'duo-layer-duo-layer-a-b',
@@ -144,8 +142,8 @@ test('duoLayer() notification', () => {
 test('duoLayer() notification parameters', () => {
   defaultDuoLayerParameters['duo_layer.notification'] = 'ab'
 
-  const rule = duoLayer('a', 'b').build()
-  const manipulator = rule.manipulators[0] as BasicManipulator
+  let rule = duoLayer('a', 'b').build()
+  let manipulator = rule.manipulators[0] as BasicManipulator
   expect(manipulator.to?.[1]).toEqual({
     set_notification_message: {
       id: 'duo-layer-duo-layer-a-b',
@@ -155,12 +153,12 @@ test('duoLayer() notification parameters', () => {
 })
 
 test('duoLayer() parameters in BuildContext', () => {
-  const context = new BuildContext()
+  let context = new BuildContext()
   context.setParameters<typeof defaultDuoLayerParameters>({
     'duo_layer.notification': 'bc',
   })
-  const rule = duoLayer('a', 'b').build(context)
-  const manipulator = rule.manipulators[0] as BasicManipulator
+  let rule = duoLayer('a', 'b').build(context)
+  let manipulator = rule.manipulators[0] as BasicManipulator
   expect(manipulator.to?.[1]).toEqual({
     set_notification_message: {
       id: 'duo-layer-duo-layer-a-b',
@@ -170,16 +168,16 @@ test('duoLayer() parameters in BuildContext', () => {
 })
 
 test('duoLayer().toIfActivated() toIfDeactivated()', () => {
-  const rule = duoLayer('a', 'b')
+  let rule = duoLayer('a', 'b')
     .toIfActivated(toNotificationMessage('testId', 'testMsg'))
     .toIfDeactivated(toRemoveNotificationMessage('testId'))
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(1)
   expect(manipulators[0].to?.[1]).toEqual({
     set_notification_message: { id: 'testId', text: 'testMsg' },
   })
-  const from = manipulators[0].from as Extract<
+  let from = manipulators[0].from as Extract<
     FromEvent,
     { simultaneous: FromKeyType[] }
   >
@@ -190,20 +188,20 @@ test('duoLayer().toIfActivated() toIfDeactivated()', () => {
 
 describe('duoLayer().leaderMode()', () => {
   test('leader() with defaults', () => {
-    const rule = duoLayer('a', 'b')
+    let rule = duoLayer('a', 'b')
       .leaderMode()
       .manipulators({ 1: toKey(2), 3: toKey(4) })
       .build()
 
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(5)
 
     // layer toggle
-    const from = manipulators[0].from as FromSimultaneousEvent
+    let from = manipulators[0].from as FromSimultaneousEvent
     expect(from.simultaneous_options?.to_after_key_up).toEqual([])
 
-    const ifOn = ifVar('duo-layer-a-b', 1).build()
-    const toOff = toSetVar('duo-layer-a-b', 0)
+    let ifOn = ifVar('duo-layer-a-b', 1).build()
+    let toOff = toSetVar('duo-layer-a-b', 0)
 
     // layer keys
     expect(manipulators[1].to?.[1]).toEqual(toOff)
@@ -218,18 +216,18 @@ describe('duoLayer().leaderMode()', () => {
   })
 
   test('leader() set escape keys', () => {
-    const rule = duoLayer('a', 'b').leaderMode({ escape: 'spacebar' }).build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let rule = duoLayer('a', 'b').leaderMode({ escape: 'spacebar' }).build()
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators[1].from).toEqual({ key_code: 'spacebar' })
     expect(manipulators[1].to?.[0]).toEqual(toSetVar('duo-layer-a-b', 0))
     expect(manipulators[1].conditions).toEqual([
       ifVar('duo-layer-a-b', 1).build(),
     ])
 
-    const rule2 = duoLayer('c', 'd')
+    let rule2 = duoLayer('c', 'd')
       .leaderMode({ escape: ['spacebar', { pointing_button: 2 }] })
       .build()
-    const manipulators2 = rule2.manipulators as BasicManipulator[]
+    let manipulators2 = rule2.manipulators as BasicManipulator[]
     expect(manipulators2[1].from).toEqual({ key_code: 'spacebar' })
     expect(manipulators2[1].to?.[0]).toEqual(toSetVar('duo-layer-c-d', 0))
     expect(manipulators2[1].conditions).toEqual([
@@ -243,47 +241,47 @@ describe('duoLayer().leaderMode()', () => {
   })
 
   test('leader() with notification()', () => {
-    const rule = duoLayer('a', 'b', 'v')
+    let rule = duoLayer('a', 'b', 'v')
       .leaderMode()
       .notification()
       .manipulators({ 1: toKey(2) })
       .build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(4)
 
     // layer toggle
-    const from = manipulators[0].from as FromSimultaneousEvent
+    let from = manipulators[0].from as FromSimultaneousEvent
     expect(from.simultaneous_options?.to_after_key_up).toEqual([])
     expect(manipulators[0].to?.[1]).toEqual(
       toNotificationMessage('duo-layer-v', 'DuoLayer v'),
     )
 
-    const remove = toRemoveNotificationMessage('duo-layer-v')
+    let remove = toRemoveNotificationMessage('duo-layer-v')
     // layer key
     expect(manipulators[1].to?.[2]).toEqual(remove)
     // escape keys
     expect(manipulators[2].to?.[1]).toEqual(remove)
     expect(manipulators[3].to?.[1]).toEqual(remove)
 
-    const rule2 = duoLayer('c', 'd').notification('Test CD').build()
-    const manipulators2 = rule2.manipulators as BasicManipulator[]
+    let rule2 = duoLayer('c', 'd').notification('Test CD').build()
+    let manipulators2 = rule2.manipulators as BasicManipulator[]
     expect(manipulators2[0].to?.[1]).toEqual(
       toNotificationMessage('duo-layer-duo-layer-c-d', 'Test CD'),
     )
   })
 
   test('leader() with sticky', () => {
-    const rule = duoLayer('a', 'b')
+    let rule = duoLayer('a', 'b')
       .leaderMode({ sticky: true })
       .notification()
       .manipulators({ 1: toKey(2) })
       .build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(4)
 
-    const ifOn = ifVar('duo-layer-a-b', 1).build()
-    const toOff = toSetVar('duo-layer-a-b', 0)
-    const remove = toRemoveNotificationMessage('duo-layer-duo-layer-a-b')
+    let ifOn = ifVar('duo-layer-a-b', 1).build()
+    let toOff = toSetVar('duo-layer-a-b', 0)
+    let remove = toRemoveNotificationMessage('duo-layer-duo-layer-a-b')
 
     // layer key
     expect(manipulators[1].to?.length).toEqual(1)
@@ -300,8 +298,8 @@ describe('duoLayer().leaderMode()', () => {
 
 describe('duoLayer().delay()', () => {
   test('delay() creates two manipulators with roll-over protection', () => {
-    const rule = duoLayer('x', 'y').delay().build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let rule = duoLayer('x', 'y').delay().build()
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(2)
 
     // Both manipulators should have roll-over protection
@@ -318,8 +316,8 @@ describe('duoLayer().delay()', () => {
   })
 
   test('delay() with custom delay value', () => {
-    const rule = duoLayer('x', 'y').delay(150).build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let rule = duoLayer('x', 'y').delay(150).build()
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(2)
     manipulators.forEach((manipulator) => {
       expect(manipulator.parameters).toEqual(
@@ -332,8 +330,8 @@ describe('duoLayer().delay()', () => {
   })
 
   test('delay() with notification shows on hold, clears on release', () => {
-    const rule = duoLayer('x', 'y').delay().notification('Test').build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let rule = duoLayer('x', 'y').delay().notification('Test').build()
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(2)
 
     // Both manipulators should have notification in to_if_held_down
@@ -349,20 +347,20 @@ describe('duoLayer().delay()', () => {
   })
 
   test('delay() handles both key orders for roll-over protection', () => {
-    const rule = duoLayer('j', 'k').delay().build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let rule = duoLayer('j', 'k').delay().build()
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(2)
 
     // Check that both key orders are created
-    const keyArrays = manipulators.map((m) => {
-      const from = m.from as { simultaneous: Array<{ key_code: string }> }
+    let keyArrays = manipulators.map((m) => {
+      let from = m.from as { simultaneous: Array<{ key_code: string }> }
       return from.simultaneous.map((k) => k.key_code).join(',')
     })
     expect(keyArrays).toEqual(['j,k', 'k,j'])
 
     // Both should use strict key_down_order
     manipulators.forEach((x) => {
-      const from = x.from as FromSimultaneousEvent
+      let from = x.from as FromSimultaneousEvent
       expect(from.simultaneous_options?.key_down_order).toBe('strict')
     })
 
@@ -378,9 +376,9 @@ describe('duoLayer().delay()', () => {
   })
 
   test('delay() respects global defaults and explicit overrides', () => {
-    const originalDelayByDefault =
+    let originalDelayByDefault =
       defaultDuoLayerParameters['duo_layer.delay_by_default']
-    const originalDelayMs =
+    let originalDelayMs =
       defaultDuoLayerParameters['duo_layer.delay_milliseconds']
 
     defaultDuoLayerParameters['duo_layer.delay_by_default'] = true
@@ -393,7 +391,7 @@ describe('duoLayer().delay()', () => {
     expect(duoLayer('x', 'y').delay(false).build().manipulators.length).toBe(1)
 
     // Custom timing works
-    const rule = duoLayer('x', 'y').delay(300).build()
+    let rule = duoLayer('x', 'y').delay(300).build()
     expect((rule.manipulators[0] as BasicManipulator).parameters).toEqual(
       expect.objectContaining({
         'basic.to_if_held_down_threshold_milliseconds': 300,

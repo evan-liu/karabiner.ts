@@ -5,7 +5,7 @@ import {
 import { RuleBuilder } from './config/rule.ts'
 import { KarabinerConfig, Rule } from './karabiner/karabiner-config.ts'
 
-export const writeContext = {
+export let writeContext = {
   karabinerConfigDir() {
     return require('node:path').join(
       require('node:os').homedir(),
@@ -59,15 +59,15 @@ export function writeToProfile(
   if (typeof writeTarget === 'string') {
     writeTarget = { name: writeTarget, dryRun: writeTarget === '--dry-run' }
   }
-  const { name, dryRun } = writeTarget
-  const jsonPath =
+  let { name, dryRun } = writeTarget
+  let jsonPath =
     writeTarget.karabinerJsonPath ?? writeContext.karabinerConfigFile()
 
-  const config: KarabinerConfig = dryRun
+  let config: KarabinerConfig = dryRun
     ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
     : writeContext.readKarabinerConfig(jsonPath)
 
-  const profile = config?.profiles.find((v) => v.name === name)
+  let profile = config?.profiles.find((v) => v.name === name)
   if (!profile)
     exitWithError(`⚠️ Profile ${name} not found in ${jsonPath}.\n
 ℹ️ Please check the profile name in the Karabiner-Elements UI and 
@@ -81,7 +81,7 @@ export function writeToProfile(
     exitWithError(e)
   }
 
-  const json = JSON.stringify(config, null, 2)
+  let json = JSON.stringify(config, null, 2)
 
   if (dryRun) {
     console.info(json)
@@ -109,10 +109,10 @@ export function writeToGlobal(
   global: KarabinerConfig['global'],
   karabinerJsonPath?: string,
 ) {
-  const jsonPath = karabinerJsonPath ?? writeContext.karabinerConfigFile()
-  const config: KarabinerConfig = writeContext.readKarabinerConfig(jsonPath)
+  let jsonPath = karabinerJsonPath ?? writeContext.karabinerConfigFile()
+  let config: KarabinerConfig = writeContext.readKarabinerConfig(jsonPath)
   config.global = { ...config.global, ...global }
-  const json = JSON.stringify(config, null, 2)
+  let json = JSON.stringify(config, null, 2)
 
   writeContext.writeKarabinerConfig(json, jsonPath).catch(exitWithError)
 

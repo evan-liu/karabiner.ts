@@ -24,7 +24,7 @@ export function withCondition(
     | Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
 ) => Manipulator[] & ManipulatorBuilder {
   return (manipulators) => {
-    const sharedConditions = conditions.map(buildCondition)
+    let sharedConditions = conditions.map(buildCondition)
     function addSharedConditions(manipulator: Manipulator) {
       if (manipulator.type !== 'basic') return manipulator
       return {
@@ -33,10 +33,10 @@ export function withCondition(
       }
     }
 
-    const src = Array.isArray(manipulators)
+    let src = Array.isArray(manipulators)
       ? manipulators
       : buildManipulators(manipulators)
-    const result = src.reduce(
+    let result = src.reduce(
       (r, v) => [...r, ...buildManipulators(v).map(addSharedConditions)],
       [] as Manipulator[],
     )

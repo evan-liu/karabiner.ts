@@ -45,7 +45,7 @@ export class MouseMotionToScrollManipulatorBuilder
   }
 
   condition(...v: Array<Condition | ConditionBuilder>): this {
-    const { conditions = [] } = this.manipulator
+    let { conditions = [] } = this.manipulator
     this.manipulator.conditions = [...conditions, ...v.map(buildCondition)]
     return this
   }

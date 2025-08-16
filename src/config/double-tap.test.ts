@@ -123,7 +123,7 @@ describe('mapDoubleTap()', () => {
         mapDoubleTap(1, '⌘', '⌥', 33),
         mapDoubleTap(1, 'optionalAny', 44),
       ].map((v) => {
-        const { from, parameters } = v.to(2).build()[1]
+        let { from, parameters } = v.to(2).build()[1]
         return [
           from.modifiers,
           parameters?.['basic.to_delayed_action_delay_milliseconds'],

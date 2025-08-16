@@ -71,8 +71,8 @@ export type SideMultiModifierAlias = `${SideModifierFlag}${
 
 export type FromModifierParam = ModifierParam | 'any'
 
-const leftModifierRegExp = /^(left|l|<|‹)([⌘⌥⌃⇧]*)$/
-const rightModifierRegExp = /^(right|r|>|›)([⌘⌥⌃⇧]*)$/
+let leftModifierRegExp = /^(left|l|<|‹)([⌘⌥⌃⇧]*)$/
+let rightModifierRegExp = /^(right|r|>|›)([⌘⌥⌃⇧]*)$/
 
 export function parseFromModifierParams(
   mandatoryParam?: FromModifierParam | '' | null,
@@ -93,7 +93,7 @@ function parseFromModifiers(
   return parseModifierParam(param)
 }
 
-const sidedModifiers = new Set<string>([
+let sidedModifiers = new Set<string>([
   'command',
   'option',
   'control',
@@ -109,11 +109,11 @@ export function isSideMultiModifierAlias(
 export function parseSideMultiModifierAlias(
   src: SideMultiModifierAlias,
 ): Modifier[] | undefined {
-  const leftMatched = src.match(leftModifierRegExp)
+  let leftMatched = src.match(leftModifierRegExp)
   if (leftMatched) {
     return parseSideModifier('left', leftMatched[2] as ModifierParam)
   }
-  const rightMatched = src.match(rightModifierRegExp)
+  let rightMatched = src.match(rightModifierRegExp)
   if (rightMatched) {
     return parseSideModifier('right', rightMatched[2] as ModifierParam)
   }

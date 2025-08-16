@@ -9,26 +9,26 @@ import {
 
 import { toKey, ToKeyParam } from './to.ts'
 
-const defaultMap: Record<string, ToEvent> = {}
+let defaultMap: Record<string, ToEvent> = {}
 for (let i = 0; i <= 9; i++) {
   defaultMap[i] = toKey(i as NumberKeyValue)
 }
 
-const letterKeys = 'abcdefghijklmnopqrstuvwxyz'.split('') as LetterKeyCode[]
-for (const k of letterKeys) {
+let letterKeys = 'abcdefghijklmnopqrstuvwxyz'.split('') as LetterKeyCode[]
+for (let k of letterKeys) {
   defaultMap[k] = toKey(k)
   defaultMap[k.toUpperCase()] = toKey(k, '⇧')
 }
 
-const keyAliases = [
+let keyAliases = [
   ...Object.keys(arrowKeyAliases),
   ...Object.keys(controlOrSymbolKeyAliases),
 ]
-for (const k of keyAliases) {
+for (let k of keyAliases) {
   defaultMap[k] = toKey(k as KeyAlias)
 }
 
-const shiftKeys = {
+let shiftKeys = {
   1: '!',
   2: '@',
   3: '#',
@@ -50,8 +50,8 @@ const shiftKeys = {
   '\\': '|',
   ']': '}',
   '`': '~',
-}
-for (const [key, shiftKey] of Object.entries(shiftKeys)) {
+} as const
+for (let [key, shiftKey] of Object.entries(shiftKeys)) {
   defaultMap[shiftKey] = toKey(key as ToKeyParam, '⇧')
 }
 
@@ -61,7 +61,7 @@ export function toTypeSequence(
   map?: Record<string, ToEvent>,
 ): ToEvent[] {
   return src.split('').map((k) => {
-    const event = map?.[k] || defaultMap[k]
+    let event = map?.[k] || defaultMap[k]
     if (!event)
       throw new Error(
         `${k} is unknown. Please provide a map with { ${k}: {ToEvent} }`,

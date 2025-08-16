@@ -9,7 +9,7 @@ import { withModifier } from './with-modifier'
 
 describe('withModifier()', () => {
   test('Add the shared modifiers to `from` but not `to`', () => {
-    const manipulators = withModifier('⌘⌥')([
+    let manipulators = withModifier('⌘⌥')([
       map(1, '⌃').to('a'),
       map(2, undefined, '⌃').to('b'),
     ]).build() as BasicManipulator[]

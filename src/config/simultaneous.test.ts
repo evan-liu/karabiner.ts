@@ -5,7 +5,7 @@ import { toOnlyKeyCodes } from '../karabiner/key-code'
 import { mapSimultaneous } from './simultaneous'
 
 test('mapSimultaneous()', () => {
-  const { from, parameters } = mapSimultaneous(
+  let { from, parameters } = mapSimultaneous(
     ['a', '←', 2, { any: 'pointing_button' }],
     { key_up_order: 'strict' },
     123,

@@ -1,6 +1,6 @@
 // See https://github.com/pqrs-org/Karabiner-Elements/blob/main/src/apps/SettingsWindow/Resources/simple_modifications.json
 
-export const fromAndToConsumerKeyCodes = [
+export let fromAndToConsumerKeyCodes = [
   // Media controls
   'rewind',
   'play_or_pause',
@@ -26,7 +26,7 @@ export const fromAndToConsumerKeyCodes = [
   'fastforward',
 ] as const
 
-export const fromOnlyConsumerKeyCodes = [
+export let fromOnlyConsumerKeyCodes = [
   // Media controls
   'menu', // Touch ID on Magic Keyboard
   // Application Launch keys
@@ -123,7 +123,7 @@ export const fromOnlyConsumerKeyCodes = [
   'three_dimensional_mode_select',
 ] as const
 
-export const toOnlyConsumerKeyCodes = [
+export let toOnlyConsumerKeyCodes = [
   // Media controls
   'display_brightness_decrement',
   'display_brightness_increment',

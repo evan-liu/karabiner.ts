@@ -23,15 +23,15 @@ import {
 } from './to'
 
 test('simlayer()', () => {
-  const layer = simlayer('a', 'b-mode', 1, true, false).manipulators([
+  let layer = simlayer('a', 'b-mode', 1, true, false).manipulators([
     map('c').to('d'),
     map('e'),
   ])
-  const rule = layer.build()
+  let rule = layer.build()
   expect(rule.description).toBe(`Simlayer - b-mode`)
   expect(layer.description('test').build().description).toBe('test')
 
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   // Layer manipulator to set variable for each manipulator
   expect(manipulators.length).toBe(4)
   expect(manipulators[2]).toEqual({
@@ -61,33 +61,33 @@ test('simlayer()', () => {
 })
 
 test('simlayer() default varName', () => {
-  const rule = simlayer('a')
+  let rule = simlayer('a')
     .manipulators([map('c').to('d')])
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[0].conditions).toEqual([
     { type: 'variable_if', name: 'simlayer-a', value: 1 },
   ])
 })
 
 test('simlayer() with multiple key', () => {
-  const rule = simlayer(['a', 'b'], 'c')
+  let rule = simlayer(['a', 'b'], 'c')
     .manipulators([map(1).to(2)])
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(3)
 
-  const from = manipulators.map((v) => v.from) as any[]
+  let from = manipulators.map((v) => v.from) as any[]
   from[1].simultaneous[0].key_code = from[2].simultaneous[0].key_code
   expect(manipulators[1]).toEqual(manipulators[2])
 })
 
 test('simlayer() with conditions', () => {
-  const rule = simlayer('a', 'b')
+  let rule = simlayer('a', 'b')
     .condition(ifVar('c'))
     .manipulators([map(1).to(2)])
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[1].conditions).toEqual([
     { type: 'variable_if', name: 'c', value: 1 },
   ])
@@ -117,12 +117,12 @@ test('simlayer().enableLayer()', () => {
     simlayer('a', 'b').enableLayer('c', 'd').enableLayer('c'),
   ).toThrowError()
 
-  const rule = simlayer('a', 'b')
+  let rule = simlayer('a', 'b')
     .enableLayer('c')
     .condition(ifVar('d'))
     .manipulators([map(1).to(2)])
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(3)
   expect(manipulators[0]).toEqual({
     type: 'basic',
@@ -205,17 +205,17 @@ test('simlayer() invalid key', () => {
 })
 
 test('simlayer().toIfActivated() toIfDeactivated()', () => {
-  const rule = simlayer('a', 'b')
+  let rule = simlayer('a', 'b')
     .manipulators([map(1).to(2)])
     .toIfActivated(toNotificationMessage('testId', 'testMsg'))
     .toIfDeactivated(toRemoveNotificationMessage('testId'))
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(2)
   expect(manipulators[1].to?.[2]).toEqual({
     set_notification_message: { id: 'testId', text: 'testMsg' },
   })
-  const from = manipulators[1].from as Extract<
+  let from = manipulators[1].from as Extract<
     FromEvent,
     { simultaneous: FromKeyType[] }
   >

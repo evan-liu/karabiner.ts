@@ -9,9 +9,9 @@ import { BasicManipulator } from '../karabiner/karabiner-config'
 import { withCondition } from './with-condition'
 
 test('withCondition()', () => {
-  const ifA = ifVar('a').build()
-  const ifB = ifVar('b').build()
-  const manipulators = withCondition(ifA)([
+  let ifA = ifVar('a').build()
+  let ifB = ifVar('b').build()
+  let manipulators = withCondition(ifA)([
     map(1).to(2),
     map(3).to(4).condition(ifB),
     { type: 'mouse_motion_to_scroll' },

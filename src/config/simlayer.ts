@@ -26,7 +26,7 @@ import { FromModifierParam } from './modifier.ts'
 import { BasicRuleBuilder } from './rule.ts'
 import { toSetVar } from './to.ts'
 
-export const defaultSimlayerParameters = {
+export let defaultSimlayerParameters = {
   'simlayer.threshold_milliseconds': 200,
 }
 
@@ -64,7 +64,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     private readonly onValue: ToVariable['value'] = 1,
     private readonly offValue: ToVariable['value'] = 0,
   ) {
-    const keys = toArray(key).map((v) =>
+    let keys = toArray(key).map((v) =>
       getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as simlayer key'),
     )
     if (!varName) {
@@ -135,22 +135,21 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
   }
 
   public build(context?: BuildContext): Rule {
-    const rule = super.build(context)
-    const params =
+    let rule = super.build(context)
+    let params =
       context?.getParameters(defaultSimlayerParameters) ??
       defaultSimlayerParameters
-    const threshold =
-      this.threshold || params['simlayer.threshold_milliseconds']
+    let threshold = this.threshold || params['simlayer.threshold_milliseconds']
 
-    const conditions =
+    let conditions =
       this.conditions.length > 1
         ? this.conditions
             .filter((v) => v !== this.layerCondition)
             .map(buildCondition)
         : undefined
 
-    const setVarOn = toSetVar(this.varName, this.onValue)
-    const setVarOff = toSetVar(this.varName, this.offValue)
+    let setVarOn = toSetVar(this.varName, this.onValue)
+    let setVarOff = toSetVar(this.varName, this.offValue)
     rule.manipulators.concat().forEach((v) => {
       if (v.type !== 'basic') {
         throw new Error(
@@ -158,7 +157,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
         )
       }
 
-      const fromKey = (v.from as { key_code: FromKeyCode })?.key_code
+      let fromKey = (v.from as { key_code: FromKeyCode })?.key_code
       if (!fromKey) {
         throw new Error(
           `Missing from.key_code in simlayer ${this.ruleDescription}`,
@@ -172,7 +171,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
         }
       }
 
-      for (const layerKey of this.keys) {
+      for (let layerKey of this.keys) {
         rule.manipulators.push({
           type: 'basic',
           parameters: {
@@ -196,7 +195,7 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
       }
     })
 
-    for (const key_code of this.sharedLayerKeys) {
+    for (let key_code of this.sharedLayerKeys) {
       rule.manipulators = [
         ...layerToggleManipulator(
           key_code,

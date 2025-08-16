@@ -28,7 +28,7 @@ import { FromModifierParam } from './modifier.ts'
 import { supportManipulator } from './support-manipulator.ts'
 import { toSetVar } from './to.ts'
 
-export const defaultDoubleTapParameters = {
+export let defaultDoubleTapParameters = {
   'double_tap.delay_milliseconds': 200,
 }
 
@@ -59,12 +59,12 @@ export function mapDoubleTap(
   arg2?: FromModifierParam | number,
   arg3?: number,
 ) {
-  const keyCode = getKeyWithAlias<FromAndToKeyCode>(
+  let keyCode = getKeyWithAlias<FromAndToKeyCode>(
     key,
     [...fromOnlyKeyCodes, ...toOnlyKeyCodes],
     'for double tap',
   )
-  const builder = new DoubleTapManipulatorBuilder({ key_code: keyCode })
+  let builder = new DoubleTapManipulatorBuilder({ key_code: keyCode })
   if (arg3) {
     builder.delay(arg3)
     builder.from.modifiers = parseFromModifierOverload(
@@ -116,16 +116,16 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
   }
 
   public build(context?: BuildContext): BasicManipulator[] {
-    const params =
+    let params =
       context?.getParameters(defaultDoubleTapParameters) ??
       defaultDoubleTapParameters
-    const delay = this.delayParam || params['double_tap.delay_milliseconds']
+    let delay = this.delayParam || params['double_tap.delay_milliseconds']
 
-    const keyCode = (this.from as FromKeyCodeEvent).key_code as FromAndToKeyCode
+    let keyCode = (this.from as FromKeyCodeEvent).key_code as FromAndToKeyCode
 
     if (typeof this.singleTapEvent === 'undefined') {
       this.singleTapEvent = { key_code: keyCode }
-      const modifiers = this.manipulator.from.modifiers?.mandatory as Array<
+      let modifiers = this.manipulator.from.modifiers?.mandatory as Array<
         Modifier | 'any'
       >
       if (modifiers) {
@@ -134,28 +134,28 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
         ) as Modifier[]
       }
     }
-    const isSingleTapModifier =
+    let isSingleTapModifier =
       this.singleTapEvent && 'key_code' in this.singleTapEvent
         ? stickyModifierKeyCodes.includes(this.singleTapEvent.key_code as any)
         : false
 
-    const varNameParts = ['double-tap', keyCode]
+    let varNameParts = ['double-tap', keyCode]
     if (this.from.modifiers) {
       ;[this.from.modifiers.mandatory, this.from.modifiers.optional]
         .map((v) => (v?.length ? v.join(',') : ''))
         .forEach((v) => v && varNameParts.push(v))
     }
-    const varName = varNameParts.join('-')
+    let varName = varNameParts.join('-')
 
-    const onCondition = ifVar(varName).build()
-    const offCondition = ifVar(varName).unless().build()
+    let onCondition = ifVar(varName).build()
+    let offCondition = ifVar(varName).unless().build()
 
-    const baseManipulator = supportManipulator({
+    let baseManipulator = supportManipulator({
       ...this.manipulator,
       conditions: [onCondition],
     })
 
-    const toggleManipulator: BasicManipulator = {
+    let toggleManipulator: BasicManipulator = {
       ...this.manipulator,
       to: [
         toSetVar(varName, 1),

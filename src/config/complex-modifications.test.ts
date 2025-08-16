@@ -11,7 +11,7 @@ import { simlayer } from './simlayer'
 
 describe('complexModifications()', () => {
   test('Parameters', () => {
-    const result = complexModifications(
+    let result = complexModifications(
       [
         rule('test').manipulators([mapDoubleTap(1).to(2)]),
         simlayer('a', 'b').manipulators([map('a').to('b')]),

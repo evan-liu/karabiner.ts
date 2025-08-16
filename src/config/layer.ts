@@ -44,7 +44,7 @@ import {
   toSetVar,
 } from './to.ts'
 
-export const defaultLayerParameters = {
+export let defaultLayerParameters = {
   'layer.delay_by_default': false,
   'layer.delay_milliseconds': 200,
 }
@@ -63,7 +63,7 @@ export type LayerKeyParam =
     >
   | '⇪'
 
-export const excludeFromLayerKeys = [
+export let excludeFromLayerKeys = [
   ...toOnlyKeyCodes,
   ...fromOnlyKeyCodes,
   ...stickyModifierKeyCodes,
@@ -98,8 +98,8 @@ export function hyperLayer(
   return modifierLayer('Hyper', key, varName, onValue, offValue)
 }
 
-const layerVarName = '__layer' // Shared by all layers, one layer at a time
-const delayValue = '__delay' // Supporting var value for delay() mode
+let layerVarName = '__layer' // Shared by all layers, one layer at a time
+let delayValue = '__delay' // Supporting var value for delay() mode
 
 export class LayerRuleBuilder extends BasicRuleBuilder {
   private readonly keys: LayerKeyCode[]
@@ -122,7 +122,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     private readonly onValue: ToVariable['value'] = 1,
     private readonly offValue: ToVariable['value'] = 0,
   ) {
-    const keys = toArray(key).map((v) =>
+    let keys = toArray(key).map((v) =>
       getKeyWithAlias<LayerKeyCode>(v, excludeFromLayerKeys, 'as layer key'),
     )
     if (!varName) {
@@ -198,11 +198,11 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   }
 
   public build(context?: BuildContext): Rule {
-    const rule = super.build(context)
+    let rule = super.build(context)
 
     // Leader mode
     if (this.leaderModeOptions) {
-      const toOff = [
+      let toOff = [
         toSetVar(this.varName, this.offValue),
         toSetVar(layerVarName, 0),
       ]
@@ -231,17 +231,17 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
       this.layerModifiers?.mandatory?.length ||
       this.layerModifiers?.optional?.length
     ) {
-      const isOptionalAny = isModifiersAny(this.layerModifiers) === 'optional'
+      let isOptionalAny = isModifiersAny(this.layerModifiers) === 'optional'
       rule.manipulators.forEach((v) =>
         this.addModifierAnyToManipulator(v, isOptionalAny),
       )
     }
 
     // Layer toggle keys
-    const conditions = this.conditions
+    let conditions = this.conditions
       .filter((v) => v !== this.layerCondition)
       .map(buildCondition)
-    for (const key_code of this.keys) {
+    for (let key_code of this.keys) {
       rule.manipulators = [
         ...layerToggleManipulator(
           key_code,
@@ -276,9 +276,9 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
   ) {
     if (manipulator.type !== 'basic') return
     if (manipulator.from.modifiers) {
-      const { mandatory, optional } = manipulator.from.modifiers
+      let { mandatory, optional } = manipulator.from.modifiers
       if (optional?.length || mandatory?.length) {
-        const isAny = isModifiersAny(manipulator.from.modifiers)
+        let isAny = isModifiersAny(manipulator.from.modifiers)
         if (isAny === 'mandatory') {
           manipulator.from.modifiers = { mandatory: ['any'] }
         } else if (isAny === 'optional') {
@@ -315,15 +315,15 @@ export function layerToggleManipulator(
     to: T,
   ): T {
     if (!layerKeyManipulator) return to
-    const fromItem = layerKeyManipulator.build()[0]
-    const toItem = toArray(to)[0]
+    let fromItem = layerKeyManipulator.build()[0]
+    let toItem = toArray(to)[0]
 
-    const keys = [
+    let keys = [
       'to',
       'to_if_alone',
       'to_if_held_down',
       'to_after_key_up',
-    ] satisfies Array<keyof BasicManipulator>
+    ] as const satisfies Array<keyof BasicManipulator>
     keys.forEach(
       (key) =>
         fromItem[key]?.forEach(
@@ -335,7 +335,7 @@ export function layerToggleManipulator(
         to_if_invoked: [],
         to_if_canceled: [],
       }
-      for (const key of ['to_if_invoked', 'to_if_canceled'] as const) {
+      for (let key of ['to_if_invoked', 'to_if_canceled'] as const) {
         fromItem.to_delayed_action[key].forEach(
           (v) => toItem.to_delayed_action?.[key].push(v),
         )
@@ -351,8 +351,8 @@ export function layerToggleManipulator(
     return to
   }
 
-  const delay = layerDelay(delayed, context)
-  const manipulator = map({ key_code, modifiers })
+  let delay = layerDelay(delayed, context)
+  let manipulator = map({ key_code, modifiers })
     .toVar(varName, delay > 0 ? delayValue : onValue)
     .toVar(layerVarName)
     .condition(
@@ -393,7 +393,7 @@ export function layerToggleManipulator(
     manipulator.condition(...conditions)
   }
   if (notification) {
-    const id = notificationId(varName)
+    let id = notificationId(varName)
     if (delay > 0) {
       manipulator.toIfHeldDown(toNotificationMessage(id, notification))
       manipulator.toDelayedAction([], {
@@ -409,14 +409,14 @@ export function layerToggleManipulator(
     return mergeManipulator(manipulator.build())
   }
 
-  const key = [
+  let key = [
     `layer_${key_code}`,
     ...(modifiers ? [JSON.stringify(modifiers)] : []),
     ...(conditions || []).map((v) => JSON.stringify(v)).sort(),
   ].join('_')
-  const exiting = context.getCache<BasicManipulator>(key)
+  let exiting = context.getCache<BasicManipulator>(key)
   if (exiting?.to && exiting.to_after_key_up) {
-    const sameVar = exiting.to.find(
+    let sameVar = exiting.to.find(
       (v) => 'set_variable' in v && v.set_variable.name === varName,
     )
     if (!sameVar) {
@@ -427,7 +427,7 @@ export function layerToggleManipulator(
     return [] // Already added
   }
 
-  const result = manipulator.build(context)
+  let result = manipulator.build(context)
   context.setCache(key, result[0])
   return mergeManipulator(result)
 }
@@ -452,7 +452,7 @@ function layerDelay(
   if (typeof delayed === 'number') return delayed
   if (delayed === false) return 0
 
-  const params =
+  let params =
     context?.getParameters(defaultLayerParameters) ?? defaultLayerParameters
   if (delayed === true || params['layer.delay_by_default'])
     return params['layer.delay_milliseconds']
