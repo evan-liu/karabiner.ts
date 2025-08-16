@@ -37,6 +37,9 @@ export function complexModifications(
     'simlayer.threshold_milliseconds': simlayerThreshold,
     'duo_layer.threshold_milliseconds': duoLayerThreshold,
     'duo_layer.notification': duoLayerNotification,
+    'duo_layer.delay_by_default': duoLayerDelayByDefault,
+    'duo_layer.delay_milliseconds': duoLayerDelayDuration,
+
     ...complexModificationsParameters
   } = parameters
 
@@ -54,6 +57,8 @@ export function complexModifications(
   context.setParameters<typeof defaultDuoLayerParameters>({
     'duo_layer.threshold_milliseconds': duoLayerThreshold,
     'duo_layer.notification': duoLayerNotification,
+    'duo_layer.delay_by_default': duoLayerDelayByDefault,
+    'duo_layer.delay_milliseconds': duoLayerDelayDuration,
   })
 
   const builtRules = rules.map((v) => buildRule(v, context))

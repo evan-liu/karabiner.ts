@@ -30,7 +30,11 @@ export type {
   KeyAlias,
   NumberKeyValue,
 } from './utils/key-alias.ts'
-export type { ManipulatorMap } from './config/manipulator.ts'
+export {
+  type ManipulatorMap,
+  type ManipulatorBuilder,
+  BasicManipulatorBuilder,
+} from './config/manipulator.ts'
 
 // Utils
 export { withCondition } from './utils/with-condition.ts'
@@ -66,6 +70,7 @@ export { defaultComplexModificationsParameters } from './config/complex-modifica
 export { defaultDoubleTapParameters } from './config/double-tap.ts'
 export { defaultSimlayerParameters } from './config/simlayer.ts'
 export { defaultDuoLayerParameters } from './config/duo-layer.ts'
+export { defaultLayerParameters } from './config/layer.ts'
 
 // Imports
 export { importJson } from './imports/import-json.ts'
