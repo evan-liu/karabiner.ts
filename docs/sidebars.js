@@ -14,6 +14,7 @@ const sidebars = {
         'rules/hyper-layer',
         'rules/duo-layer',
         'rules/leader-mode',
+        'rules/delayed-layer',
       ],
     },
     {
