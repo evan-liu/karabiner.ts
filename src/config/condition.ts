@@ -103,7 +103,7 @@ export function ifEventChanged(value = true, description?: string) {
   return new ConditionBuilder({ type: 'event_changed_if', value, description })
 }
 
-const unlessTypes = flipUnlessTypes({
+let unlessTypes = flipUnlessTypes({
   frontmost_application_if: 'frontmost_application_unless',
   device_if: 'device_unless',
   device_exists_if: 'device_exists_unless',

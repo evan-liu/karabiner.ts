@@ -1,6 +1,6 @@
 // See https://github.com/pqrs-org/Karabiner-Elements/blob/main/src/apps/SettingsWindow/Resources/simple_modifications.json
 
-export const pointingButtons = [
+export let pointingButtons = [
   'button1',
   'button2',
   'button3',

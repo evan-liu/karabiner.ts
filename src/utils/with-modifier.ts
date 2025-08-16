@@ -53,24 +53,24 @@ export function withModifier(
 ) => ManipulatorBuilder {
   return (manipulators) => ({
     build: (context?: BuildContext) => {
-      const sharedModifiers = parseFromModifierOverload(
+      let sharedModifiers = parseFromModifierOverload(
         mandatoryModifiers,
         optionalModifiers,
       )!
 
-      const src = Array.isArray(manipulators)
+      let src = Array.isArray(manipulators)
         ? manipulators
         : buildManipulators(manipulators)
       return src
         .map((v) => buildManipulators(v, context))
         .reduce((result, manipulator) => result.concat(manipulator), [])
         .map((src) => {
-          const modifiers = (
+          let modifiers = (
             Object.keys(sharedModifiers) as Array<keyof typeof sharedModifiers>
           ).reduce(
             (result, key) => {
               if (!sharedModifiers[key]?.length) return result
-              const modifierSet = new Set([
+              let modifierSet = new Set([
                 ...(result[key] || []),
                 ...sharedModifiers[key]!,
               ])

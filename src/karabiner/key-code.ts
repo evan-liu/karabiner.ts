@@ -1,6 +1,6 @@
 // See https://github.com/pqrs-org/Karabiner-Elements/blob/main/src/apps/SettingsWindow/Resources/simple_modifications.json
 
-export const stickyModifierKeyCodes = [
+export let stickyModifierKeyCodes = [
   'left_control',
   'left_shift',
   'left_option',
@@ -12,12 +12,9 @@ export const stickyModifierKeyCodes = [
   'fn',
 ] as const
 
-export const modifierKeyCodes = [
-  ...stickyModifierKeyCodes,
-  'caps_lock',
-] as const
+export let modifierKeyCodes = [...stickyModifierKeyCodes, 'caps_lock'] as const
 
-export const controlOrSymbolKeyCodes = [
+export let controlOrSymbolKeyCodes = [
   'return_or_enter',
   'escape',
   'delete_or_backspace',
@@ -39,7 +36,7 @@ export const controlOrSymbolKeyCodes = [
   'non_us_backslash',
 ] as const
 
-export const arrowKeyCodes = [
+export let arrowKeyCodes = [
   'up_arrow',
   'down_arrow',
   'left_arrow',
@@ -50,7 +47,7 @@ export const arrowKeyCodes = [
   'end',
 ] as const
 
-export const letterKeyCodes = [
+export let letterKeyCodes = [
   'a',
   'b',
   'c',
@@ -79,7 +76,7 @@ export const letterKeyCodes = [
   'z',
 ] as const
 
-export const numberKeyCodes = [
+export let numberKeyCodes = [
   '1',
   '2',
   '3',
@@ -92,7 +89,7 @@ export const numberKeyCodes = [
   '0',
 ] as const
 
-export const functionKeyCodes = [
+export let functionKeyCodes = [
   'f1',
   'f2',
   'f3',
@@ -115,7 +112,7 @@ export const functionKeyCodes = [
   'f20',
 ] as const
 
-export const keypadKeyCodes = [
+export let keypadKeyCodes = [
   'keypad_num_lock',
   'keypad_slash',
   'keypad_asterisk',
@@ -137,7 +134,7 @@ export const keypadKeyCodes = [
   'keypad_comma',
 ] as const
 
-export const pcKeyboardKeyCodes = [
+export let pcKeyboardKeyCodes = [
   'print_screen',
   'scroll_lock',
   'pause',
@@ -147,16 +144,16 @@ export const pcKeyboardKeyCodes = [
   'power',
 ] as const
 
-export const internationalKeyCodes = [
+export let internationalKeyCodes = [
   'international1',
   'international3',
   'lang1',
   'lang2',
 ] as const
 
-export const japaneseKeyCodes = ['japanese_eisuu', 'japanese_kana'] as const
+export let japaneseKeyCodes = ['japanese_eisuu', 'japanese_kana'] as const
 
-export const otherKeyCodes = [
+export let otherKeyCodes = [
   'volume_down', // equal to `volume_decrement`
   'volume_up', // equal to `volume_increment`
   'mute',
@@ -164,7 +161,7 @@ export const otherKeyCodes = [
   'volume_increment',
 ] as const
 
-export const fromOnlyKeyCodes = [
+export let fromOnlyKeyCodes = [
   // Function keys
   'f21',
   'f22',
@@ -219,7 +216,7 @@ export const fromOnlyKeyCodes = [
   'ex_sel',
 ] as const
 
-export const toOnlyKeyCodes = [
+export let toOnlyKeyCodes = [
   // Disable this key
   'vk_none',
   // Others

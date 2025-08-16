@@ -299,7 +299,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     ifInvoked: ToEvent | ToEvent[],
     ifCanceled: ToEvent | ToEvent[],
   ): this {
-    const delayedAction = this.manipulator.to_delayed_action || {
+    let delayedAction = this.manipulator.to_delayed_action || {
       to_if_invoked: [],
       to_if_canceled: [],
     }
@@ -315,7 +315,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   }
 
   condition(...v: Array<Condition | ConditionBuilder>): this {
-    const { conditions = [] } = this.manipulator
+    let { conditions = [] } = this.manipulator
     this.manipulator.conditions = [...conditions, ...v.map(buildCondition)]
     return this
   }
@@ -338,7 +338,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     key: keyof TListHolder,
     item: TItem | TItem[],
   ) {
-    const list = (obj[key] || []) as TItem[]
+    let list = (obj[key] || []) as TItem[]
     toArray(item).forEach((v) => list.push(v))
     Object.assign(obj, { [key]: list })
   }
@@ -357,7 +357,7 @@ export function buildManipulators(
   if (isManipulatorBuilder(src)) return src.build(context)
   if ('type' in src) return [src as Manipulator]
 
-  const entries = Object.entries(src) as Array<
+  let entries = Object.entries(src) as Array<
     [FromKeyParam, ToEvent | ToEvent[]]
   >
   return entries.reduce(

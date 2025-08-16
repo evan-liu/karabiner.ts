@@ -54,7 +54,7 @@ export class BasicRuleBuilder implements RuleBuilder {
   }
 
   build(context?: BuildContext): Rule {
-    const rule: Rule = {
+    let rule: Rule = {
       description: this.ruleDescription,
       manipulators: this.manipulatorSources.reduce(
         (r, v) => [...r, ...buildManipulators(v, context)],
@@ -68,7 +68,7 @@ export class BasicRuleBuilder implements RuleBuilder {
 
     if (this.conditions.length === 0) return rule
 
-    const conditions = this.conditions.map(buildCondition)
+    let conditions = this.conditions.map(buildCondition)
     rule.manipulators = rule.manipulators.map((v) =>
       v.type === 'basic' && !isSupportManipulator(v)
         ? { ...v, conditions: [...(v.conditions || []), ...conditions] }

@@ -22,12 +22,12 @@ import {
 } from './to'
 
 test('layer()', () => {
-  const rule = layer('a', 'b-mode', 2, -1)
+  let rule = layer('a', 'b-mode', 2, -1)
     .manipulators([map('c').to('d')])
     .build()
   expect(rule.description).toBe(`Layer - b-mode`)
 
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   // One layer manipulator to set variable
   expect(manipulators.length).toBe(2)
   expect(manipulators[0]).toEqual({
@@ -54,12 +54,12 @@ test('layer()', () => {
 })
 
 test('layer() default varName', () => {
-  const rule = layer('a')
+  let rule = layer('a')
     .manipulators([map('c').to('d')])
     .build()
   expect(rule.description).toBe(`Layer - layer-a`)
 
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[1].conditions).toEqual([
     { type: 'variable_if', name: 'layer-a', value: 1 },
   ])
@@ -73,13 +73,13 @@ test('layer() with invalid key', () => {
 })
 
 test('layer() with multiple keys', () => {
-  const rule = layer(['a', 'b'], 'c')
+  let rule = layer(['a', 'b'], 'c')
     .manipulators([map(1).to(2)])
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(3)
-  const { from: fromB, to_if_alone: aloneB, ...restB } = manipulators[0]
-  const { from: fromA, to_if_alone: aloneA, ...restA } = manipulators[1]
+  let { from: fromB, to_if_alone: aloneB, ...restB } = manipulators[0]
+  let { from: fromA, to_if_alone: aloneA, ...restA } = manipulators[1]
   expect(fromB).toEqual({ key_code: 'b' })
   expect(aloneB).toEqual([{ key_code: 'b' }])
   expect(fromA).toEqual({ key_code: 'a' })
@@ -88,11 +88,11 @@ test('layer() with multiple keys', () => {
 })
 
 test('layer() conditions', () => {
-  const rule = layer('a', 'b')
+  let rule = layer('a', 'b')
     .condition(ifVar('c'))
     .manipulators([map(1).to(2)])
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators[0].conditions).toEqual([
     { type: 'variable_unless', name: 'b', value: 1 },
     { type: 'variable_unless', name: '__layer', value: 1 },
@@ -107,7 +107,7 @@ test('layer() allows empty manipulators', () => {
 })
 
 test('multiple layer() by same key ', () => {
-  const { rules } = complexModifications([
+  let { rules } = complexModifications([
     layer('a', 'v1').manipulators([map(1).to(2)]),
     layer(['a', 'b'], 'v2').manipulators([map(1).to(2)]),
     layer('a', 'v3')
@@ -123,7 +123,7 @@ test('multiple layer() by same key ', () => {
   expect(rules[0].manipulators.length).toBe(2)
   expect(rules[1].manipulators.length).toBe(2)
 
-  const manipulator = rules[0].manipulators[0] as BasicManipulator
+  let manipulator = rules[0].manipulators[0] as BasicManipulator
   expect(manipulator.to).toEqual([
     { set_variable: { name: 'v1', value: 1 } },
     { set_variable: { name: '__layer', value: 1 } },
@@ -140,12 +140,12 @@ test('multiple layer() by same key ', () => {
 })
 
 test('layer().configKey()', () => {
-  const rule = layer('a', 'v1')
+  let rule = layer('a', 'v1')
     .configKey((v) =>
       v.to('b').toIfHeldDown('c').toDelayedAction(toKey('x'), toKey('y')),
     )
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(1)
   expect(manipulators[0]).toEqual({
     type: 'basic',
@@ -173,10 +173,10 @@ test('layer().configKey()', () => {
 })
 
 test('layer().configKey() replaceToIfAlone', () => {
-  const rule = layer('⇪', 'v1')
+  let rule = layer('⇪', 'v1')
     .configKey((v) => v.toIfAlone('b', '⌘'), true)
     .build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(1)
   expect(manipulators[0]).toEqual({
     type: 'basic',
@@ -286,7 +286,7 @@ test('layer().modifier() to_if_alone', () => {
   expect(toIfAlone(layer('a').modifiers('Hyper'))).toBeUndefined()
 
   function toIfAlone(builder: LayerRuleBuilder) {
-    const rule = builder.manipulators({ 1: toKey(2) }).build()
+    let rule = builder.manipulators({ 1: toKey(2) }).build()
     return (rule.manipulators[0] as BasicManipulator).to_if_alone
   }
 })
@@ -335,8 +335,8 @@ test('layer().modifier(??)', () => {
 })
 
 test('layer() notification', () => {
-  const rule = layer('a').notification().build()
-  const manipulators = rule.manipulators as BasicManipulator[]
+  let rule = layer('a').notification().build()
+  let manipulators = rule.manipulators as BasicManipulator[]
   expect(manipulators.length).toBe(1)
   expect(manipulators[0].to?.[2]).toEqual({
     set_notification_message: {
@@ -348,8 +348,8 @@ test('layer() notification', () => {
     set_notification_message: { id: 'layer-layer-a', text: '' },
   })
 
-  const ruleB = layer('a').notification('test-b').build()
-  const manipulatorB = ruleB.manipulators[0] as BasicManipulator
+  let ruleB = layer('a').notification('test-b').build()
+  let manipulatorB = ruleB.manipulators[0] as BasicManipulator
   expect(manipulatorB.to?.[2]).toEqual({
     set_notification_message: {
       id: 'layer-layer-a',
@@ -360,20 +360,20 @@ test('layer() notification', () => {
 
 describe('layer() leader mode', () => {
   test('leader() with defaults', () => {
-    const rule = layer('a')
+    let rule = layer('a')
       .leaderMode()
       .manipulators({ 1: toKey(2), 3: toKey(4) })
       .build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(5)
 
     // layer toggle
     expect(manipulators[0].to_after_key_up).toBeUndefined()
     expect(manipulators[0].to_if_alone).toBeUndefined()
 
-    const ifOn = ifVar('layer-a', 1).build()
-    const toOff = toSetVar('layer-a', 0)
-    const toLayerVarOff = toSetVar('__layer', 0)
+    let ifOn = ifVar('layer-a', 1).build()
+    let toOff = toSetVar('layer-a', 0)
+    let toLayerVarOff = toSetVar('__layer', 0)
     // layer keys
     expect(manipulators[1].to?.slice(1)).toEqual([toOff, toLayerVarOff])
     expect(manipulators[2].to?.slice(1)).toEqual([toOff, toLayerVarOff])
@@ -387,16 +387,16 @@ describe('layer() leader mode', () => {
   })
 
   test('leader() set escape keys', () => {
-    const rule = layer('a').leaderMode({ escape: 'spacebar' }).build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let rule = layer('a').leaderMode({ escape: 'spacebar' }).build()
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators[1].from).toEqual({ key_code: 'spacebar' })
     expect(manipulators[1].to?.[0]).toEqual(toSetVar('layer-a', 0))
     expect(manipulators[1].conditions).toEqual([ifVar('layer-a', 1).build()])
 
-    const rule2 = layer('b')
+    let rule2 = layer('b')
       .leaderMode({ escape: ['spacebar', { pointing_button: 2 }] })
       .build()
-    const manipulators2 = rule2.manipulators as BasicManipulator[]
+    let manipulators2 = rule2.manipulators as BasicManipulator[]
     expect(manipulators2[1].from).toEqual({ key_code: 'spacebar' })
     expect(manipulators2[1].to?.[0]).toEqual(toSetVar('layer-b', 0))
     expect(manipulators2[1].conditions).toEqual([ifVar('layer-b', 1).build()])
@@ -406,12 +406,12 @@ describe('layer() leader mode', () => {
   })
 
   test('leader() with notification()', () => {
-    const rule = layer('a', 'v')
+    let rule = layer('a', 'v')
       .leaderMode()
       .notification()
       .manipulators({ 1: toKey(2) })
       .build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(4)
 
     // layer toggle
@@ -420,33 +420,33 @@ describe('layer() leader mode', () => {
       toNotificationMessage('layer-v', 'Layer - v'),
     )
 
-    const remove = toRemoveNotificationMessage('layer-v')
+    let remove = toRemoveNotificationMessage('layer-v')
     // layer key
     expect(manipulators[1].to?.[3]).toEqual(remove)
     // escape keys
     expect(manipulators[2].to?.[2]).toEqual(remove)
     expect(manipulators[3].to?.[2]).toEqual(remove)
 
-    const rule2 = layer('b').notification('Test B').build()
-    const manipulators2 = rule2.manipulators as BasicManipulator[]
+    let rule2 = layer('b').notification('Test B').build()
+    let manipulators2 = rule2.manipulators as BasicManipulator[]
     expect(manipulators2[0].to?.[2]).toEqual(
       toNotificationMessage('layer-layer-b', 'Test B'),
     )
   })
 
   test('leader() with sticky', () => {
-    const rule = layer('a')
+    let rule = layer('a')
       .leaderMode({ sticky: true })
       .notification()
       .manipulators({ 1: toKey(2) })
       .build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(4)
 
-    const ifOn = ifVar('layer-a', 1).build()
-    const toOff = toSetVar('layer-a', 0)
-    const toLayerVarOff = toSetVar('__layer', 0)
-    const remove = toRemoveNotificationMessage('layer-layer-a')
+    let ifOn = ifVar('layer-a', 1).build()
+    let toOff = toSetVar('layer-a', 0)
+    let toLayerVarOff = toSetVar('__layer', 0)
+    let remove = toRemoveNotificationMessage('layer-layer-a')
 
     // layer key
     expect(manipulators[1].to?.length).toEqual(1)
@@ -459,18 +459,18 @@ describe('layer() leader mode', () => {
   })
 
   test('leader() and mapDoubleTap()', () => {
-    const rule = layer('a')
+    let rule = layer('a')
       .leaderMode({ sticky: true })
       .notification()
       .manipulators([mapDoubleTap(1).to(2).singleTap(toKey(3))])
       .build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(5)
 
-    const ifOn = ifVar('layer-a', 1).build()
-    const toOff = toSetVar('layer-a', 0)
-    const toLayerVarOff = toSetVar('__layer', 0)
-    const remove = toRemoveNotificationMessage('layer-layer-a')
+    let ifOn = ifVar('layer-a', 1).build()
+    let toOff = toSetVar('layer-a', 0)
+    let toLayerVarOff = toSetVar('__layer', 0)
+    let remove = toRemoveNotificationMessage('layer-layer-a')
 
     // the second tap
     expect(manipulators[1].to).toEqual([{ key_code: '2' }])
@@ -497,11 +497,11 @@ describe('layer() leader mode', () => {
 
 describe('layer().delay()', () => {
   test('delay() with defaults', () => {
-    const rule = layer('a')
+    let rule = layer('a')
       .delay()
       .manipulators({ 1: toKey(2) })
       .build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(2)
     expect(manipulators[0]).toEqual({
       type: 'basic',
@@ -561,8 +561,8 @@ describe('layer().delay()', () => {
   })
 
   test('delay() with delay param', () => {
-    const rule = layer('a').delay(100).build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let rule = layer('a').delay(100).build()
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators[0].parameters).toEqual({
       'basic.to_if_held_down_threshold_milliseconds': 100,
       'basic.to_delayed_action_delay_milliseconds': 100,
@@ -571,8 +571,8 @@ describe('layer().delay()', () => {
   })
 
   test('delay() with notification', () => {
-    const rule = layer('a').delay().notification().build()
-    const manipulators = rule.manipulators as BasicManipulator[]
+    let rule = layer('a').delay().notification().build()
+    let manipulators = rule.manipulators as BasicManipulator[]
     expect(manipulators.length).toBe(1)
     expect(manipulators[0].to_if_held_down?.[1]).toEqual({
       set_notification_message: {
@@ -588,8 +588,8 @@ describe('layer().delay()', () => {
       conditions: [{ type: 'variable_if', name: 'layer-a', value: '__delay' }],
     })
 
-    const ruleB = layer('a').delay().notification('test-b').build()
-    const manipulatorB = ruleB.manipulators[0] as BasicManipulator
+    let ruleB = layer('a').delay().notification('test-b').build()
+    let manipulatorB = ruleB.manipulators[0] as BasicManipulator
     expect(manipulatorB.to_if_held_down?.[1]).toEqual({
       set_notification_message: {
         id: 'layer-layer-a',

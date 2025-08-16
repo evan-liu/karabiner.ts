@@ -128,39 +128,39 @@ test('ifEventChanged()', () => {
 })
 
 test('unless()', () => {
-  const appUnless = ifApp('a').unless()
+  let appUnless = ifApp('a').unless()
   expect(appUnless.build().type).toBe('frontmost_application_unless')
   expect(appUnless.build()).toEqual(appUnless.unless().unless().build())
 
-  const deviceUnless = ifDevice({ vendor_id: 1 }).unless()
+  let deviceUnless = ifDevice({ vendor_id: 1 }).unless()
   expect(deviceUnless.build().type).toBe('device_unless')
   expect(deviceUnless.build()).toEqual(deviceUnless.unless().unless().build())
 
-  const deviceExistsUnless = ifDeviceExists({ vendor_id: 1 }).unless()
+  let deviceExistsUnless = ifDeviceExists({ vendor_id: 1 }).unless()
   expect(deviceExistsUnless.build().type).toBe('device_exists_unless')
   expect(deviceExistsUnless.build()).toEqual(
     deviceExistsUnless.unless().unless().build(),
   )
 
-  const keyboardTypeUnless = ifKeyboardType('iso').unless()
+  let keyboardTypeUnless = ifKeyboardType('iso').unless()
   expect(keyboardTypeUnless.build().type).toBe('keyboard_type_unless')
   expect(keyboardTypeUnless.build()).toEqual(
     keyboardTypeUnless.unless().unless().build(),
   )
 
-  const inputSourceUnless = ifInputSource({ language: 'en' }).unless()
+  let inputSourceUnless = ifInputSource({ language: 'en' }).unless()
   expect(inputSourceUnless.build().type).toBe('input_source_unless')
   expect(inputSourceUnless.build()).toEqual(
     inputSourceUnless.unless().unless().build(),
   )
 
-  const variableUnless = ifVar('a').unless()
+  let variableUnless = ifVar('a').unless()
   expect(variableUnless.build().type).toBe('variable_unless')
   expect(variableUnless.build()).toEqual(
     variableUnless.unless().unless().build(),
   )
 
-  const eventChangedUnless = ifEventChanged().unless()
+  let eventChangedUnless = ifEventChanged().unless()
   expect(eventChangedUnless.build().type).toBe('event_changed_unless')
   expect(eventChangedUnless.build()).toEqual(
     eventChangedUnless.unless().unless().build(),
@@ -168,7 +168,7 @@ test('unless()', () => {
 })
 
 test('isConditionBuilder()', () => {
-  const condition: Condition = { type: 'event_changed_if', value: false }
+  let condition: Condition = { type: 'event_changed_if', value: false }
   expect(isConditionBuilder(condition)).toBe(false)
   expect(isConditionBuilder(new ConditionBuilder(condition))).toBe(true)
 })

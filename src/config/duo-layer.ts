@@ -25,7 +25,7 @@ import {
   toSetVar,
 } from './to.ts'
 
-export const defaultDuoLayerParameters = {
+export let defaultDuoLayerParameters = {
   'duo_layer.threshold_milliseconds': 200,
   'duo_layer.notification': false as boolean | string,
   'duo_layer.delay_by_default': false,
@@ -64,7 +64,7 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     private readonly onValue: ToVariable['value'] = 1,
     private readonly offValue: ToVariable['value'] = 0,
   ) {
-    const desc = `DuoLayer ${varName || `${key1} ${key2}`}`
+    let desc = `DuoLayer ${varName || `${key1} ${key2}`}`
     if (!varName) {
       varName = `duo-layer-${key1}-${key2}`
     }
@@ -123,16 +123,16 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
   }
 
   public build(context?: BuildContext): Rule {
-    const rule = super.build(context)
+    let rule = super.build(context)
 
-    const params =
+    let params =
       context?.getParameters(defaultDuoLayerParameters) ??
       defaultDuoLayerParameters
-    const threshold =
+    let threshold =
       this.simultaneousThreshold || params['duo_layer.threshold_milliseconds']
-    const notification =
+    let notification =
       this.layerNotification ?? params['duo_layer.notification']
-    const delay =
+    let delay =
       typeof this.delayed === 'number'
         ? this.delayed
         : this.delayed === false
@@ -141,20 +141,19 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
         ? params['duo_layer.delay_milliseconds']
         : 0
 
-    const conditions = this.conditions
+    let conditions = this.conditions
       .filter((v) => v !== this.layerCondition)
       .map(buildCondition)
 
-    const activate = [toSetVar(this.varName, this.onValue), ...this.ifActivated]
-    const deactivate = [
+    let activate = [toSetVar(this.varName, this.onValue), ...this.ifActivated]
+    let deactivate = [
       toSetVar(this.varName, this.offValue),
       ...this.ifDeactivated,
     ]
 
     if (notification) {
-      const id = `duo-layer-${this.varName}`
-      const message =
-        notification === true ? this.ruleDescription : notification
+      let id = `duo-layer-${this.varName}`
+      let message = notification === true ? this.ruleDescription : notification
       activate.push(toNotificationMessage(id, message))
       deactivate.push(toRemoveNotificationMessage(id))
     }
@@ -179,16 +178,16 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     }
 
     // Layer toggle
-    const toAfterKeyUp = this.simultaneousOptions.to_after_key_up || []
+    let toAfterKeyUp = this.simultaneousOptions.to_after_key_up || []
     if (!this.leaderModeOptions) {
       toAfterKeyUp.push(...deactivate)
     }
 
-    const manipulators = [
+    let manipulators = [
       [this.key1, this.key2],
       ...(delay > 0 ? [[this.key2, this.key1]] : []),
     ].map((keys) => {
-      const manipulator = mapSimultaneous(
+      let manipulator = mapSimultaneous(
         keys,
         {
           ...this.simultaneousOptions,
@@ -226,27 +225,27 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     }
 
     // Add variables to the existing manipulator
-    const key = [
+    let key = [
       'duo_layer',
       ...[this.key1, this.key2].sort(),
       ...conditions.map((v) => JSON.stringify(v)).sort(),
     ].join('_')
-    const existing = context.getCache<BasicManipulator[]>(key)
+    let existing = context.getCache<BasicManipulator[]>(key)
     if (existing) {
       existing.forEach((manipulator) => {
-        const sameVar = manipulator.to?.find(
+        let sameVar = manipulator.to?.find(
           (v) => 'set_variable' in v && v.set_variable.name === this.varName,
         )
         if (!sameVar) {
           manipulator.to?.push(toSetVar(this.varName, this.onValue))
-          const from = manipulator.from as FromSimultaneousEvent
+          let from = manipulator.from as FromSimultaneousEvent
           from.simultaneous_options?.to_after_key_up?.push(
             toSetVar(this.varName, this.offValue),
           )
         }
       })
     } else {
-      const result = manipulators.flatMap((x) => x.build(context))
+      let result = manipulators.flatMap((x) => x.build(context))
       context.setCache(key, result)
       rule.manipulators = [...result, ...rule.manipulators]
     }

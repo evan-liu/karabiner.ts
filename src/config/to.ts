@@ -37,7 +37,7 @@ export function toKey(
   modifiers?: ModifierParam,
   options?: ToEventOptions,
 ): ToEvent {
-  const keyCode = getKeyWithAlias<ToKeyCode>(
+  let keyCode = getKeyWithAlias<ToKeyCode>(
     key,
     fromOnlyKeyCodes,
     'as to.key_code',
@@ -115,7 +115,7 @@ export function to$(shell_command: string): ToEvent {
 
 /** Create ToEvent with shell_command `open -a {app}.app` */
 export function toApp(app: string): ToEvent {
-  const matched = app.match(/^"?(.*?)(.app)?"?$/)
+  let matched = app.match(/^"?(.*?)(.app)?"?$/)
   return to$(`open -a "${matched?.[1] || app}".app`)
 }
 
@@ -131,7 +131,7 @@ end tell
 set the clipboard to prev'`)
 }
 
-export const systemSounds = [
+export let systemSounds = [
   'Tink',
   'Submarine',
   'Sosumi',
@@ -154,7 +154,7 @@ export function toPlaySound(systemSound: SystemSounds): ToEvent
 /** Play a sound file with afplay. */
 export function toPlaySound(soundFile: string): ToEvent
 export function toPlaySound(sound: SystemSounds | string) {
-  const file = systemSounds.includes(sound as SystemSounds)
+  let file = systemSounds.includes(sound as SystemSounds)
     ? `/System/Library/Sounds/${sound}.aiff`
     : sound
   return to$(`afplay ${file}`)

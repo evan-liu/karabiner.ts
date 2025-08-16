@@ -1,6 +1,6 @@
 import { BasicManipulator, Manipulator } from '../karabiner/karabiner-config.ts'
 
-const suffix = '__support__manipulator'
+let suffix = '__support__manipulator'
 
 /** Manipulators only to support normal manipulators. */
 export function supportManipulator(manipulator: BasicManipulator) {

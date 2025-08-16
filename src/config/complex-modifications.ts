@@ -11,7 +11,7 @@ import { defaultLayerParameters } from './layer.ts'
 import { buildRule, RuleBuilder } from './rule.ts'
 import { defaultSimlayerParameters } from './simlayer.ts'
 
-export const defaultComplexModificationsParameters: ComplexModificationsParameters =
+export let defaultComplexModificationsParameters: ComplexModificationsParameters =
   {
     'basic.to_if_alone_timeout_milliseconds': 1000,
     'basic.to_if_held_down_threshold_milliseconds': 500,
@@ -30,7 +30,7 @@ export function complexModifications(
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
 ): ComplexModifications {
-  const {
+  let {
     'double_tap.delay_milliseconds': doubleTapDelay,
     'layer.delay_by_default': layerDelayByDefault,
     'layer.delay_milliseconds': layerDelayDuration,
@@ -43,7 +43,7 @@ export function complexModifications(
     ...complexModificationsParameters
   } = parameters
 
-  const context = new BuildContext()
+  let context = new BuildContext()
   context.setParameters<typeof defaultDoubleTapParameters>({
     'double_tap.delay_milliseconds': doubleTapDelay,
   })
@@ -61,8 +61,8 @@ export function complexModifications(
     'duo_layer.delay_milliseconds': duoLayerDelayDuration,
   })
 
-  const builtRules = rules.map((v) => buildRule(v, context))
-  const modifications: ComplexModifications = {
+  let builtRules = rules.map((v) => buildRule(v, context))
+  let modifications: ComplexModifications = {
     rules: builtRules.filter((v) => v.manipulators.length),
     parameters: {
       ...defaultComplexModificationsParameters,

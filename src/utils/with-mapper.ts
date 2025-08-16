@@ -36,7 +36,7 @@ export function withMapper(
 ) => ManipulatorBuilder {
   return (mapper) => ({
     build: () => {
-      const entries = Array.isArray(src)
+      let entries = Array.isArray(src)
         ? src.map((v, i) => [v, i])
         : Object.entries(src)
       return entries.reduce(

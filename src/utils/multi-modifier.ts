@@ -1,13 +1,13 @@
 import { Modifier } from '../karabiner/karabiner-config.ts'
 
-export const namedMultiModifierAliases = {
+export let namedMultiModifierAliases = {
   Meh: ['option', 'control', 'shift'],
   Hyper: ['command', 'option', 'control', 'shift'],
   SuperHyper: ['command', 'option', 'control', 'shift', 'fn'],
-} /* c8 ignore next */ satisfies Record<string, Modifier[]>
+} as const /* c8 ignore next */ satisfies Record<string, Modifier[]>
 export type NamedMultiModifierAlias = keyof typeof namedMultiModifierAliases
 
-export const multiModifierAliases = {
+export let multiModifierAliases = {
   '⌘⇧': ['command', 'shift'],
   '⌥⇧': ['option', 'shift'],
   '⌃⇧': ['control', 'shift'],
@@ -20,6 +20,6 @@ export const multiModifierAliases = {
   '⌥⌃⇧': ['option', 'control', 'shift'],
   '⌘⌥⌃⇧': ['command', 'option', 'control', 'shift'],
   ...namedMultiModifierAliases,
-} /* c8 ignore next */ satisfies Record<string, Modifier[]>
+} as const /* c8 ignore next */ satisfies Record<string, Modifier[]>
 
 export type MultiModifierAlias = keyof typeof multiModifierAliases

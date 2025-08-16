@@ -10,7 +10,7 @@ import { writeContext } from '../output.ts'
 export function importJson(filePath: string): RuleBuilder {
   return {
     build(): Rule {
-      const json = writeContext.readJson(filePath)
+      let json = writeContext.readJson(filePath)
       if (!Array.isArray(json?.rules))
         throw new Error(`Cannot file rules in ${filePath}`)
 
