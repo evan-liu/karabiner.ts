@@ -297,3 +297,112 @@ describe('duoLayer().leaderMode()', () => {
     expect(manipulators[3].to?.[1]).toEqual(remove)
   })
 })
+
+describe('duoLayer().delay()', () => {
+  test('delay() creates two manipulators with roll-over protection', () => {
+    const rule = duoLayer('x', 'y').delay().build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(2)
+
+    // Both manipulators should have roll-over protection
+    manipulators.forEach((manipulator) => {
+      expect(manipulator.to_if_alone).toBeDefined()
+      expect(manipulator.to_if_held_down).toBeDefined()
+      expect(manipulator.parameters).toEqual(
+        expect.objectContaining({
+          'basic.to_if_held_down_threshold_milliseconds': 200,
+          'basic.to_if_alone_timeout_milliseconds': 200,
+        }),
+      )
+    })
+  })
+
+  test('delay() with custom delay value', () => {
+    const rule = duoLayer('x', 'y').delay(150).build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(2)
+    manipulators.forEach((manipulator) => {
+      expect(manipulator.parameters).toEqual(
+        expect.objectContaining({
+          'basic.to_if_held_down_threshold_milliseconds': 150,
+          'basic.to_if_alone_timeout_milliseconds': 150,
+        }),
+      )
+    })
+  })
+
+  test('delay() with notification shows on hold, clears on release', () => {
+    const rule = duoLayer('x', 'y').delay().notification('Test').build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(2)
+
+    // Both manipulators should have notification in to_if_held_down
+    manipulators.forEach((manipulator) => {
+      expect(manipulator.to_if_held_down).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            set_notification_message: expect.objectContaining({ text: 'Test' }),
+          }),
+        ]),
+      )
+    })
+  })
+
+  test('delay() handles both key orders for roll-over protection', () => {
+    const rule = duoLayer('j', 'k').delay().build()
+    const manipulators = rule.manipulators as BasicManipulator[]
+    expect(manipulators.length).toBe(2)
+
+    // Check that both key orders are created
+    const keyArrays = manipulators.map((m) => {
+      const from = m.from as { simultaneous: Array<{ key_code: string }> }
+      return from.simultaneous.map((k) => k.key_code).join(',')
+    })
+    expect(keyArrays).toEqual(['j,k', 'k,j'])
+
+    // Both should use strict key_down_order
+    manipulators.forEach((x) => {
+      const from = x.from as FromSimultaneousEvent
+      expect(from.simultaneous_options?.key_down_order).toBe('strict')
+    })
+
+    // toIfAlone should output keys matching their respective arrays
+    expect(manipulators[0].to_if_alone).toEqual([
+      { key_code: 'j' },
+      { key_code: 'k' },
+    ])
+    expect(manipulators[1].to_if_alone).toEqual([
+      { key_code: 'k' },
+      { key_code: 'j' },
+    ])
+  })
+
+  test('delay() respects global defaults and explicit overrides', () => {
+    const originalDelayByDefault =
+      defaultDuoLayerParameters['duo_layer.delay_by_default']
+    const originalDelayMs =
+      defaultDuoLayerParameters['duo_layer.delay_milliseconds']
+
+    defaultDuoLayerParameters['duo_layer.delay_by_default'] = true
+    defaultDuoLayerParameters['duo_layer.delay_milliseconds'] = 150
+
+    // Global default enables delay
+    expect(duoLayer('x', 'y').build().manipulators.length).toBe(2)
+
+    // Explicit false overrides global default
+    expect(duoLayer('x', 'y').delay(false).build().manipulators.length).toBe(1)
+
+    // Custom timing works
+    const rule = duoLayer('x', 'y').delay(300).build()
+    expect((rule.manipulators[0] as BasicManipulator).parameters).toEqual(
+      expect.objectContaining({
+        'basic.to_if_held_down_threshold_milliseconds': 300,
+      }),
+    )
+
+    // Restore original values
+    defaultDuoLayerParameters['duo_layer.delay_by_default'] =
+      originalDelayByDefault
+    defaultDuoLayerParameters['duo_layer.delay_milliseconds'] = originalDelayMs
+  })
+})

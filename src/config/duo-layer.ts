@@ -19,6 +19,7 @@ import { BasicRuleBuilder } from './rule.ts'
 import { mapSimultaneous } from './simultaneous.ts'
 import { isSupportManipulator } from './support-manipulator.ts'
 import {
+  toKey,
   toNotificationMessage,
   toRemoveNotificationMessage,
   toSetVar,
@@ -27,6 +28,8 @@ import {
 export const defaultDuoLayerParameters = {
   'duo_layer.threshold_milliseconds': 200,
   'duo_layer.notification': false as boolean | string,
+  'duo_layer.delay_by_default': false,
+  'duo_layer.delay_milliseconds': 200,
 }
 
 export function duoLayer(
@@ -51,6 +54,8 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
   private ifDeactivated = [] as ToEvent[]
 
   private leaderModeOptions?: LeaderModeOptions
+
+  private delayed: boolean | number | undefined = undefined
 
   constructor(
     private readonly key1: LayerKeyParam,
@@ -111,6 +116,12 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     return this
   }
 
+  /** Set delay mode (and delay_milliseconds). */
+  public delay(v: boolean | number = true) {
+    this.delayed = v
+    return this
+  }
+
   public build(context?: BuildContext): Rule {
     const rule = super.build(context)
 
@@ -121,6 +132,14 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
       this.simultaneousThreshold || params['duo_layer.threshold_milliseconds']
     const notification =
       this.layerNotification ?? params['duo_layer.notification']
+    const delay =
+      typeof this.delayed === 'number'
+        ? this.delayed
+        : this.delayed === false
+        ? 0
+        : this.delayed === true || params['duo_layer.delay_by_default']
+        ? params['duo_layer.delay_milliseconds']
+        : 0
 
     const conditions = this.conditions
       .filter((v) => v !== this.layerCondition)
@@ -164,48 +183,72 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     if (!this.leaderModeOptions) {
       toAfterKeyUp.push(...deactivate)
     }
-    const manipulator = mapSimultaneous(
+
+    const manipulators = [
       [this.key1, this.key2],
-      {
-        ...this.simultaneousOptions,
-        to_after_key_up: toAfterKeyUp,
-      },
-      threshold,
-    )
-      .modifiers('??')
-      .to(activate)
-      .condition(ifVar(this.varName, this.onValue).unless())
-    if (conditions.length) {
-      manipulator.condition(...conditions)
-    }
+      ...(delay > 0 ? [[this.key2, this.key1]] : []),
+    ].map((keys) => {
+      const manipulator = mapSimultaneous(
+        keys,
+        {
+          ...this.simultaneousOptions,
+          ...(delay > 0 ? { key_down_order: 'strict' } : {}),
+          to_after_key_up: toAfterKeyUp,
+        },
+        threshold,
+      )
+        .modifiers('??')
+        .condition(ifVar(this.varName, this.onValue).unless())
+      if (conditions.length) {
+        manipulator.condition(...conditions)
+      }
+      if (delay > 0) {
+        manipulator
+          .toIfHeldDown(activate)
+          .toIfAlone(keys.map((x) => toKey(x)))
+          .parameters({
+            'basic.to_if_held_down_threshold_milliseconds': delay,
+            'basic.to_if_alone_timeout_milliseconds': delay,
+          })
+      } else {
+        manipulator.to(activate)
+      }
+      return manipulator
+    })
 
     // Build context
     if (!context) {
-      rule.manipulators = [...manipulator.build(), ...rule.manipulators]
+      rule.manipulators = [
+        ...manipulators.flatMap((x) => x.build()),
+        ...rule.manipulators,
+      ]
       return rule
     }
 
     // Add variables to the existing manipulator
     const key = [
-      `duo_layer_${this.key1}_${this.key2}`,
+      'duo_layer',
+      ...[this.key1, this.key2].sort(),
       ...conditions.map((v) => JSON.stringify(v)).sort(),
     ].join('_')
-    const exiting = context.getCache<BasicManipulator>(key)
-    if (exiting) {
-      const sameVar = exiting.to?.find(
-        (v) => 'set_variable' in v && v.set_variable.name === this.varName,
-      )
-      if (!sameVar) {
-        exiting.to?.push(toSetVar(this.varName, this.onValue))
-        const from = exiting.from as FromSimultaneousEvent
-        from.simultaneous_options?.to_after_key_up?.push(
-          toSetVar(this.varName, this.offValue),
+    const existing = context.getCache<BasicManipulator[]>(key)
+    if (existing) {
+      existing.forEach((manipulator) => {
+        const sameVar = manipulator.to?.find(
+          (v) => 'set_variable' in v && v.set_variable.name === this.varName,
         )
-      }
+        if (!sameVar) {
+          manipulator.to?.push(toSetVar(this.varName, this.onValue))
+          const from = manipulator.from as FromSimultaneousEvent
+          from.simultaneous_options?.to_after_key_up?.push(
+            toSetVar(this.varName, this.offValue),
+          )
+        }
+      })
     } else {
-      const result = manipulator.build(context)[0]
+      const result = manipulators.flatMap((x) => x.build(context))
       context.setCache(key, result)
-      rule.manipulators = [result, ...rule.manipulators]
+      rule.manipulators = [...result, ...rule.manipulators]
     }
 
     return rule
