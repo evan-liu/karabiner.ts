@@ -98,11 +98,11 @@ export function getKeyWithAlias<T extends KeyCode = KeyCode>(
   excludeKeys?: readonly KeyCode[],
   excludeLabel?: string,
 ): T {
-  if (typeof key === 'number') return `${key}` as T
+  if (typeof key == 'number') return `${key}` as T
 
   if (key.length > 1 && isSideMultiModifierAlias(key)) {
     let modifiers = parseSideMultiModifierAlias(key)
-    if (modifiers?.length === 1) {
+    if (modifiers?.length == 1) {
       return modifiers[0] as T
     } else {
       throw new Error(`Invalid key ${key}`)

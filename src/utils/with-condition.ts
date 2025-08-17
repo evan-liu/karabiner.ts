@@ -26,7 +26,7 @@ export function withCondition(
   return (manipulators) => {
     let sharedConditions = conditions.map(buildCondition)
     function addSharedConditions(manipulator: Manipulator) {
-      if (manipulator.type !== 'basic') return manipulator
+      if (manipulator.type != 'basic') return manipulator
       return {
         ...manipulator,
         conditions: [...(manipulator.conditions || []), ...sharedConditions],

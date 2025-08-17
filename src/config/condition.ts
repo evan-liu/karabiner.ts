@@ -38,7 +38,7 @@ export function ifApp(
   let bundle_identifiers: string[]
   if (Array.isArray(app)) {
     bundle_identifiers = app.map(formatRegExp)
-  } else if (typeof app === 'string' || app instanceof RegExp) {
+  } else if (typeof app == 'string' || app instanceof RegExp) {
     bundle_identifiers = [formatRegExp(app)]
   } else {
     return new ConditionBuilder({
@@ -132,7 +132,7 @@ export class ConditionBuilder {
 export function isConditionBuilder(
   src: Condition | ConditionBuilder,
 ): src is ConditionBuilder {
-  return typeof (src as ConditionBuilder).build === 'function'
+  return typeof (src as ConditionBuilder).build == 'function'
 }
 
 export function buildCondition(src: Condition | ConditionBuilder): Condition {
@@ -140,7 +140,7 @@ export function buildCondition(src: Condition | ConditionBuilder): Condition {
 }
 
 function formatRegExp(v: string | RegExp) {
-  return typeof v === 'string' ? v : v.toString().slice(1, -1)
+  return typeof v == 'string' ? v : v.toString().slice(1, -1)
 }
 
 function flipUnlessTypes(

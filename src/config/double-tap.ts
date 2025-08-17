@@ -72,7 +72,7 @@ export function mapDoubleTap(
       arg2 as FromModifierParam,
     )
   } else if (arg2) {
-    if (typeof arg2 === 'number') {
+    if (typeof arg2 == 'number') {
       builder.delay(arg2)
       builder.from.modifiers = parseFromModifierOverload(
         arg1 as FromModifierOverloadParam,
@@ -84,7 +84,7 @@ export function mapDoubleTap(
       )
     }
   } else if (arg1) {
-    if (typeof arg1 === 'number') {
+    if (typeof arg1 == 'number') {
       builder.delay(arg1)
     } else {
       builder.from.modifiers = parseFromModifierOverload(
@@ -123,14 +123,14 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
 
     let keyCode = (this.from as FromKeyCodeEvent).key_code as FromAndToKeyCode
 
-    if (typeof this.singleTapEvent === 'undefined') {
+    if (typeof this.singleTapEvent == 'undefined') {
       this.singleTapEvent = { key_code: keyCode }
       let modifiers = this.manipulator.from.modifiers?.mandatory as Array<
         Modifier | 'any'
       >
       if (modifiers) {
         this.singleTapEvent.modifiers = modifiers.filter(
-          (v) => v !== 'any',
+          (v) => v != 'any',
         ) as Modifier[]
       }
     }
@@ -165,7 +165,7 @@ export class DoubleTapManipulatorBuilder extends BasicManipulatorBuilder {
                 ...this.singleTapEvent!,
                 lazy:
                   this.singleTapEvent!.lazy ||
-                  typeof this.singleTapEvent!.lazy === 'undefined',
+                  typeof this.singleTapEvent!.lazy == 'undefined',
               },
             ]
           : []),

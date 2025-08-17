@@ -25,7 +25,7 @@ export function mapSimultaneous(
     getKeyWithAlias<FromKeyCode>(v, toOnlyKeyCodes, 'for from.simultaneous')
   let manipulatorBuilder = new SimultaneousManipulatorBuilder({
     simultaneous: keys.map((v) =>
-      typeof v === 'object' ? v : { key_code: getKeyCode(v) },
+      typeof v == 'object' ? v : { key_code: getKeyCode(v) },
     ),
     simultaneous_options: options,
   })

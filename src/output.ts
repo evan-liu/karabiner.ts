@@ -56,8 +56,8 @@ export function writeToProfile(
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
 ) {
-  if (typeof writeTarget === 'string') {
-    writeTarget = { name: writeTarget, dryRun: writeTarget === '--dry-run' }
+  if (typeof writeTarget == 'string') {
+    writeTarget = { name: writeTarget, dryRun: writeTarget == '--dry-run' }
   }
   let { name, dryRun } = writeTarget
   let jsonPath =
@@ -67,7 +67,7 @@ export function writeToProfile(
     ? { profiles: [{ name, complex_modifications: { rules: [] } }] }
     : writeContext.readKarabinerConfig(jsonPath)
 
-  let profile = config?.profiles.find((v) => v.name === name)
+  let profile = config?.profiles.find((v) => v.name == name)
   if (!profile)
     exitWithError(`⚠️ Profile ${name} not found in ${jsonPath}.\n
 ℹ️ Please check the profile name in the Karabiner-Elements UI and 
@@ -95,7 +95,7 @@ export function writeToProfile(
 
 function exitWithError(err: any): never {
   if (err) {
-    if (typeof err === 'string') {
+    if (typeof err == 'string') {
       console.error(err)
     } else {
       console.error((err as Error).message || err)

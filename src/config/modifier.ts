@@ -21,7 +21,7 @@ export function parseModifierParam(
 ): Modifier[] | undefined {
   if (!src) return undefined
 
-  if (typeof src === 'string') {
+  if (typeof src == 'string') {
     if (isSideMultiModifierAlias(src)) {
       return parseSideMultiModifierAlias(src)
     }
@@ -89,7 +89,7 @@ function parseFromModifiers(
   param?: FromModifierParam | '' | null,
 ): Modifier[] | ['any'] | undefined {
   if (!param) return undefined
-  if (param === 'any') return ['any']
+  if (param == 'any') return ['any']
   return parseModifierParam(param)
 }
 

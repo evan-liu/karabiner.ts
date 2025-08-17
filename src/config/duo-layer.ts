@@ -106,10 +106,8 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
 
   /** Set leader mode. Default escape keys: ['escape', 'caps_lock']. */
   public leaderMode(v: boolean | LeaderModeOptions = true) {
-    if (v === true) {
-      this.leaderModeOptions = defaultLeaderModeOptions
-    } else if (!v) {
-      this.leaderModeOptions = undefined
+    if (typeof v == 'boolean') {
+      this.leaderModeOptions = v ? defaultLeaderModeOptions : undefined
     } else {
       this.leaderModeOptions = { ...defaultLeaderModeOptions, ...v }
     }
@@ -133,16 +131,16 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     let notification =
       this.layerNotification ?? params['duo_layer.notification']
     let delay =
-      typeof this.delayed === 'number'
+      typeof this.delayed == 'number'
         ? this.delayed
-        : this.delayed === false
+        : this.delayed == false
         ? 0
-        : this.delayed === true || params['duo_layer.delay_by_default']
+        : this.delayed == true || params['duo_layer.delay_by_default']
         ? params['duo_layer.delay_milliseconds']
         : 0
 
     let conditions = this.conditions
-      .filter((v) => v !== this.layerCondition)
+      .filter((v) => v != this.layerCondition)
       .map(buildCondition)
 
     let activate = [toSetVar(this.varName, this.onValue), ...this.ifActivated]
@@ -153,7 +151,8 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
 
     if (notification) {
       let id = `duo-layer-${this.varName}`
-      let message = notification === true ? this.ruleDescription : notification
+      let message =
+        typeof notification == 'boolean' ? this.ruleDescription : notification
       activate.push(toNotificationMessage(id, message))
       deactivate.push(toRemoveNotificationMessage(id))
     }
@@ -163,7 +162,7 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
       if (!this.leaderModeOptions.sticky) {
         rule.manipulators.forEach(
           (v) =>
-            v.type === 'basic' &&
+            v.type == 'basic' &&
             !isSupportManipulator(v) &&
             (v.to = (v.to || []).concat(deactivate)),
         )
@@ -234,7 +233,7 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
     if (existing) {
       existing.forEach((manipulator) => {
         let sameVar = manipulator.to?.find(
-          (v) => 'set_variable' in v && v.set_variable.name === this.varName,
+          (v) => 'set_variable' in v && v.set_variable.name == this.varName,
         )
         if (!sameVar) {
           manipulator.to?.push(toSetVar(this.varName, this.onValue))
