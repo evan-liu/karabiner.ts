@@ -144,14 +144,14 @@ export class SimlayerRuleBuilder extends BasicRuleBuilder {
     let conditions =
       this.conditions.length > 1
         ? this.conditions
-            .filter((v) => v !== this.layerCondition)
+            .filter((v) => v != this.layerCondition)
             .map(buildCondition)
         : undefined
 
     let setVarOn = toSetVar(this.varName, this.onValue)
     let setVarOff = toSetVar(this.varName, this.offValue)
     rule.manipulators.concat().forEach((v) => {
-      if (v.type !== 'basic') {
+      if (v.type != 'basic') {
         throw new Error(
           `Unsupported manipulator type ${v.type} in simlayer ${this.ruleDescription}`,
         )

@@ -29,7 +29,7 @@ export function parseFromModifierOverload(
     return parseFromModifierParams('', 'any')
   }
 
-  if (typeof mandatoryModifiers === 'string') {
+  if (typeof mandatoryModifiers == 'string') {
     if (isOptionalModifierAlias(mandatoryModifiers)) {
       return parseFromModifierParams(
         '',
@@ -41,7 +41,7 @@ export function parseFromModifierOverload(
   }
 
   if (
-    typeof mandatoryModifiers === 'object' &&
+    typeof mandatoryModifiers == 'object' &&
     'optional' in mandatoryModifiers
   ) {
     return parseFromModifierParams('', mandatoryModifiers.optional)

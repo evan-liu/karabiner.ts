@@ -62,15 +62,15 @@ export class BasicRuleBuilder implements RuleBuilder {
       ),
     }
 
-    if (!this.allowEmptyManipulators && rule.manipulators.length === 0) {
+    if (!this.allowEmptyManipulators && rule.manipulators.length == 0) {
       throw new Error(`"manipulators" is empty in "${rule.description}"`)
     }
 
-    if (this.conditions.length === 0) return rule
+    if (this.conditions.length == 0) return rule
 
     let conditions = this.conditions.map(buildCondition)
     rule.manipulators = rule.manipulators.map((v) =>
-      v.type === 'basic' && !isSupportManipulator(v)
+      v.type == 'basic' && !isSupportManipulator(v)
         ? { ...v, conditions: [...(v.conditions || []), ...conditions] }
         : { ...v },
     )
@@ -83,7 +83,7 @@ export interface RuleBuilder {
 }
 
 export function isRuleBuilder(src: Rule | RuleBuilder): src is RuleBuilder {
-  return typeof (src as RuleBuilder).build === 'function'
+  return typeof (src as RuleBuilder).build == 'function'
 }
 
 export function buildRule(

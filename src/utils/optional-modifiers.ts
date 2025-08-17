@@ -18,7 +18,7 @@ export type OptionalModifierAlias = `?${
   | SideMultiModifierAlias}`
 
 export function isOptionalAnyAlias(src: any): src is OptionalAnyAlias {
-  if (!src || typeof src !== 'string') return false
+  if (!src || typeof src != 'string') return false
   return optionalAnyAliases.includes(src as OptionalAnyAlias)
 }
 

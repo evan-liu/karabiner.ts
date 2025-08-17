@@ -9,7 +9,7 @@ export class BuildContext {
   public getParameters<TDefaults extends {}>(defaults: TDefaults): TDefaults {
     let result = { ...defaults }
     for (let key of Object.keys(defaults)) {
-      if (key in this.parameters && this.parameters[key] !== undefined) {
+      if (key in this.parameters && this.parameters[key] != undefined) {
         Object.assign(result, { [key]: this.parameters[key] })
       }
     }

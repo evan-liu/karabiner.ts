@@ -16,7 +16,7 @@ export function importProfile(name: string, configFile?: string): RuleBuilder {
   return {
     build(): Rule {
       let config: KarabinerConfig = writeContext.readKarabinerConfig(configFile)
-      let profile = config.profiles.find((v) => v.name === name)
+      let profile = config.profiles.find((v) => v.name == name)
       if (!profile) throw new Error(`Profile ${name} not found`)
 
       return {

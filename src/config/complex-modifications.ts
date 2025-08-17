@@ -70,14 +70,14 @@ export function complexModifications(
     },
   }
 
-  if (modifications.rules.length === 0) {
+  if (modifications.rules.length == 0) {
     throw new Error(`complex_modifications "rules" is empty `)
   }
 
   if (modifications.rules.length < builtRules.length) {
     console.warn(`Rules with empty manipulators are ignored: 
 ${builtRules
-  .filter((v) => v.manipulators.length === 0)
+  .filter((v) => v.manipulators.length == 0)
   .map((v) => '- ' + v.description)
   .join('\n')}
 `)

@@ -79,7 +79,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     options?: ToEventOptions,
   ): this {
     this.addToEvent(
-      typeof keyOrEvent === 'object'
+      typeof keyOrEvent == 'object'
         ? keyOrEvent
         : toKey(keyOrEvent, modifiers, options),
     )
@@ -246,7 +246,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     this.pushOrCreateList(
       this.manipulator,
       'to_if_alone',
-      typeof keyOrEvent === 'object'
+      typeof keyOrEvent == 'object'
         ? keyOrEvent
         : toKey(keyOrEvent, modifiers, options),
     )
@@ -267,7 +267,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     this.pushOrCreateList(
       this.manipulator,
       'to_if_held_down',
-      typeof keyOrEvent === 'object'
+      typeof keyOrEvent == 'object'
         ? keyOrEvent
         : toKey(keyOrEvent, modifiers, options),
     )
@@ -288,7 +288,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     this.pushOrCreateList(
       this.manipulator,
       'to_after_key_up',
-      typeof keyOrEvent === 'object'
+      typeof keyOrEvent == 'object'
         ? keyOrEvent
         : toKey(keyOrEvent, modifiers, options),
     )
@@ -347,7 +347,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
 export function isManipulatorBuilder(
   src: Manipulator | ManipulatorBuilder | ManipulatorMap,
 ): src is ManipulatorBuilder {
-  return typeof (src as ManipulatorBuilder).build === 'function'
+  return typeof (src as ManipulatorBuilder).build == 'function'
 }
 
 export function buildManipulators(

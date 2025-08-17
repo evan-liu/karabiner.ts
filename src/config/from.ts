@@ -40,7 +40,7 @@ export function map(
   mandatoryModifiers?: FromModifierOverloadParam,
   optionalModifiers?: FromModifierParam,
 ) {
-  if (typeof keyOrEvent === 'object')
+  if (typeof keyOrEvent == 'object')
     return new BasicManipulatorBuilder(keyOrEvent)
 
   let keyCode = getKeyWithAlias<FromKeyCode>(

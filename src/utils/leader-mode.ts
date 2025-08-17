@@ -26,7 +26,7 @@ export function leaderModeEscape(
   if (!keys) return result
 
   for (let key of Array.isArray(keys) ? keys : [keys]) {
-    let builder = typeof key === 'object' ? map(key) : map(key) // For TS fn overloads
+    let builder = typeof key == 'object' ? map(key) : map(key) // For TS fn overloads
     result.push(...builder.condition(ifOn).to(toOff).build())
   }
 

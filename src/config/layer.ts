@@ -181,10 +181,8 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
 
   /** Set leader mode. Default escape keys: ['escape', 'caps_lock']. */
   public leaderMode(v: boolean | LeaderModeOptions = true) {
-    if (v === true) {
-      this.leaderModeOptions = defaultLeaderModeOptions
-    } else if (!v) {
-      this.leaderModeOptions = undefined
+    if (typeof v == 'boolean') {
+      this.leaderModeOptions = v ? defaultLeaderModeOptions : undefined
     } else {
       this.leaderModeOptions = { ...defaultLeaderModeOptions, ...v }
     }
@@ -212,7 +210,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
       if (!this.leaderModeOptions.sticky) {
         rule.manipulators.forEach(
           (v) =>
-            v.type === 'basic' &&
+            v.type == 'basic' &&
             !isSupportManipulator(v) &&
             (v.to = (v.to || []).concat(toOff)),
         )
@@ -231,7 +229,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
       this.layerModifiers?.mandatory?.length ||
       this.layerModifiers?.optional?.length
     ) {
-      let isOptionalAny = isModifiersAny(this.layerModifiers) === 'optional'
+      let isOptionalAny = isModifiersAny(this.layerModifiers) == 'optional'
       rule.manipulators.forEach((v) =>
         this.addModifierAnyToManipulator(v, isOptionalAny),
       )
@@ -239,7 +237,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
 
     // Layer toggle keys
     let conditions = this.conditions
-      .filter((v) => v !== this.layerCondition)
+      .filter((v) => v != this.layerCondition)
       .map(buildCondition)
     for (let key_code of this.keys) {
       rule.manipulators = [
@@ -253,7 +251,7 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
           context,
           this.layerKeyManipulator,
           this.replaceLayerKeyToIfAlone,
-          this.layerNotification === true
+          typeof this.layerNotification == 'boolean' && this.layerNotification
             ? this.ruleDescription
             : this.layerNotification || undefined,
           this.leaderModeOptions,
@@ -274,14 +272,14 @@ export class LayerRuleBuilder extends BasicRuleBuilder {
     //   - Otherwise - Set manipulator modifier to optional any - https://github.com/evan-liu/karabiner.ts/discussions/116
     isOptionalAny: boolean,
   ) {
-    if (manipulator.type !== 'basic') return
+    if (manipulator.type != 'basic') return
     if (manipulator.from.modifiers) {
       let { mandatory, optional } = manipulator.from.modifiers
       if (optional?.length || mandatory?.length) {
         let isAny = isModifiersAny(manipulator.from.modifiers)
-        if (isAny === 'mandatory') {
+        if (isAny == 'mandatory') {
           manipulator.from.modifiers = { mandatory: ['any'] }
-        } else if (isAny === 'optional') {
+        } else if (isAny == 'optional') {
           manipulator.from.modifiers = { optional: ['any'] }
         } else if (!isOptionalAny) {
           throw new Error(
@@ -344,7 +342,7 @@ export function layerToggleManipulator(
 
     if (replaceLayerKeyToIfAlone) {
       toItem.to_if_alone = toItem.to_if_alone?.filter(
-        (v) => !('key_code' in v && v.key_code === key_code),
+        (v) => !('key_code' in v && v.key_code == key_code),
       )
     }
 
@@ -417,7 +415,7 @@ export function layerToggleManipulator(
   let exiting = context.getCache<BasicManipulator>(key)
   if (exiting?.to && exiting.to_after_key_up) {
     let sameVar = exiting.to.find(
-      (v) => 'set_variable' in v && v.set_variable.name === varName,
+      (v) => 'set_variable' in v && v.set_variable.name == varName,
     )
     if (!sameVar) {
       exiting.to.push(toSetVar(varName, onValue))
@@ -436,8 +434,8 @@ function isModifiersAny({
   mandatory,
   optional,
 }: FromModifiers): keyof FromModifiers | null {
-  if (mandatory?.length === 1 && mandatory[0] === 'any') return 'mandatory'
-  if (optional?.length === 1 && optional[0] === 'any') return 'optional'
+  if (mandatory?.length == 1 && mandatory[0] == 'any') return 'mandatory'
+  if (optional?.length == 1 && optional[0] == 'any') return 'optional'
   return null
 }
 
@@ -449,12 +447,12 @@ function layerDelay(
   delayed?: boolean | number,
   context?: BuildContext,
 ): number {
-  if (typeof delayed === 'number') return delayed
-  if (delayed === false) return 0
+  if (typeof delayed == 'number') return delayed
+  if (delayed == false) return 0
 
   let params =
     context?.getParameters(defaultLayerParameters) ?? defaultLayerParameters
-  if (delayed === true || params['layer.delay_by_default'])
+  if (delayed || params['layer.delay_by_default'])
     return params['layer.delay_milliseconds']
   return 0
 }
