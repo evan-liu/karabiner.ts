@@ -186,6 +186,18 @@ Located in `.github/workflows/`:
 
 ## Coding Style and Conventions
 
+### Core Principle: Be Precise, yet Concise
+
+- **Apply to all aspects**: This principle governs code, tests, documentation, commit messages, PR titles, and all project contributions
+- **Precision**: Changes should be targeted and exact, addressing the specific need without unnecessary modifications
+- **Conciseness**: Avoid verbosity while maintaining clarity - prefer clear, direct solutions over elaborate ones
+- **Examples**: 
+  - Code: Use descriptive but brief variable names, minimal function signatures
+  - Tests: Focus on specific behaviors, avoid redundant test cases
+  - Documentation: Clear explanations without unnecessary detail
+  - Commits: Descriptive but concise messages with appropriate Gitmoji
+  - PRs: Clear titles and focused changes
+
 ### Variable Declarations
 
 - **Prefer `let` over `const`** for variable declarations, even for values that won't be reassigned
