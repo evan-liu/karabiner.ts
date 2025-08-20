@@ -1,6 +1,0 @@
-# GitHub Copilot Agent Configuration
-# Instructions for Copilot when working on this repository
-
-instructions:
-  # Package management
-  - "Do not commit package-lock.json unless editing dependencies in package.json"
