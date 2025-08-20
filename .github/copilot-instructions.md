@@ -5,6 +5,7 @@
 **karabiner.ts** is a TypeScript/JavaScript library that allows users to write [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) configuration using modern syntax instead of JSON. It provides strongly-typed abstractions and IDE support for creating complex keyboard remapping rules.
 
 ### Repository Details
+
 - **Type**: TypeScript library package distributed via npm and Deno
 - **Size**: ~50 source files, medium-sized codebase
 - **Languages**: TypeScript (primary), JavaScript (documentation examples)
@@ -15,6 +16,7 @@
 ## Build and Validation Commands
 
 ### Prerequisites
+
 - Node.js 18+ is required
 - Always run `npm install` before any build commands
 - The repository supports multiple package managers but uses npm by default
@@ -22,12 +24,14 @@
 ### Core Commands (run in repository root)
 
 #### Bootstrap and Dependencies
+
 ```bash
 npm install
 # Note: Removes package-lock.json in CI/CD workflows for dependency updates
 ```
 
 #### Build
+
 ```bash
 npm run build
 # Uses Vite to build TypeScript library
@@ -38,6 +42,7 @@ npm run build
 ```
 
 #### Test
+
 ```bash
 npm run test        # Run all tests
 npm run test:coverage  # Run tests with coverage report
@@ -48,6 +53,7 @@ npm run test:coverage  # Run tests with coverage report
 ```
 
 #### Formatting
+
 ```bash
 npx prettier --check .    # Check formatting
 npx prettier --write .    # Fix formatting issues
@@ -56,10 +62,13 @@ npx prettier --write .    # Fix formatting issues
 ```
 
 #### Documentation (run in docs/ directory)
+
 ```bash
 cd docs
 npm install  # Required first time and after dependency changes
 npm run build:editor-worker  # Build Monaco editor worker
+# Copy examples to docs (normally done by build pipeline)
+node ../.github/actions/copy-examples-to-docs/copy-examples-to-docs.js
 npm run build               # Build documentation site
 npm run start              # Development server
 ```
@@ -72,11 +81,14 @@ npm run start              # Development server
 
 3. **Documentation Dependencies**: The docs build requires installing dependencies in both root and docs/ directories.
 
-4. **Package Lock Issues**: CI workflows remove `package-lock.json` for fresh dependency resolution.
+4. **Package Lock Issues**: CI workflows remove `package-lock.json` for fresh dependency resolution. Only commit `package-lock.json` when making actual dependency changes in `package.json`.
+
+5. **Documentation Examples**: Before building docs locally, run `node ../.github/actions/copy-examples-to-docs/copy-examples-to-docs.js` to copy examples to the docs directory (this is normally done by the build pipeline).
 
 ## Project Architecture and Layout
 
 ### Core Library Structure
+
 ```
 src/
 ├── index.ts                 # Main entry point, exports all public APIs
@@ -96,6 +108,7 @@ src/
 ```
 
 ### Configuration Files
+
 - `package.json` - Main package configuration, build scripts
 - `tsconfig.json` - TypeScript compiler configuration
 - `vite.config.ts` - Build configuration (Vite + vitest)
@@ -103,6 +116,7 @@ src/
 - `.gitignore` - Standard Node.js gitignore with dist/, coverage/
 
 ### Documentation
+
 ```
 docs/
 ├── package.json           # Documentation dependencies
@@ -113,6 +127,7 @@ docs/
 ```
 
 ### Examples
+
 ```
 examples/
 ├── modifier-keys/        # Modifier key examples
@@ -122,17 +137,21 @@ examples/
 ```
 
 ### GitHub Workflows
+
 Located in `.github/workflows/`:
+
 - `pr-test.yml` - Runs build + test on PRs (affects src/ changes)
 - `build-publish.yml` - Builds, tests, publishes to npm (on main branch)
 - `docs-publish.yml` - Builds and deploys documentation (on docs/ changes)
 
 ### Key Dependencies
+
 - **Production**: None (library outputs pure configuration objects)
 - **Development**: Vite, Vitest, TypeScript, Prettier, API Extractor
 - **Documentation**: Docusaurus, Monaco Editor, ESBuild (for online editor)
 
 ### Validation Steps
+
 1. **Always run tests after code changes**: `npm run test`
 2. **Check formatting**: `npx prettier --check .`
 3. **Verify build succeeds**: `npm run build`
@@ -140,6 +159,7 @@ Located in `.github/workflows/`:
 5. **Example validation**: Test example files can be imported and executed
 
 ### File Organization Notes
+
 - Main library exports are in `src/index.ts`
 - Each major feature has its own file in `src/config/`
 - Test files are co-located with source files (`.test.ts`)
@@ -147,6 +167,7 @@ Located in `.github/workflows/`:
 - Examples serve as both documentation and integration tests
 
 ### Build Artifacts
+
 - `dist/` - Built library (gitignored)
 - `coverage/` - Test coverage reports (gitignored)
 - `docs/build/` - Built documentation site (gitignored)
@@ -157,7 +178,30 @@ Located in `.github/workflows/`:
 **Trust these instructions**: Only search for additional information if the instructions above are incomplete or found to be incorrect. The commands and file locations documented here have been validated and should be used as the primary reference for working with this codebase.
 
 **Common Tasks**:
+
 - For library changes: Modify files in `src/`, run `npm run test` and `npm run build`
 - For documentation: Work in `docs/docs/`, build with `cd docs && npm run build`
 - For examples: Add to appropriate subdirectory in `examples/`
 - Always check formatting with prettier before committing changes
+
+## Coding Style and Conventions
+
+### Variable Declarations
+
+- **Prefer `let` over `const`** for variable declarations, even for values that won't be reassigned
+- This maintains consistency with the existing codebase style
+
+### Equality Comparisons
+
+- **Prefer `==` over `===`** for equality comparisons
+- The codebase uses loose equality checks consistently
+
+### Commit and PR Conventions
+
+- **Use Gitmoji** for commit messages and PR titles (e.g., ♻️ for refactoring, ✨ for new features)
+- Follow the existing Gitmoji patterns seen in commit history
+
+### Dependency Management
+
+- **Only commit `package-lock.json`** when making actual dependency changes in `package.json`
+- CI workflows remove package-lock.json for fresh dependency resolution in most cases
