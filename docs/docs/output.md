@@ -37,37 +37,22 @@ writeToProfile('Default', [
 
 ### Examples
 
-**Basic usage:**
 ```typescript
-import { writeToProfile, rule, map } from 'karabiner.ts'
-
+// Basic usage
 writeToProfile('Default', [
   rule('Caps Lock to Delete').manipulators([
     map('⇪').to('⌫'),
   ]),
 ])
-```
 
-**Dry run:**
-```typescript
-writeToProfile('--dry-run', [
-  rule('Test Rule').manipulators([
-    map('a').to('b'),
-  ]),
-])
-// Prints JSON to console instead of writing to file
-```
+// Dry run (prints JSON to console)
+writeToProfile('--dry-run', [...rules])
 
-**Custom karabiner.json path:**
-```typescript
+// Custom path
 writeToProfile({
   name: 'MyProfile',
-  karabinerJsonPath: '/path/to/custom/karabiner.json'
-}, [
-  rule('Custom Rule').manipulators([
-    map('1').to('a'),
-  ]),
-])
+  karabinerJsonPath: '/custom/path/karabiner.json'
+}, [...rules])
 ```
 
 ## writeToGlobal() {#write-to-global}
@@ -92,65 +77,20 @@ writeToGlobal({
 
 ### Examples
 
-**Configure menu bar display:**
 ```typescript
-import { writeToGlobal } from 'karabiner.ts'
-
+// Configure menu bar display
 writeToGlobal({
   show_in_menu_bar: true,
   show_profile_name_in_menu_bar: true,
 })
-```
 
-**Disable update checks:**
-```typescript
+// Disable update checks
 writeToGlobal({
   check_for_updates_on_startup: false,
 })
-```
 
-**Use custom configuration file:**
-```typescript
+// Custom configuration file
 writeToGlobal({
   show_in_menu_bar: false,
-}, '/path/to/custom/karabiner.json')
-```
-
-**Combined with profile configuration:**
-```typescript
-import { writeToProfile, writeToGlobal, rule, map } from 'karabiner.ts'
-
-// Configure global settings
-writeToGlobal({
-  show_in_menu_bar: true,
-  show_profile_name_in_menu_bar: true,
-})
-
-// Configure profile rules
-writeToProfile('MyProfile', [
-  rule('Custom mappings').manipulators([
-    map('⇪').to('⌫'),
-  ]),
-])
-```
-
-## Using with Deno
-
-Both methods are available in Deno environments:
-
-```typescript
-import { writeToProfile, writeToGlobal } from 'https://deno.land/x/karabinerts@{version}/deno.ts'
-
-writeToGlobal({
-  show_in_menu_bar: true,
-})
-
-writeToProfile('Default', [
-  // rules...
-])
-```
-
-Run with:
-```bash
-deno run --allow-env --allow-read --allow-write your-script.ts
+}, '/custom/path/karabiner.json')
 ```
