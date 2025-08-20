@@ -2,11 +2,11 @@ import { lstatSync } from 'node:fs'
 import { copyFile, mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
-const rootDir = process.cwd()
-const examplesDir = join(rootDir, 'examples')
-const examplesInDocs = join(rootDir, 'docs/docs/examples')
-const examplesFile = join(rootDir, 'docs/static/examples.json')
-const examplesMap = {}
+let rootDir = process.cwd()
+let examplesDir = join(rootDir, 'examples')
+let examplesInDocs = join(rootDir, 'docs/docs/examples')
+let examplesFile = join(rootDir, 'docs/static/examples.json')
+let examplesMap = {}
 
 copyDir(examplesDir)
   .then(() => writeFile(examplesFile, JSON.stringify(examplesMap)))
@@ -16,26 +16,26 @@ copyDir(examplesDir)
   })
 
 async function copyDir(dirFullPath, dirLevels = []) {
-  const items = await readdir(dirFullPath)
+  let items = await readdir(dirFullPath)
 
-  const toCopy = { code: {}, files: [], dirs: [] }
+  let toCopy = { code: {}, files: [], dirs: [] }
   items.forEach((item) => {
-    const itemFullPath = join(dirFullPath, item)
+    let itemFullPath = join(dirFullPath, item)
     if (lstatSync(itemFullPath).isDirectory()) {
       return toCopy.dirs.push(item)
     }
 
-    const codeMatched = item.match(/^(.*)\.(md|ts)$/)
+    let codeMatched = item.match(/^(.*)\.(md|ts)$/)
     if (!codeMatched) {
       return toCopy.files.push(item)
     }
-    const [, name, format] = codeMatched
+    let [, name, format] = codeMatched
     ;(toCopy.code[name] ||= []).push(format)
   })
 
   await Promise.all([
     ...toCopy.dirs.map(async (item) => {
-      const dirInDocs = join(examplesInDocs, ...dirLevels, item)
+      let dirInDocs = join(examplesInDocs, ...dirLevels, item)
       await mkdir(dirInDocs, { recursive: true })
       await copyDir(join(dirFullPath, item), dirLevels.concat(item))
     }),
@@ -52,7 +52,7 @@ async function copyDir(dirFullPath, dirLevels = []) {
 }
 
 async function copyCode(name, formats, dirFullPath, dirLevels) {
-  const code = formats.includes('ts')
+  let code = formats.includes('ts')
     ? await readCode(name, dirFullPath, dirLevels)
     : null
 
@@ -67,20 +67,20 @@ Example code: ( [Open in the online editor →](/editor?example=${key}) )
 ${code}
 \`\`\`
 `
-    const mdFile = join(examplesInDocs, ...dirLevels, `${name}.md`)
+    let mdFile = join(examplesInDocs, ...dirLevels, `${name}.md`)
     await writeFile(mdFile, markdown)
   }
 }
 
 async function readCode(name, dirFullPath, dirLevels) {
-  const fileName = `${name}.ts`
-  const fullPath = join(dirFullPath, fileName)
-  const srcCode = await readFile(fullPath, 'utf-8')
-  const matched = srcCode.match(/^(import[\s\S]*?)from '.*?'\s*([\s\S]*)$/m)
+  let fileName = `${name}.ts`
+  let fullPath = join(dirFullPath, fileName)
+  let srcCode = await readFile(fullPath, 'utf-8')
+  let matched = srcCode.match(/^(import[\s\S]*?)from '.*?'\s*([\s\S]*)$/m)
   if (!matched)
     throw new Error(`Cannot parse ${dirLevels.concat(fileName).join('/')}`)
 
-  const code = matched[2]
+  let code = matched[2]
   examplesMap[dirLevels.concat(name).join('/')] = code
   return code
 }

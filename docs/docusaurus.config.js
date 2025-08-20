@@ -1,12 +1,12 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const { themes } = require('prism-react-renderer')
-const lightCodeTheme = themes.github
-const darkCodeTheme = themes.dracula
+let { themes } = require('prism-react-renderer')
+let lightCodeTheme = themes.github
+let darkCodeTheme = themes.dracula
 
 /** @type {import('@docusaurus/types').Config} */
-const config = {
+let config = {
   title: 'karabiner.ts',
 
   url: 'https://karabiner.ts.evanliu.dev',
