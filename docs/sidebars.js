@@ -29,6 +29,7 @@ const sidebars = {
       ],
     },
     'utils',
+    'output',
     'imports',
     {
       type: 'category',
