@@ -134,10 +134,10 @@ export class DuoLayerRuleBuilder extends BasicRuleBuilder {
       typeof this.delayed == 'number'
         ? this.delayed
         : this.delayed == false
-        ? 0
-        : this.delayed == true || params['duo_layer.delay_by_default']
-        ? params['duo_layer.delay_milliseconds']
-        : 0
+          ? 0
+          : this.delayed == true || params['duo_layer.delay_by_default']
+            ? params['duo_layer.delay_milliseconds']
+            : 0
 
     let conditions = this.conditions
       .filter((v) => v != this.layerCondition)

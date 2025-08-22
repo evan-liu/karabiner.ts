@@ -322,11 +322,10 @@ export function layerToggleManipulator(
       'to_if_held_down',
       'to_after_key_up',
     ] as const satisfies Array<keyof BasicManipulator>
-    keys.forEach(
-      (key) =>
-        fromItem[key]?.forEach(
-          (v) => (toItem[key] = [...(toItem[key] || []), v]),
-        ),
+    keys.forEach((key) =>
+      fromItem[key]?.forEach(
+        (v) => (toItem[key] = [...(toItem[key] || []), v]),
+      ),
     )
     if (fromItem.to_delayed_action) {
       toItem.to_delayed_action = toItem.to_delayed_action || {
@@ -334,8 +333,8 @@ export function layerToggleManipulator(
         to_if_canceled: [],
       }
       for (let key of ['to_if_invoked', 'to_if_canceled'] as const) {
-        fromItem.to_delayed_action[key].forEach(
-          (v) => toItem.to_delayed_action?.[key].push(v),
+        fromItem.to_delayed_action[key].forEach((v) =>
+          toItem.to_delayed_action?.[key].push(v),
         )
       }
     }

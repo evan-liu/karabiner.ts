@@ -146,10 +146,13 @@ function formatRegExp(v: string | RegExp) {
 function flipUnlessTypes(
   types: Partial<Record<Condition['type'], Condition['type']>>,
 ): Record<Condition['type'], Condition['type']> {
-  return Object.keys(types).reduce(
-    (result, type) => {
-      return { ...result, [result[type as Condition['type']]]: type }
-    },
-    types as Record<Condition['type'], Condition['type']>,
-  )
+  let result = { ...types } as Record<Condition['type'], Condition['type']>
+  
+  for (let [ifType, unlessType] of Object.entries(types)) {
+    if (unlessType) {
+      result[unlessType as Condition['type']] = ifType as Condition['type']
+    }
+  }
+  
+  return result
 }

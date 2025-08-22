@@ -5,17 +5,28 @@ import {
 import { RuleBuilder } from './config/rule.ts'
 import { KarabinerConfig, Rule } from './karabiner/karabiner-config.ts'
 
+// Constants for better maintainability
+const KARABINER_CONFIG_DIR = '.config/karabiner'
+const KARABINER_CONFIG_FILE = 'karabiner.json'
+const JSON_INDENT = 2
+
+const ERROR_MESSAGES = {
+  PROFILE_NOT_FOUND: (name: string, jsonPath: string) => 
+    `⚠️ Profile ${name} not found in ${jsonPath}.\n\nℹ️ Please check the profile name in the Karabiner-Elements UI and \n    - Update the profile name at writeToProfile()\n    - Create a new profile if needed`,
+  UNKNOWN_ERROR: 'An unknown error occurred',
+} as const
+
 export let writeContext = {
   karabinerConfigDir() {
     return require('node:path').join(
       require('node:os').homedir(),
-      '.config/karabiner',
+      KARABINER_CONFIG_DIR,
     )
   },
   karabinerConfigFile() {
     return require('node:path').join(
       this.karabinerConfigDir(),
-      'karabiner.json',
+      KARABINER_CONFIG_FILE,
     )
   },
   readKarabinerConfig(karabinerJsonPath?: string) {
@@ -68,12 +79,9 @@ export function writeToProfile(
     : writeContext.readKarabinerConfig(jsonPath)
 
   let profile = config?.profiles.find((v) => v.name == name)
-  if (!profile)
-    exitWithError(`⚠️ Profile ${name} not found in ${jsonPath}.\n
-ℹ️ Please check the profile name in the Karabiner-Elements UI and 
-    - Update the profile name at writeToProfile()
-    - Create a new profile if needed
- `)
+  if (!profile) {
+    exitWithError(ERROR_MESSAGES.PROFILE_NOT_FOUND(name, jsonPath))
+  }
 
   try {
     profile.complex_modifications = complexModifications(rules, parameters)
@@ -81,7 +89,7 @@ export function writeToProfile(
     exitWithError(e)
   }
 
-  let json = JSON.stringify(config, null, 2)
+  let json = JSON.stringify(config, null, JSON_INDENT)
 
   if (dryRun) {
     console.info(json)
@@ -96,10 +104,17 @@ export function writeToProfile(
 function exitWithError(err: any): never {
   if (err) {
     if (typeof err == 'string') {
-      console.error(err)
+      console.error(`❌ Error: ${err}`)
+    } else if (err instanceof Error) {
+      console.error(`❌ Error: ${err.message}`)
+      if (err.stack) {
+        console.error(err.stack)
+      }
     } else {
-      console.error((err as Error).message || err)
+      console.error(`❌ Unknown error:`, err)
     }
+  } else {
+    console.error(`❌ ${ERROR_MESSAGES.UNKNOWN_ERROR}`)
   }
   return writeContext.exit(1)
 }
@@ -112,7 +127,7 @@ export function writeToGlobal(
   let jsonPath = karabinerJsonPath ?? writeContext.karabinerConfigFile()
   let config: KarabinerConfig = writeContext.readKarabinerConfig(jsonPath)
   config.global = { ...config.global, ...global }
-  let json = JSON.stringify(config, null, 2)
+  let json = JSON.stringify(config, null, JSON_INDENT)
 
   writeContext.writeKarabinerConfig(json, jsonPath).catch(exitWithError)
 
