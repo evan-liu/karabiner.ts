@@ -13,9 +13,7 @@ Write complex_modifications rules to a profile inside `~/.config/karabiner/karab
 
 ```typescript
 writeToProfile('Default', [
-  rule('Demo Rule').manipulators([
-    map('⇪').to('⌫', '⌘'),
-  ]),
+  rule('Demo Rule').manipulators([map('⇪').to('⌫', '⌘')]),
 ])
 ```
 
@@ -40,19 +38,20 @@ writeToProfile('Default', [
 ```typescript
 // Basic usage
 writeToProfile('Default', [
-  rule('Caps Lock to Delete').manipulators([
-    map('⇪').to('⌫'),
-  ]),
+  rule('Caps Lock to Delete').manipulators([map('⇪').to('⌫')]),
 ])
 
 // Dry run (prints JSON to console)
 writeToProfile('--dry-run', [...rules])
 
 // Custom path
-writeToProfile({
-  name: 'MyProfile',
-  karabinerJsonPath: '/custom/path/karabiner.json'
-}, [...rules])
+writeToProfile(
+  {
+    name: 'MyProfile',
+    karabinerJsonPath: '/custom/path/karabiner.json',
+  },
+  [...rules],
+)
 ```
 
 ## writeToGlobal() {#write-to-global}
@@ -90,7 +89,10 @@ writeToGlobal({
 })
 
 // Custom configuration file
-writeToGlobal({
-  show_in_menu_bar: false,
-}, '/custom/path/karabiner.json')
+writeToGlobal(
+  {
+    show_in_menu_bar: false,
+  },
+  '/custom/path/karabiner.json',
+)
 ```
