@@ -2,47 +2,62 @@
 title: Imports
 ---
 
-Config created by other tools, or those imported from
-[shared rules](https://ke-complex-modifications.pqrs.org), can be imported into
-`karabiner.ts` instead of being rewritten.
+# Importing Existing Configurations
 
-## importJson() {#import-json}
+karabiner.ts can import configurations from [Karabiner-Elements shared rules](https://ke-complex-modifications.pqrs.org), existing JSON files, and other profiles. This lets you gradually migrate to karabiner.ts or combine different sources.
 
-Rules imported from [shared rules](https://ke-complex-modifications.pqrs.org)
-are stored in directory `~/.config/karabiner/assets/complex_modifications/`.
-They can also be stored within the `karabiner.ts` project directory and
-imported using `__dirname`:
+## importJson()
+
+Import rules from JSON files, including shared gallery rules.
+
+**Import shared rules** (stored in `~/.config/karabiner/assets/complex_modifications/`):
 
 ```typescript
-import { homedir } from 'node:os'
-import { resolve } from 'node:path'
-
 writeToProfile('Default', [
-  // ... karabiner.ts rules
-
-  // Imported shared rules
+  rule('My custom rule').manipulators([map('⇪').to('⎋')]),
   importJson(
     resolve(
       homedir(),
       '.config/karabiner/assets/complex_modifications/1703535155.json',
     ),
   ),
-
-  // Local JSON file
-  importJson(resolve(__dirname, './my-rules.json')),
 ])
 ```
 
-## importProfile() {#import-profile}
+**Import local files:**
 
-Rules created using other tools can be imported from a different profile, and new rules
-can be added prior to the `importProfile()` call.
+```typescript
+writeToProfile('Default', [
+  rule('TypeScript rules').manipulators([map('a').to('b')]),
+  importJson(resolve(__dirname, './legacy-config.json')),
+])
+```
+
+## importProfile()
+
+Import all rules from another Karabiner-Elements profile:
 
 ```typescript
 writeToProfile('karabiner.ts', [
-  // ... karabiner.ts rules
-
-  // Import from another profile
-  importProfile('ByAnotherTool'),
+  rule('New rules').manipulators([map('⇪').to('⎋')]),
+  importProfile('MyOldProfile'), // Import existing profile
 ])
 ```
+
+**Migration strategy:**
+
+```typescript
+writeToProfile('Default', [
+  importProfile('LegacyConfig'), // Keep existing rules
+  rule('New features').manipulators([
+    layer('a', 'nav').manipulators([map('h').to('←'), map('j').to('↓')]),
+  ]),
+])
+```
+
+## Best Practices
+
+- **Group imports at the top** for clarity
+- **Use absolute paths:** `resolve(__dirname, './file.json')`
+- **Check file exists** before importing
+- **Rules process in order** - earlier rules take precedence
