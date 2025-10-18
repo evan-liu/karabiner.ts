@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - copilot/add-workflow-for-jsr
     paths:
       - '.github/workflows/build-publish.yml'
       - 'src/**'
