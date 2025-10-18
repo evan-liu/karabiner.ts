@@ -16,6 +16,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      id-token: write
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -30,5 +31,23 @@ jobs:
         if: always()
 
       - uses: JS-DevTools/npm-publish@v2
+        id: npm-publish
         with:
           token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create jsr.json
+        if: steps.npm-publish.outputs.type != 'none'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          cat > jsr.json << EOF
+          {
+            "name": "@evan-liu/karabiner-ts",
+            "version": "$VERSION",
+            "exports": "./src/index.ts",
+            "include": ["src"]
+          }
+          EOF
+
+      - name: Publish to JSR
+        if: steps.npm-publish.outputs.type != 'none'
+        run: npx jsr publish
