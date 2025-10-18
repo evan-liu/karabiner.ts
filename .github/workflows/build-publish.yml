@@ -25,18 +25,7 @@ jobs:
       - run: rm package-lock.json
       - run: npm i
 
-      - run: npm run build
-      - run: npm run test:coverage
-      - uses: coverallsapp/github-action@v2
-        if: always()
-
-      - uses: JS-DevTools/npm-publish@v2
-        id: npm-publish
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-
       - name: Create jsr.json
-        if: steps.npm-publish.outputs.type != 'none'
         run: |
           VERSION=$(node -p "require('./package.json').version")
           cat > jsr.json << EOF
@@ -49,5 +38,4 @@ jobs:
           EOF
 
       - name: Publish to JSR
-        if: steps.npm-publish.outputs.type != 'none'
         run: npx jsr publish
