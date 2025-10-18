@@ -1,0 +1,37 @@
+name: 📦 Publish to JSR
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/jsr-publish.yml'
+      - 'src/**'
+      - 'package.json'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+
+      - run: rm package-lock.json
+      - run: npm i
+
+      - run: npm run build
+      - run: npm run test
+
+      - name: Update jsr.json version from package.json
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          node -e "const fs=require('fs'); const jsr=JSON.parse(fs.readFileSync('jsr.json')); jsr.version='$VERSION'; fs.writeFileSync('jsr.json', JSON.stringify(jsr, null, 2)+'\n');"
+
+      - name: Publish package
+        run: npx jsr publish
