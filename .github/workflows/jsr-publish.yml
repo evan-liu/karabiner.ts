@@ -28,10 +28,17 @@ jobs:
       - run: npm run build
       - run: npm run test
 
-      - name: Update jsr.json version from package.json
+      - name: Create jsr.json
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          node -e "const fs=require('fs'); const jsr=JSON.parse(fs.readFileSync('jsr.json')); jsr.version='$VERSION'; fs.writeFileSync('jsr.json', JSON.stringify(jsr, null, 2)+'\n');"
+          cat > jsr.json << EOF
+          {
+            "name": "@evan-liu/karabiner-ts",
+            "version": "$VERSION",
+            "exports": "./src/index.ts",
+            "include": ["src"]
+          }
+          EOF
 
       - name: Publish package
         run: npx jsr publish
