@@ -2,12 +2,13 @@ import {
   complexModifications,
   ModificationParameters,
 } from './config/complex-modifications.ts'
+import { ManipulatorBuilder, ManipulatorMap } from './config/manipulator.ts'
 import { RuleBuilder } from './config/rule.ts'
 import { simpleModifications } from './config/simple-modifications.ts'
 import {
   KarabinerConfig,
+  Manipulator,
   Rule,
-  SimpleManipulator,
 } from './karabiner/karabiner-config.ts'
 
 export let writeContext = {
@@ -62,7 +63,9 @@ export function writeToProfile(
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
   extras?: {
-    simple_modifications?: Array<SimpleManipulator>
+    simple_modifications?: Array<
+      Manipulator | ManipulatorBuilder | ManipulatorMap
+    >
   },
 ) {
   if (typeof writeTarget == 'string') {

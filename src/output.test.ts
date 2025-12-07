@@ -1,12 +1,29 @@
 import { map, rule } from '.'
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  MockInstance,
+  test,
+  vi,
+} from 'vitest'
 
 import { writeContext, writeToProfile } from './output'
 
 describe('writeToProfile', () => {
-  let consoleInfoSpy
-  let writeContextReadKarabinerConfigSpy
-  let writeContextWriteKarabinerConfigSpy
+  let consoleInfoSpy: MockInstance<
+    [message?: any, ...optionalParams: any[]],
+    void
+  >
+  let writeContextReadKarabinerConfigSpy: MockInstance<
+    [karabinerJsonPath?: string],
+    any
+  >
+  let writeContextWriteKarabinerConfigSpy: MockInstance<
+    [json: any, karabinerJsonPath?: string],
+    any
+  >
 
   beforeEach(() => {
     consoleInfoSpy = vi

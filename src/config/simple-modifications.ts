@@ -1,6 +1,10 @@
-import { Rule, SimpleManipulator } from '../karabiner/karabiner-config.ts'
+import { Manipulator, SimpleManipulator } from '../karabiner/karabiner-config'
 
-import { buildManipulators } from './manipulator.ts'
+import {
+  buildManipulators,
+  ManipulatorBuilder,
+  ManipulatorMap,
+} from './manipulator'
 
 /**
  * Returns the given manipulators as simple manipulators, for a profile's `simple_modifications`.
@@ -11,17 +15,26 @@ export function simpleModifications(
   manipulatorSources: Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
 ): SimpleManipulator[] {
   const manipulators = manipulatorSources.reduce(
-    (r, v) => [...r, ...buildManipulators(v)],
+    (acc, manipulator) => [...acc, ...buildManipulators(manipulator)],
     [] as Manipulator[],
   )
 
   // Verify and pare the manipulators down to "simple" fields, to & from.
-  const simpleManipulators = manipulators.map((m) => {
-    const { to, from, type, ...rest } = m
-
-    if (type !== 'basic') {
-      throw new Error(`simple_modifications manipulator type isn't "basic"`)
+  const simpleManipulators = manipulators.map((manipulator) => {
+    if (
+      !(
+        manipulator.type === 'basic' &&
+        'from' in manipulator &&
+        'to' in manipulator
+      )
+    ) {
+      throw new Error(
+        `simple_modifications manipulator isn't a BasicManipulator`,
+      )
     }
+
+    const { to, from, type, ...rest } = manipulator
+
     if (!to || !from) {
       throw new Error(`simple_modifications manipulator missing to/from`)
     }
