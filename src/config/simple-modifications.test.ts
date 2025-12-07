@@ -27,12 +27,14 @@ describe('simpleModifications', () => {
 
   test('should throw if not simple', () => {
     expect(() => simpleModifications([map('1').to('2')])).not.toThrow()
-    expect(() =>
-      simpleModifications([map('1').to('2').description('description')]),
-    ).toThrow()
+
+    expect(() => simpleModifications([map('1')])).toThrow()
     expect(() => simpleModifications([map('1').toIfAlone('2')])).toThrow()
     expect(() => simpleModifications([map('1').toIfHeldDown('2')])).toThrow()
     expect(() => simpleModifications([map('1').toAfterKeyUp('2')])).toThrow()
+    expect(() =>
+      simpleModifications([map('1').to('2').description('description')]),
+    ).toThrow()
     expect(() =>
       simpleModifications([
         map('1').to('2').parameters({

@@ -2,6 +2,11 @@ import { Rule, SimpleManipulator } from '../karabiner/karabiner-config.ts'
 
 import { buildManipulators } from './manipulator.ts'
 
+/**
+ * Returns the given manipulators as simple manipulators, for a profile's `simple_modifications`.
+ *
+ * Throws if any of the manipulators isn't "simple" (i.e. "basic" type with only `to` & `from`).
+ */
 export function simpleModifications(
   manipulatorSources: Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
 ): SimpleManipulator[] {
@@ -16,6 +21,9 @@ export function simpleModifications(
 
     if (type !== 'basic') {
       throw new Error(`simple_modifications manipulator type isn't "basic"`)
+    }
+    if (!to || !from) {
+      throw new Error(`simple_modifications manipulator missing to/from`)
     }
     if (Object.keys(rest).length) {
       throw new Error(`simple_modifications manipulator isn't simple`)
