@@ -54,7 +54,8 @@ export interface WriteTarget {
  *                    Use '--dry-run' to print the config json into console.
  * @param rules       The complex_modifications rules
  * @param parameters  Extra complex_modifications parameters
- * @param extras      Optional extras parameters, like rules for simple_modifications if given.
+ * @param extras      Optional extras. If simple_modifications is given, verifies the given
+ *                    manipulators are "simple" and overwrites the profile's simple_modifications.
  *
  * @see https://karabiner-elements.pqrs.org/docs/json/root-data-structure/
  */

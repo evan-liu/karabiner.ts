@@ -50,7 +50,7 @@ describe('writeToProfile', () => {
     expect(writeContextWriteKarabinerConfigSpy).not.toHaveBeenCalled()
     expect(consoleInfoSpy).toHaveBeenCalledTimes(1)
 
-    const { profiles } = JSON.parse(consoleInfoSpy.mock.calls[0][0])
+    let { profiles } = JSON.parse(consoleInfoSpy.mock.calls[0][0])
     expect(profiles.length).toEqual(1)
     expect(profiles[0].complex_modifications.rules.length).toEqual(1)
     expect(profiles[0].complex_modifications.rules[0].description).toEqual(
@@ -74,7 +74,7 @@ describe('writeToProfile', () => {
     expect(consoleInfoSpy).not.toHaveBeenCalled()
     expect(writeContextWriteKarabinerConfigSpy).toHaveBeenCalledTimes(1)
 
-    const { profiles } = JSON.parse(
+    let { profiles } = JSON.parse(
       writeContextWriteKarabinerConfigSpy.mock.calls[0][0],
     )
     expect(profiles.length).toEqual(1)
@@ -105,7 +105,7 @@ describe('writeToProfile', () => {
         },
       )
 
-      const { profiles } = JSON.parse(
+      let { profiles } = JSON.parse(
         writeContextWriteKarabinerConfigSpy.mock.calls[0][0],
       )
       expect(profiles.length).toEqual(1)
@@ -145,7 +145,7 @@ describe('writeToProfile', () => {
         },
       )
 
-      const { profiles } = JSON.parse(
+      let { profiles } = JSON.parse(
         writeContextWriteKarabinerConfigSpy.mock.calls[0][0],
       )
       expect(profiles.length).toEqual(1)
@@ -183,7 +183,7 @@ describe('writeToProfile', () => {
         { simple_modifications: [] },
       )
 
-      const { profiles } = JSON.parse(
+      let { profiles } = JSON.parse(
         writeContextWriteKarabinerConfigSpy.mock.calls[0][0],
       )
       expect(profiles.length).toEqual(1)
@@ -212,7 +212,7 @@ describe('writeToProfile', () => {
         {},
       )
 
-      const { profiles } = JSON.parse(
+      let { profiles } = JSON.parse(
         writeContextWriteKarabinerConfigSpy.mock.calls[0][0],
       )
       expect(profiles.length).toEqual(1)

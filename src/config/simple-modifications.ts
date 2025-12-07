@@ -14,16 +14,16 @@ import {
 export function simpleModifications(
   manipulatorSources: Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
 ): SimpleManipulator[] {
-  const manipulators = manipulatorSources.reduce(
+  let manipulators = manipulatorSources.reduce(
     (acc, manipulator) => [...acc, ...buildManipulators(manipulator)],
     [] as Manipulator[],
   )
 
   // Verify and pare the manipulators down to "simple" fields, to & from.
-  const simpleManipulators = manipulators.map((manipulator) => {
+  let simpleManipulators = manipulators.map((manipulator) => {
     if (
       !(
-        manipulator.type === 'basic' &&
+        manipulator.type == 'basic' &&
         'from' in manipulator &&
         'to' in manipulator
       )
@@ -33,7 +33,7 @@ export function simpleModifications(
       )
     }
 
-    const { to, from, type, ...rest } = manipulator
+    let { to, from, type, ...rest } = manipulator
 
     if (!to || !from) {
       throw new Error(`simple_modifications manipulator missing to/from`)

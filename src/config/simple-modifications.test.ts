@@ -5,13 +5,13 @@ import { simpleModifications } from './simple-modifications'
 
 describe('simpleModifications', () => {
   test('should return empty if empty given', () => {
-    const result = simpleModifications([])
+    let result = simpleModifications([])
 
     expect(result).toEqual([])
   })
 
   test('should return simple manipulators', () => {
-    const result = simpleModifications([map('1').to('2'), map('3').to('4')])
+    let result = simpleModifications([map('1').to('2'), map('3').to('4')])
 
     expect(result).toEqual([
       {
