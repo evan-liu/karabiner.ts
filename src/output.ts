@@ -3,7 +3,12 @@ import {
   ModificationParameters,
 } from './config/complex-modifications.ts'
 import { RuleBuilder } from './config/rule.ts'
-import { KarabinerConfig, Rule } from './karabiner/karabiner-config.ts'
+import { simpleModifications } from './config/simple-modifications.ts'
+import {
+  KarabinerConfig,
+  Rule,
+  SimpleManipulator,
+} from './karabiner/karabiner-config.ts'
 
 export let writeContext = {
   karabinerConfigDir() {
@@ -48,6 +53,7 @@ export interface WriteTarget {
  *                    Use '--dry-run' to print the config json into console.
  * @param rules       The complex_modifications rules
  * @param parameters  Extra complex_modifications parameters
+ * @param extras      Optional extras parameters, like rules for simple_modifications if given.
  *
  * @see https://karabiner-elements.pqrs.org/docs/json/root-data-structure/
  */
@@ -55,6 +61,9 @@ export function writeToProfile(
   writeTarget: '--dry-run' | string | WriteTarget,
   rules: Array<Rule | RuleBuilder>,
   parameters: ModificationParameters = {},
+  extras?: {
+    simple_modifications?: Array<SimpleManipulator>
+  },
 ) {
   if (typeof writeTarget == 'string') {
     writeTarget = { name: writeTarget, dryRun: writeTarget == '--dry-run' }
@@ -79,6 +88,12 @@ export function writeToProfile(
     profile.complex_modifications = complexModifications(rules, parameters)
   } catch (e) {
     exitWithError(e)
+  }
+
+  if (extras?.simple_modifications) {
+    profile.simple_modifications = simpleModifications(
+      extras.simple_modifications,
+    )
   }
 
   let json = JSON.stringify(config, null, 2)
