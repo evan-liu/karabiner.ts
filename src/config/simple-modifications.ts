@@ -7,9 +7,10 @@ import {
 } from './manipulator'
 
 /**
- * Returns the given manipulators as simple manipulators, for a profile's `simple_modifications`.
+ * Builds and verifies the given manipulators are "simple" and returns them as SimpleManipulators,
+ * for a profile's `simple_modifications`.
  *
- * Throws if any of the manipulators isn't "simple" (i.e. "basic" type with only `to` & `from`).
+ * Throws if any aren't "simple" (i.e. "basic" type with only `to` & `from`).
  */
 export function simpleModifications(
   manipulatorSources: Array<Manipulator | ManipulatorBuilder | ManipulatorMap>,
