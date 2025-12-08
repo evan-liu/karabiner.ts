@@ -334,10 +334,16 @@ export type ComplexModifications = {
   rules: Rule[]
 }
 
+// In practice, SimpleManipulator is merely "from a key_code, to a single key_code."
+// But they're parsed by Karabiner Elements as a pared down basic manipulator of "from" and "to":
+// https://github.com/pqrs-org/Karabiner-Elements/blob/7c96d997ca448a9c3d3b6b7466e5159fda2d9e52/src/share/manipulator/manipulators/basic/basic.hpp#L133
+export type SimpleManipulator = Pick<BasicManipulator, 'from' | 'to'>
+
 export type KarabinerProfile = {
   name: string
   selected: boolean
   complex_modifications: ComplexModifications
+  simple_modifications?: SimpleManipulator[]
 }
 
 export type KarabinerConfig = {

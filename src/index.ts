@@ -78,4 +78,5 @@ export { importProfile } from './imports/import-profile.ts'
 
 // Output
 export { complexModifications } from './config/complex-modifications.ts'
+export { simpleModifications } from './config/simple-modifications.ts'
 export { writeToProfile, writeToGlobal } from './output.ts'
