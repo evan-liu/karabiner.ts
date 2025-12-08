@@ -95,9 +95,13 @@ export function writeToProfile(
   }
 
   if (extras?.simple_modifications) {
-    profile.simple_modifications = simpleModifications(
-      extras.simple_modifications,
-    )
+    try {
+      profile.simple_modifications = simpleModifications(
+        extras.simple_modifications,
+      )
+    } catch (e) {
+      exitWithError(e)
+    }
   }
 
   let json = JSON.stringify(config, null, 2)

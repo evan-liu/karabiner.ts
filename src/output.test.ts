@@ -39,6 +39,8 @@ describe('writeToProfile', () => {
 
   afterEach(() => {
     consoleInfoSpy.mockRestore()
+    writeContextReadKarabinerConfigSpy.mockRestore()
+    writeContextWriteKarabinerConfigSpy.mockRestore()
   })
 
   test('should output dry-run to console.info and not writeKarabinerConfig', () => {

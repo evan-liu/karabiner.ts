@@ -1,10 +1,10 @@
-import { Manipulator, SimpleManipulator } from '../karabiner/karabiner-config'
+import { Manipulator, SimpleManipulator } from '../karabiner/karabiner-config.ts'
 
 import {
   buildManipulators,
   ManipulatorBuilder,
   ManipulatorMap,
-} from './manipulator'
+} from './manipulator.ts'
 
 /**
  * Builds and verifies the given manipulators are "simple" and returns them as SimpleManipulators,
@@ -40,7 +40,9 @@ export function simpleModifications(
       throw new Error(`simple_modifications manipulator missing to/from`)
     }
     if (Object.keys(rest).length) {
-      throw new Error(`simple_modifications manipulator isn't simple`)
+      throw new Error(
+        `simple_modifications manipulator contains unsupported fields: ${Object.keys(rest).join(', ')}. Only 'from' and 'to' are allowed.`,
+      )
     }
 
     return { to, from } as SimpleManipulator
