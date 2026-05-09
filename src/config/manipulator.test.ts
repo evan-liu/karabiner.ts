@@ -210,6 +210,18 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toSendUserCommand()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toSendUserCommand('hello')
+        .toSendUserCommand({ cmd: 'test' }, '/tmp/sock')
+        .build()[0].to,
+    ).toEqual([
+      { send_user_command: { payload: 'hello' } },
+      { send_user_command: { endpoint: '/tmp/sock', payload: { cmd: 'test' } } },
+    ])
+  })
+
   test('toIfAlone()', () => {
     expect(
       new BasicManipulatorBuilder(from)

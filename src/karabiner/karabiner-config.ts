@@ -118,6 +118,12 @@ export type ToOpenApplication =
   | { file_path: string }
   | { frontmost_application_history_index: number }
 
+/** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/send-user-command/ */
+export type ToSendUserCommand = {
+  endpoint?: string
+  payload: unknown
+}
+
 export type ToSoftwareFunction =
   | { cg_event_double_click: ToCgEventDoubleClick }
   | { set_mouse_cursor_position: ToMouseCursorPosition }
@@ -151,6 +157,7 @@ export type ToEvent = (
   | { sticky_modifier: ToStickyModifier }
   | { software_function: ToSoftwareFunction }
   | { generic_desktop: number }
+  | { send_user_command: ToSendUserCommand }
 ) &
   ToEventOptions
 
@@ -181,6 +188,10 @@ export type ToStickyModifierEvent = Extract<
 export type ToSoftwareFunctionEvent = Extract<
   ToEvent,
   { software_function: ToSoftwareFunction }
+>
+export type ToSendUserCommandEvent = Extract<
+  ToEvent,
+  { send_user_command: ToSendUserCommand }
 >
 
 export type DeviceIdentifier = {

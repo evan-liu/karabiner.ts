@@ -39,6 +39,7 @@ import {
   toPaste,
   toPointingButton,
   toRemoveNotificationMessage,
+  toSendUserCommand,
   toSetVar,
   toSleepSystem,
   toStickyModifier,
@@ -223,6 +224,12 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   /** To causes a system sleep */
   toSleepSystem(delay?: number): this {
     this.addToEvent(toSleepSystem(delay))
+    return this
+  }
+
+  /** Map to send_user_command */
+  toSendUserCommand(payload: unknown, endpoint?: string): this {
+    this.addToEvent(toSendUserCommand(payload, endpoint))
     return this
   }
 
