@@ -281,6 +281,22 @@ describe('ManipulatorBuilder', () => {
     })
   })
 
+  test('toIfOtherKeyPressed()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toIfOtherKeyPressed(
+          [{ key_code: 'tab', modifiers: { optional: ['any'] } }],
+          [{ key_code: 'left_command' }],
+        )
+        .build()[0].to_if_other_key_pressed,
+    ).toEqual([
+      {
+        other_keys: [{ key_code: 'tab', modifiers: { optional: ['any'] } }],
+        to: [{ key_code: 'left_command' }],
+      },
+    ])
+  })
+
   test('description()', () => {
     let manipulatorBuilder = new BasicManipulatorBuilder(from)
     expect(manipulatorBuilder.build()[0].description).toBeUndefined()

@@ -297,6 +297,13 @@ type ToDelayedAction = {
   to_if_invoked: ToEvent[]
   to_if_canceled: ToEvent[]
 }
+
+export type ToIfOtherKeyPressed = {
+  /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-if-other-key-pressed/ */
+  other_keys: (FromKeyType & { modifiers?: FromModifiers })[]
+  to: ToEvent[]
+}
+
 export type BasicManipulator = {
   type: 'basic'
   from: FromEvent
@@ -309,6 +316,8 @@ export type BasicManipulator = {
   to_after_key_up?: ToEvent[]
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-delayed-action/ */
   to_delayed_action?: ToDelayedAction
+  /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-if-other-key-pressed/ */
+  to_if_other_key_pressed?: ToIfOtherKeyPressed[]
   parameters?: BasicParameters
   conditions?: Condition[]
   description?: string

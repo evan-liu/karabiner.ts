@@ -4,6 +4,8 @@ import {
   BasicParameters,
   Condition,
   FromEvent,
+  FromKeyType,
+  FromModifiers,
   Manipulator,
   ToEvent,
   ToEventOptions,
@@ -320,6 +322,19 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     toArray(ifInvoked).forEach((v) => delayedAction.to_if_invoked.push(v))
     toArray(ifCanceled).forEach((v) => delayedAction.to_if_canceled.push(v))
     this.manipulator.to_delayed_action = delayedAction
+    return this
+  }
+
+  toIfOtherKeyPressed(
+    other_keys: (FromKeyType & { modifiers?: FromModifiers })[],
+    to: ToEvent | ToEvent[],
+  ): this {
+    let entry = { other_keys, to: toArray(to) }
+    this.pushOrCreateList(
+      this.manipulator,
+      'to_if_other_key_pressed',
+      entry,
+    )
     return this
   }
 
