@@ -45,6 +45,8 @@ export type FromEvent = (
 ) & {
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/ */
   modifiers?: FromModifiers
+  /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/integer-value/ */
+  integer_value?: number
 }
 export type FromKeyCodeEvent = Extract<
   FromEvent,
