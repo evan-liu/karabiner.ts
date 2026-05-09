@@ -254,6 +254,12 @@ export type Condition =
       description?: string
     }
   | {
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/expression/ */
+      type: 'expression_if' | 'expression_unless'
+      expression: string
+      description?: string
+    }
+  | {
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/event-changed/ */
       type: 'event_changed_if' | 'event_changed_unless'
       value: boolean
@@ -281,6 +287,10 @@ export type InputSourceCondition = Extract<
 export type VariableCondition = Extract<
   Condition,
   { type: 'input_source_if' | 'input_source_unless' }
+>
+export type ExpressionCondition = Extract<
+  Condition,
+  { type: 'expression_if' | 'expression_unless' }
 >
 export type EventChangedCondition = Extract<
   Condition,
