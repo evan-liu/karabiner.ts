@@ -26,6 +26,7 @@ import {
   toApp,
   toCgEventDoubleClick,
   toConsumerKey,
+  toFromEvent,
   toGenericDesktop,
   toHyper,
   toInputSource,
@@ -230,6 +231,12 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   /** Map to send_user_command */
   toSendUserCommand(payload: unknown, endpoint?: string): this {
     this.addToEvent(toSendUserCommand(payload, endpoint))
+    return this
+  }
+
+  /** Pass through the from event as-is */
+  toFromEvent(): this {
+    this.addToEvent(toFromEvent())
     return this
   }
 

@@ -158,6 +158,7 @@ export type ToEvent = (
   | { software_function: ToSoftwareFunction }
   | { generic_desktop: number }
   | { send_user_command: ToSendUserCommand }
+  | { from_event: boolean }
 ) &
   ToEventOptions
 
@@ -193,6 +194,7 @@ export type ToSendUserCommandEvent = Extract<
   ToEvent,
   { send_user_command: ToSendUserCommand }
 >
+export type ToFromEvent = Extract<ToEvent, { from_event: boolean }>
 
 export type DeviceIdentifier = {
   vendor_id?: number

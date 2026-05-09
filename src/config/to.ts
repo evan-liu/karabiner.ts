@@ -228,3 +228,8 @@ export function toSleepSystem(delay?: number): ToEvent {
 export function toSendUserCommand(payload: unknown, endpoint?: string): ToEvent {
   return { send_user_command: { payload, ...(endpoint && { endpoint }) } }
 }
+
+/** Create ToEvent with from_event */
+export function toFromEvent(): ToEvent {
+  return { from_event: true }
+}

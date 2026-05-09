@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { toKey, toPlaySound, toSendUserCommand, toSetVar, toUnsetVar } from './to'
+import { toFromEvent, toKey, toPlaySound, toSendUserCommand, toSetVar, toUnsetVar } from './to'
 
 test('toKey()', () => {
   // ToKeyCode
@@ -76,4 +76,8 @@ test('toSendUserCommand()', () => {
       payload: { command: 'set_window_frames' },
     },
   })
+})
+
+test('toFromEvent()', () => {
+  expect(toFromEvent()).toEqual({ from_event: true })
 })

@@ -222,6 +222,12 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toFromEvent()', () => {
+    expect(
+      new BasicManipulatorBuilder(from).toFromEvent().build()[0].to,
+    ).toEqual([{ from_event: true }])
+  })
+
   test('toIfAlone()', () => {
     expect(
       new BasicManipulatorBuilder(from)
