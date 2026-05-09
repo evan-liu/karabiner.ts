@@ -53,6 +53,15 @@ test('setVar()', () => {
       type: 'unset',
     },
   })
+  expect(toSetVar('test', 1, 2, 'set', 'x + 1')).toEqual({
+    set_variable: {
+      name: 'test',
+      value: 1,
+      key_up_value: 2,
+      type: 'set',
+      expression: 'x + 1',
+    },
+  })
 })
 
 test('toUnsetVar()', () => {

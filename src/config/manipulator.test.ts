@@ -132,6 +132,22 @@ describe('ManipulatorBuilder', () => {
     ).toEqual([
       { set_variable: { name: 'a', value: 1, key_up_value: 2, type: 'unset' } },
     ])
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toVar('a', 1, 2, 'set', 'x + 1', 'x - 1')
+        .build()[0].to,
+    ).toEqual([
+      {
+        set_variable: {
+          name: 'a',
+          value: 1,
+          key_up_value: 2,
+          type: 'set',
+          expression: 'x + 1',
+          key_up_expression: 'x - 1',
+        },
+      },
+    ])
   })
 
   test('toUnsetVar()', () => {

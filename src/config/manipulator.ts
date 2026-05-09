@@ -174,8 +174,10 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     value: ToVariable['value'] = 1,
     key_up_value?: ToVariable['key_up_value'],
     type?: ToVariable['type'],
+    expression?: ToVariable['expression'],
+    key_up_expression?: ToVariable['key_up_expression'],
   ): this {
-    this.addToEvent(toSetVar(name, value, key_up_value, type))
+    this.addToEvent(toSetVar(name, value, key_up_value, type, expression, key_up_expression))
     return this
   }
 

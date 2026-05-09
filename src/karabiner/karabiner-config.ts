@@ -79,6 +79,8 @@ export type ToVariable = {
   name: string
   value?: number | boolean | string
   key_up_value?: number | boolean | string
+  expression?: string
+  key_up_expression?: string
   type?: 'set' | 'unset'
 }
 
