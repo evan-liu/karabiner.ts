@@ -80,7 +80,7 @@ ifApp('Finder').unless()
 
 </details>
 
-It can be added to `rule()` (`layer()`, `simlayer()`), or to each manipulators. 
+It can be added to `rule()` (`layer()`, `simlayer()`), or to each manipulators.
 
 ```typescript
 rule('Finder', ifApp('Finder')).manipulators([
@@ -109,3 +109,11 @@ rule('Finder', ifApp('Finder')).manipulators([
 ```
 
 </details>
+
+## Accessibility Variables
+
+`accessibilityVariable` provides built-in variable names for the focused UI element.
+
+```typescript
+ifVar(accessibilityVariable.roleString, 'AXTextField')
+```

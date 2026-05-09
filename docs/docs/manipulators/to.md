@@ -54,21 +54,26 @@ export type ToEvent = (
         >
       >
     }
-  | {
-      software_function:
-        | { cg_event_double_click: { button: number } }
-        | {
-            set_mouse_cursor_position: {
-              x: number | `${number}%`
-              y: number | `${number}%`
-              screen?: number
-            }
-          }
-        | {
-            iokit_power_management_sleep_system: { delay_milliseconds?: number }
-          }
-    }
-) & {
+   | {
+       software_function:
+         | { cg_event_double_click: { button: number } }
+         | {
+             set_mouse_cursor_position: {
+               x: number | `${number}%`
+               y: number | `${number}%`
+               screen?: number
+               relative_to?: string
+               fallback_to?: string
+             }
+           }
+         | {
+             iokit_power_management_sleep_system: { delay_milliseconds?: number }
+           }
+     }
+   | { generic_desktop: number }
+   | { send_user_command: { endpoint?: string; payload: unknown } }
+   | { from_event: boolean }
+ ) & {
   modifiers?: Array<
     | 'left_control'
     | 'left_shift'
@@ -193,6 +198,8 @@ toStickyModifier()
 toCgEventDoubleClick()
 toMouseCursorPosition()
 toSleepSystem()
+toSendUserCommand()
+toFromEvent()
 ```
 
 ### map().to*()
@@ -228,6 +235,7 @@ map(1).to('a').toApp('Arc').toConsumerKey('play_or_pause')
 map().toIfAlone(/* to*() */)
 map().toIfHeldDown(/* to*() */)
 map().toAfterKeyUp(/* to*() */)
+map().toIfOtherKeyPressed(/* otherKeys, to*() */)
 map().toDelayedAction(/* to*(),  to*() */)
 mapDoubleTap().singleTap(/* to*() */)
 mapSimultaneous([], { to_after_key_up: [/* to*() */] })
