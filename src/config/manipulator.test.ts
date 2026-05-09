@@ -313,6 +313,32 @@ describe('ManipulatorBuilder', () => {
         to: [{ key_code: 'left_command' }],
       },
     ])
+
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toIfOtherKeyPressed(
+          [{ key_code: 'fn', modifiers: { optional: ['any'] } }],
+          [
+            {
+              key_code: 'left_control',
+              modifiers: ['command', 'option'],
+              lazy: true,
+            },
+          ],
+        )
+        .build()[0].to_if_other_key_pressed,
+    ).toEqual([
+      {
+        other_keys: [{ key_code: 'fn', modifiers: { optional: ['any'] } }],
+        to: [
+          {
+            key_code: 'left_control',
+            modifiers: ['command', 'option'],
+            lazy: true,
+          },
+        ],
+      },
+    ])
   })
 
   test('description()', () => {

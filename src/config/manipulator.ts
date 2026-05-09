@@ -326,10 +326,29 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
   }
 
   toIfOtherKeyPressed(
-    other_keys: (FromKeyType & { modifiers?: FromModifiers })[],
+    otherKeys: (FromKeyType & { modifiers?: FromModifiers })[],
     to: ToEvent | ToEvent[],
+  ): this
+  toIfOtherKeyPressed(
+    otherKeys: (FromKeyType & { modifiers?: FromModifiers })[],
+    key: ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this
+  toIfOtherKeyPressed(
+    otherKeys: (FromKeyType & { modifiers?: FromModifiers })[],
+    toOrKey: ToEvent | ToEvent[] | ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
   ): this {
-    let entry = { other_keys, to: toArray(to) }
+    let entry = {
+      other_keys: otherKeys,
+      to: toArray(
+        typeof toOrKey == 'object'
+          ? toOrKey
+          : toKey(toOrKey, modifiers, options),
+      ),
+    }
     this.pushOrCreateList(this.manipulator, 'to_if_other_key_pressed', entry)
     return this
   }
