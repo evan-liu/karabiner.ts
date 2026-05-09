@@ -122,7 +122,11 @@ export type ToNotificationMessage = { id: string; text: string }
 export type ToOpenApplication =
   | { bundle_identifier: string }
   | { file_path: string }
-  | { frontmost_application_history_index: number }
+  | {
+      frontmost_application_history_index: number
+      frontmost_application_history_exclusion_bundle_identifiers?: string[]
+      frontmost_application_history_exclusion_file_paths?: string[]
+    }
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/send-user-command/ */
 export type ToSendUserCommand = {
@@ -206,6 +210,7 @@ export type DeviceIdentifier = {
   vendor_id?: number
   product_id?: number
   location_id?: number
+  device_address?: string
   is_keyboard?: boolean
   is_pointing_device?: boolean
   is_touch_bar?: boolean
