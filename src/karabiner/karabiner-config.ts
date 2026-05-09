@@ -300,8 +300,8 @@ type ToDelayedAction = {
   to_if_canceled: ToEvent[]
 }
 
+/** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-if-other-key-pressed/ */
 export type ToIfOtherKeyPressed = {
-  /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-if-other-key-pressed/ */
   other_keys: (FromKeyType & { modifiers?: FromModifiers })[]
   to: ToEvent[]
 }

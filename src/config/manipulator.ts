@@ -325,10 +325,12 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     return this
   }
 
+  /** Map to to_if_other_key_pressed */
   toIfOtherKeyPressed(
     otherKeys: (FromKeyType & { modifiers?: FromModifiers })[],
     to: ToEvent | ToEvent[],
   ): this
+  /** Map to to_if_other_key_pressed */
   toIfOtherKeyPressed(
     otherKeys: (FromKeyType & { modifiers?: FromModifiers })[],
     key: ToKeyParam,
