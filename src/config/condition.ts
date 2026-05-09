@@ -104,7 +104,11 @@ export function ifEventChanged(value = true, description?: string) {
 }
 
 export function ifExpression(expression: string, description?: string) {
-  return new ConditionBuilder({ type: 'expression_if', expression, description })
+  return new ConditionBuilder({
+    type: 'expression_if',
+    expression,
+    description,
+  })
 }
 
 export const accessibilityVariable = {

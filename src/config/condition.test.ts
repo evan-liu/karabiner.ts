@@ -176,7 +176,9 @@ test('unless()', () => {
 })
 
 test('ifExpression()', () => {
-  expect(ifExpression('command_q_expiration > system.now.milliseconds').build()).toEqual({
+  expect(
+    ifExpression('command_q_expiration > system.now.milliseconds').build(),
+  ).toEqual({
     type: 'expression_if',
     expression: 'command_q_expiration > system.now.milliseconds',
   })
