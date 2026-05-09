@@ -191,12 +191,28 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toMouseCursorPosition({ x: 0, y: 0 })
         .toMouseCursorPosition({ x: '50%', y: '50%', screen: 1 })
+        .toMouseCursorPosition({
+          x: '100%',
+          y: '100%',
+          relative_to: 'current_position',
+          fallback_to: 'window',
+        })
         .build()[0].to,
     ).toEqual([
       { software_function: { set_mouse_cursor_position: { x: 0, y: 0 } } },
       {
         software_function: {
           set_mouse_cursor_position: { x: '50%', y: '50%', screen: 1 },
+        },
+      },
+      {
+        software_function: {
+          set_mouse_cursor_position: {
+            x: '100%',
+            y: '100%',
+            relative_to: 'current_position',
+            fallback_to: 'window',
+          },
         },
       },
     ])
