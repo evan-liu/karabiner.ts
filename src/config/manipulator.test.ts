@@ -339,6 +339,22 @@ describe('ManipulatorBuilder', () => {
         ],
       },
     ])
+
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toIfOtherKeyPressed(
+          [{ key_code: 'escape' }],
+          'b',
+          '⌘',
+          { lazy: true },
+        )
+        .build()[0].to_if_other_key_pressed,
+    ).toEqual([
+      {
+        other_keys: [{ key_code: 'escape' }],
+        to: [{ key_code: 'b', modifiers: ['command'], lazy: true }],
+      },
+    ])
   })
 
   test('description()', () => {
