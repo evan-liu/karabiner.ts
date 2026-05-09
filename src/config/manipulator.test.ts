@@ -234,7 +234,9 @@ describe('ManipulatorBuilder', () => {
         .build()[0].to,
     ).toEqual([
       { send_user_command: { payload: 'hello' } },
-      { send_user_command: { endpoint: '/tmp/sock', payload: { cmd: 'test' } } },
+      {
+        send_user_command: { endpoint: '/tmp/sock', payload: { cmd: 'test' } },
+      },
     ])
   })
 

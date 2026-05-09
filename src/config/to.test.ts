@@ -1,6 +1,13 @@
 import { expect, test } from 'vitest'
 
-import { toFromEvent, toKey, toPlaySound, toSendUserCommand, toSetVar, toUnsetVar } from './to'
+import {
+  toFromEvent,
+  toKey,
+  toPlaySound,
+  toSendUserCommand,
+  toSetVar,
+  toUnsetVar,
+} from './to'
 
 test('toKey()', () => {
   // ToKeyCode

@@ -330,11 +330,7 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     to: ToEvent | ToEvent[],
   ): this {
     let entry = { other_keys, to: toArray(to) }
-    this.pushOrCreateList(
-      this.manipulator,
-      'to_if_other_key_pressed',
-      entry,
-    )
+    this.pushOrCreateList(this.manipulator, 'to_if_other_key_pressed', entry)
     return this
   }
 

@@ -3,8 +3,8 @@ import { expect, test } from 'vitest'
 import { Condition } from '../karabiner/karabiner-config'
 
 import {
-  ConditionBuilder,
   accessibilityVariable,
+  ConditionBuilder,
   ifApp,
   ifDevice,
   ifDeviceExists,
