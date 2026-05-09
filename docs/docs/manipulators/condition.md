@@ -46,6 +46,11 @@ type Condition =
       value: boolean
       description?: string
     }
+  | {
+      type: 'expression_if' | 'expression_unless'
+      expression: string
+      description?: string
+    }
 ```
 
 </details>
@@ -59,6 +64,7 @@ ifDeviceExists() // device_exists_if
 ifKeyboardType() // keyboard_type_if 
 ifInputSource() // input_source_if 
 ifVar() // variable_if 
+ifExpression() // expression_if
 ifEventChanged() // event_changed_if 
 ```
 

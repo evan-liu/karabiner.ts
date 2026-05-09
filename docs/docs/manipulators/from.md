@@ -22,6 +22,7 @@ export type FromEvent = (
   | { simultaneous: Array</*...*/>, simultaneous_options?: {/*...*/} }
 ) & {
   modifiers?: { mandatory?: [/*...*/], optional?: [/*...*/] }
+  integer_value?: number
 }
 ```
 
