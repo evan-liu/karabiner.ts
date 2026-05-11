@@ -3,6 +3,7 @@ import { expect, test } from 'vitest'
 import { Condition } from '../karabiner/karabiner-config'
 
 import {
+  accessibilityVariable,
   ConditionBuilder,
   ifApp,
   ifDevice,
@@ -164,6 +165,15 @@ test('unless()', () => {
   expect(eventChangedUnless.build().type).toBe('event_changed_unless')
   expect(eventChangedUnless.build()).toEqual(
     eventChangedUnless.unless().unless().build(),
+  )
+})
+
+test('accessibilityVariable constants', () => {
+  expect(accessibilityVariable.roleString).toBe(
+    'accessibility.focused_ui_element.role_string',
+  )
+  expect(accessibilityVariable.windowSizeWidth).toBe(
+    'accessibility.focused_ui_element.window_size_width',
   )
 })
 

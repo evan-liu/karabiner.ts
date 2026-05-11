@@ -104,6 +104,8 @@ export type ToMouseCursorPosition = {
   x: number | `${number}%`
   y: number | `${number}%`
   screen?: number
+  relative_to?: string
+  fallback_to?: string
 }
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/software_function/iokit_power_management_sleep_system/ */
@@ -117,6 +119,12 @@ export type ToOpenApplication =
   | { bundle_identifier: string }
   | { file_path: string }
   | { frontmost_application_history_index: number }
+
+/** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/send-user-command/ */
+export type ToSendUserCommand = {
+  endpoint?: string
+  payload: unknown
+}
 
 export type ToSoftwareFunction =
   | { cg_event_double_click: ToCgEventDoubleClick }
@@ -151,6 +159,8 @@ export type ToEvent = (
   | { sticky_modifier: ToStickyModifier }
   | { software_function: ToSoftwareFunction }
   | { generic_desktop: number }
+  | { send_user_command: ToSendUserCommand }
+  | { from_event: boolean }
 ) &
   ToEventOptions
 
@@ -182,6 +192,11 @@ export type ToSoftwareFunctionEvent = Extract<
   ToEvent,
   { software_function: ToSoftwareFunction }
 >
+export type ToSendUserCommandEvent = Extract<
+  ToEvent,
+  { send_user_command: ToSendUserCommand }
+>
+export type ToFromEvent = Extract<ToEvent, { from_event: boolean }>
 
 export type DeviceIdentifier = {
   vendor_id?: number
@@ -284,6 +299,13 @@ type ToDelayedAction = {
   to_if_invoked: ToEvent[]
   to_if_canceled: ToEvent[]
 }
+
+/** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-if-other-key-pressed/ */
+export type ToIfOtherKeyPressed = {
+  other_keys: (FromKeyType & { modifiers?: FromModifiers })[]
+  to: ToEvent[]
+}
+
 export type BasicManipulator = {
   type: 'basic'
   from: FromEvent
@@ -296,6 +318,8 @@ export type BasicManipulator = {
   to_after_key_up?: ToEvent[]
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-delayed-action/ */
   to_delayed_action?: ToDelayedAction
+  /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-if-other-key-pressed/ */
+  to_if_other_key_pressed?: ToIfOtherKeyPressed[]
   parameters?: BasicParameters
   conditions?: Condition[]
   description?: string

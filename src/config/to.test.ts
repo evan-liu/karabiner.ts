@@ -1,6 +1,13 @@
 import { expect, test } from 'vitest'
 
-import { toKey, toPlaySound, toSetVar, toUnsetVar } from './to'
+import {
+  toFromEvent,
+  toKey,
+  toPlaySound,
+  toSendUserCommand,
+  toSetVar,
+  toUnsetVar,
+} from './to'
 
 test('toKey()', () => {
   // ToKeyCode
@@ -62,4 +69,22 @@ test('toPlaySound()', () => {
   expect(toPlaySound('/test/sound.mp3')).toEqual({
     shell_command: 'afplay /test/sound.mp3',
   })
+})
+
+test('toSendUserCommand()', () => {
+  expect(toSendUserCommand('hello')).toEqual({
+    send_user_command: { payload: 'hello' },
+  })
+  expect(
+    toSendUserCommand({ command: 'set_window_frames' }, '/tmp/sock'),
+  ).toEqual({
+    send_user_command: {
+      endpoint: '/tmp/sock',
+      payload: { command: 'set_window_frames' },
+    },
+  })
+})
+
+test('toFromEvent()', () => {
+  expect(toFromEvent()).toEqual({ from_event: true })
 })

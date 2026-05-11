@@ -103,6 +103,16 @@ export function ifEventChanged(value = true, description?: string) {
   return new ConditionBuilder({ type: 'event_changed_if', value, description })
 }
 
+export const accessibilityVariable = {
+  roleString: 'accessibility.focused_ui_element.role_string',
+  subroleString: 'accessibility.focused_ui_element.subrole_string',
+  titleString: 'accessibility.focused_ui_element.title_string',
+  windowPositionX: 'accessibility.focused_ui_element.window_position_x',
+  windowPositionY: 'accessibility.focused_ui_element.window_position_y',
+  windowSizeHeight: 'accessibility.focused_ui_element.window_size_height',
+  windowSizeWidth: 'accessibility.focused_ui_element.window_size_width',
+} as const
+
 let unlessTypes = flipUnlessTypes({
   frontmost_application_if: 'frontmost_application_unless',
   device_if: 'device_unless',

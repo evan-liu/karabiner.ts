@@ -191,12 +191,28 @@ describe('ManipulatorBuilder', () => {
       new BasicManipulatorBuilder(from)
         .toMouseCursorPosition({ x: 0, y: 0 })
         .toMouseCursorPosition({ x: '50%', y: '50%', screen: 1 })
+        .toMouseCursorPosition({
+          x: '100%',
+          y: '100%',
+          relative_to: 'current_position',
+          fallback_to: 'window',
+        })
         .build()[0].to,
     ).toEqual([
       { software_function: { set_mouse_cursor_position: { x: 0, y: 0 } } },
       {
         software_function: {
           set_mouse_cursor_position: { x: '50%', y: '50%', screen: 1 },
+        },
+      },
+      {
+        software_function: {
+          set_mouse_cursor_position: {
+            x: '100%',
+            y: '100%',
+            relative_to: 'current_position',
+            fallback_to: 'window',
+          },
         },
       },
     ])
@@ -208,6 +224,26 @@ describe('ManipulatorBuilder', () => {
     ).toEqual([
       { software_function: { iokit_power_management_sleep_system: {} } },
     ])
+  })
+
+  test('toSendUserCommand()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toSendUserCommand('hello')
+        .toSendUserCommand({ cmd: 'test' }, '/tmp/sock')
+        .build()[0].to,
+    ).toEqual([
+      { send_user_command: { payload: 'hello' } },
+      {
+        send_user_command: { endpoint: '/tmp/sock', payload: { cmd: 'test' } },
+      },
+    ])
+  })
+
+  test('toFromEvent()', () => {
+    expect(
+      new BasicManipulatorBuilder(from).toFromEvent().build()[0].to,
+    ).toEqual([{ from_event: true }])
   })
 
   test('toIfAlone()', () => {
@@ -261,6 +297,64 @@ describe('ManipulatorBuilder', () => {
       to_if_invoked: [{ key_code: 'a' }, { key_code: 'c' }],
       to_if_canceled: [{ key_code: 'b' }, { key_code: 'd' }],
     })
+  })
+
+  test('toIfOtherKeyPressed()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toIfOtherKeyPressed(
+          [{ key_code: 'tab', modifiers: { optional: ['any'] } }],
+          [{ key_code: 'left_command' }],
+        )
+        .build()[0].to_if_other_key_pressed,
+    ).toEqual([
+      {
+        other_keys: [{ key_code: 'tab', modifiers: { optional: ['any'] } }],
+        to: [{ key_code: 'left_command' }],
+      },
+    ])
+
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toIfOtherKeyPressed(
+          [{ key_code: 'fn', modifiers: { optional: ['any'] } }],
+          [
+            {
+              key_code: 'left_control',
+              modifiers: ['command', 'option'],
+              lazy: true,
+            },
+          ],
+        )
+        .build()[0].to_if_other_key_pressed,
+    ).toEqual([
+      {
+        other_keys: [{ key_code: 'fn', modifiers: { optional: ['any'] } }],
+        to: [
+          {
+            key_code: 'left_control',
+            modifiers: ['command', 'option'],
+            lazy: true,
+          },
+        ],
+      },
+    ])
+
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toIfOtherKeyPressed(
+          [{ key_code: 'escape' }],
+          'b',
+          '⌘',
+          { lazy: true },
+        )
+        .build()[0].to_if_other_key_pressed,
+    ).toEqual([
+      {
+        other_keys: [{ key_code: 'escape' }],
+        to: [{ key_code: 'b', modifiers: ['command'], lazy: true }],
+      },
+    ])
   })
 
   test('description()', () => {

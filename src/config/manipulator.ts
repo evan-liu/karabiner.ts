@@ -4,6 +4,8 @@ import {
   BasicParameters,
   Condition,
   FromEvent,
+  FromKeyType,
+  FromModifiers,
   Manipulator,
   ToEvent,
   ToEventOptions,
@@ -26,6 +28,7 @@ import {
   toApp,
   toCgEventDoubleClick,
   toConsumerKey,
+  toFromEvent,
   toGenericDesktop,
   toHyper,
   toInputSource,
@@ -39,6 +42,7 @@ import {
   toPaste,
   toPointingButton,
   toRemoveNotificationMessage,
+  toSendUserCommand,
   toSetVar,
   toSleepSystem,
   toStickyModifier,
@@ -226,6 +230,18 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     return this
   }
 
+  /** Map to send_user_command */
+  toSendUserCommand(payload: unknown, endpoint?: string): this {
+    this.addToEvent(toSendUserCommand(payload, endpoint))
+    return this
+  }
+
+  /** Pass through the from event as-is */
+  toFromEvent(): this {
+    this.addToEvent(toFromEvent())
+    return this
+  }
+
   /** To type a string of keys */
   toTypeSequence(src: string, map?: Record<string, ToEvent>): this {
     this.addToEvent(toTypeSequence(src, map))
@@ -306,6 +322,36 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     toArray(ifInvoked).forEach((v) => delayedAction.to_if_invoked.push(v))
     toArray(ifCanceled).forEach((v) => delayedAction.to_if_canceled.push(v))
     this.manipulator.to_delayed_action = delayedAction
+    return this
+  }
+
+  /** Map to to_if_other_key_pressed */
+  toIfOtherKeyPressed(
+    otherKeys: (FromKeyType & { modifiers?: FromModifiers })[],
+    to: ToEvent | ToEvent[],
+  ): this
+  /** Map to to_if_other_key_pressed */
+  toIfOtherKeyPressed(
+    otherKeys: (FromKeyType & { modifiers?: FromModifiers })[],
+    key: ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this
+  toIfOtherKeyPressed(
+    otherKeys: (FromKeyType & { modifiers?: FromModifiers })[],
+    toOrKey: ToEvent | ToEvent[] | ToKeyParam,
+    modifiers?: ModifierParam,
+    options?: ToEventOptions,
+  ): this {
+    let entry = {
+      other_keys: otherKeys,
+      to: toArray(
+        typeof toOrKey == 'object'
+          ? toOrKey
+          : toKey(toOrKey, modifiers, options),
+      ),
+    }
+    this.pushOrCreateList(this.manipulator, 'to_if_other_key_pressed', entry)
     return this
   }
 
