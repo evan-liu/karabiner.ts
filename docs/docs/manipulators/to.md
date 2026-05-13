@@ -195,6 +195,7 @@ The other `to*()` methods to create `ToEvent`:
 ```typescript
 toInputSource()
 toSetVar()
+toSetVarExpression()
 toNotificationMessage()
 toRemoveNotificationMessage()
 toMouseKey()

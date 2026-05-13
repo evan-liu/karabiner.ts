@@ -44,6 +44,7 @@ import {
   toRemoveNotificationMessage,
   toSendUserCommand,
   toSetVar,
+  toSetVarExpression,
   toSleepSystem,
   toStickyModifier,
   toSuperHyper,
@@ -174,12 +175,20 @@ export class BasicManipulatorBuilder implements ManipulatorBuilder {
     value: ToVariable['value'] = 1,
     key_up_value?: ToVariable['key_up_value'],
     type?: ToVariable['type'],
-    expression?: ToVariable['expression'],
-    key_up_expression?: ToVariable['key_up_expression'],
   ): this {
-    this.addToEvent(
-      toSetVar(name, value, key_up_value, type, expression, key_up_expression),
-    )
+    this.addToEvent(toSetVar(name, value, key_up_value, type))
+    return this
+  }
+
+  /** Map to setting a variable using expressions */
+  toVarExpression(
+    name: string,
+    options: {
+      expression: string
+      key_up_expression?: string
+    },
+  ): this {
+    this.addToEvent(toSetVarExpression(name, options))
     return this
   }
 
