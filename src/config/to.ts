@@ -175,6 +175,23 @@ export function toSetVar(
   return { set_variable: { name, value, key_up_value, type } }
 }
 
+/** Create ToEvent with set_variable using expressions */
+export function toSetVarExpression(
+  name: string,
+  options: {
+    expression: string
+    key_up_expression?: string
+  },
+): ToEvent {
+  return {
+    set_variable: {
+      name,
+      expression: options.expression,
+      key_up_expression: options.key_up_expression,
+    },
+  }
+}
+
 /** Create ToEvent with set_variable: { type: 'unset' } */
 export function toUnsetVar(name: string): ToEvent {
   return { set_variable: { name, type: 'unset' } }

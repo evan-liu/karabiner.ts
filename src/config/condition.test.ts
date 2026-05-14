@@ -9,6 +9,7 @@ import {
   ifDevice,
   ifDeviceExists,
   ifEventChanged,
+  ifExpression,
   ifInputSource,
   ifKeyboardType,
   ifVar,
@@ -166,6 +167,21 @@ test('unless()', () => {
   expect(eventChangedUnless.build()).toEqual(
     eventChangedUnless.unless().unless().build(),
   )
+
+  let expressionUnless = ifExpression('a > 0').unless()
+  expect(expressionUnless.build().type).toBe('expression_unless')
+  expect(expressionUnless.build()).toEqual(
+    expressionUnless.unless().unless().build(),
+  )
+})
+
+test('ifExpression()', () => {
+  expect(
+    ifExpression('command_q_expiration > system.now.milliseconds').build(),
+  ).toEqual({
+    type: 'expression_if',
+    expression: 'command_q_expiration > system.now.milliseconds',
+  })
 })
 
 test('accessibilityVariable constants', () => {

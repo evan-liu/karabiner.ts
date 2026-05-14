@@ -103,6 +103,14 @@ export function ifEventChanged(value = true, description?: string) {
   return new ConditionBuilder({ type: 'event_changed_if', value, description })
 }
 
+export function ifExpression(expression: string, description?: string) {
+  return new ConditionBuilder({
+    type: 'expression_if',
+    expression,
+    description,
+  })
+}
+
 export const accessibilityVariable = {
   roleString: 'accessibility.focused_ui_element.role_string',
   subroleString: 'accessibility.focused_ui_element.subrole_string',
@@ -120,6 +128,7 @@ let unlessTypes = flipUnlessTypes({
   keyboard_type_if: 'keyboard_type_unless',
   input_source_if: 'input_source_unless',
   variable_if: 'variable_unless',
+  expression_if: 'expression_unless',
   event_changed_if: 'event_changed_unless',
 })
 

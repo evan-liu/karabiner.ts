@@ -6,6 +6,7 @@ import {
   toPlaySound,
   toSendUserCommand,
   toSetVar,
+  toSetVarExpression,
   toUnsetVar,
 } from './to'
 
@@ -51,6 +52,26 @@ test('setVar()', () => {
       value: true,
       key_up_value: false,
       type: 'unset',
+    },
+  })
+  expect(toSetVar('test', 1, 2, 'set')).toEqual({
+    set_variable: {
+      name: 'test',
+      value: 1,
+      key_up_value: 2,
+      type: 'set',
+    },
+  })
+  expect(
+    toSetVarExpression('test', {
+      expression: 'x + 1',
+      key_up_expression: 'x - 1',
+    }),
+  ).toEqual({
+    set_variable: {
+      name: 'test',
+      expression: 'x + 1',
+      key_up_expression: 'x - 1',
     },
   })
 })

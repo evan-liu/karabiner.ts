@@ -45,6 +45,8 @@ export type FromEvent = (
 ) & {
   /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/ */
   modifiers?: FromModifiers
+  /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/integer-value/ */
+  integer_value?: number
 }
 export type FromKeyCodeEvent = Extract<
   FromEvent,
@@ -79,6 +81,8 @@ export type ToVariable = {
   name: string
   value?: number | boolean | string
   key_up_value?: number | boolean | string
+  expression?: string
+  key_up_expression?: string
   type?: 'set' | 'unset'
 }
 
@@ -118,7 +122,11 @@ export type ToNotificationMessage = { id: string; text: string }
 export type ToOpenApplication =
   | { bundle_identifier: string }
   | { file_path: string }
-  | { frontmost_application_history_index: number }
+  | {
+      frontmost_application_history_index: number
+      frontmost_application_history_exclusion_bundle_identifiers?: string[]
+      frontmost_application_history_exclusion_file_paths?: string[]
+    }
 
 /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/send-user-command/ */
 export type ToSendUserCommand = {
@@ -202,6 +210,7 @@ export type DeviceIdentifier = {
   vendor_id?: number
   product_id?: number
   location_id?: number
+  device_address?: string
   is_keyboard?: boolean
   is_pointing_device?: boolean
   is_touch_bar?: boolean
@@ -254,6 +263,12 @@ export type Condition =
       description?: string
     }
   | {
+      /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/expression/ */
+      type: 'expression_if' | 'expression_unless'
+      expression: string
+      description?: string
+    }
+  | {
       /** @see https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/event-changed/ */
       type: 'event_changed_if' | 'event_changed_unless'
       value: boolean
@@ -281,6 +296,10 @@ export type InputSourceCondition = Extract<
 export type VariableCondition = Extract<
   Condition,
   { type: 'input_source_if' | 'input_source_unless' }
+>
+export type ExpressionCondition = Extract<
+  Condition,
+  { type: 'expression_if' | 'expression_unless' }
 >
 export type EventChangedCondition = Extract<
   Condition,

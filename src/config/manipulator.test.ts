@@ -134,6 +134,25 @@ describe('ManipulatorBuilder', () => {
     ])
   })
 
+  test('toVarExpression()', () => {
+    expect(
+      new BasicManipulatorBuilder(from)
+        .toVarExpression('a', {
+          expression: 'x + 1',
+          key_up_expression: 'x - 1',
+        })
+        .build()[0].to,
+    ).toEqual([
+      {
+        set_variable: {
+          name: 'a',
+          expression: 'x + 1',
+          key_up_expression: 'x - 1',
+        },
+      },
+    ])
+  })
+
   test('toUnsetVar()', () => {
     expect(
       new BasicManipulatorBuilder(from).toUnsetVar('a').build()[0].to,
@@ -342,12 +361,7 @@ describe('ManipulatorBuilder', () => {
 
     expect(
       new BasicManipulatorBuilder(from)
-        .toIfOtherKeyPressed(
-          [{ key_code: 'escape' }],
-          'b',
-          '⌘',
-          { lazy: true },
-        )
+        .toIfOtherKeyPressed([{ key_code: 'escape' }], 'b', '⌘', { lazy: true })
         .build()[0].to_if_other_key_pressed,
     ).toEqual([
       {

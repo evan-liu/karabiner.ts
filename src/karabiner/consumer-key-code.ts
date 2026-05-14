@@ -29,6 +29,13 @@ export let fromAndToConsumerKeyCodes = [
 export let fromOnlyConsumerKeyCodes = [
   // Media controls
   'menu', // Touch ID on Magic Keyboard
+  'stop',
+  'microphone',
+  'selection',
+  'bass_boost',
+  'loudness',
+  'bass_increment',
+  'bass_decrement',
   // Application Launch keys
   'al_graphics_editor',
   'al_database_app',
@@ -97,6 +104,9 @@ export let fromOnlyConsumerKeyCodes = [
   'ac_forward',
   'ac_refresh',
   'ac_bookmarks',
+  'ac_search',
+  'ac_zoom_out',
+  'ac_zoom_in',
   // Remote control buttons
   'menu_pick',
   'menu_up',

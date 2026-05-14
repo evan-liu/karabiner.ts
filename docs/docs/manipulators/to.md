@@ -26,6 +26,10 @@ export type ToEvent = (
       set_variable: {
         name: string
         value: number | boolean | string
+        key_up_value?: number | boolean | string
+        expression?: string
+        key_up_expression?: string
+        type?: 'set' | 'unset'
       }
     }
   | { set_notification_message: { id: string; text: string } }
@@ -191,6 +195,7 @@ The other `to*()` methods to create `ToEvent`:
 ```typescript
 toInputSource()
 toSetVar()
+toSetVarExpression()
 toNotificationMessage()
 toRemoveNotificationMessage()
 toMouseKey()
