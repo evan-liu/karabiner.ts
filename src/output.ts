@@ -121,7 +121,7 @@ function exitWithError(err: any): never {
     if (typeof err == 'string') {
       console.error(err)
     } else {
-      console.error((err as Error).message || err)
+      console.error((err as Error).stack || (err as Error).message || err)
     }
   }
   return writeContext.exit(1)
