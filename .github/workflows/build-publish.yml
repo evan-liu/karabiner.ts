@@ -29,5 +29,3 @@ jobs:
       - run: npm run test:coverage
       - uses: coverallsapp/github-action@v2
         if: always()
-
-      - run: npm publish
