@@ -5,6 +5,7 @@ import {
 import { ManipulatorBuilder, ManipulatorMap } from './config/manipulator.ts'
 import { RuleBuilder } from './config/rule.ts'
 import { simpleModifications } from './config/simple-modifications.ts'
+import { pqrsFormat } from './karabiner/json-formatter.ts'
 import {
   KarabinerConfig,
   Manipulator,
@@ -104,7 +105,7 @@ export function writeToProfile(
     }
   }
 
-  let json = JSON.stringify(config, null, 2)
+  let json = pqrsFormat(config, { indentSize: 4 })
 
   if (dryRun) {
     console.info(json)
@@ -135,7 +136,7 @@ export function writeToGlobal(
   let jsonPath = karabinerJsonPath ?? writeContext.karabinerConfigFile()
   let config: KarabinerConfig = writeContext.readKarabinerConfig(jsonPath)
   config.global = { ...config.global, ...global }
-  let json = JSON.stringify(config, null, 2)
+  let json = pqrsFormat(config, { indentSize: 4 })
 
   writeContext.writeKarabinerConfig(json, jsonPath).catch(exitWithError)
 
